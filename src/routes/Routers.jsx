@@ -1,6 +1,9 @@
 import { createBrowserRouter } from "react-router";
+import { Suspense } from "react";
 import HomeLayout from "../layouts/HomeLayout";
 import ErrorPage from "../pages/ErrorPage";
+import PrivateRoute from "./PrivateRoute";
+import Loading from "../components/loadingComponents/Loading";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 import AuthLayout from "../layouts/AuthLayout";
@@ -18,29 +21,49 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <HomePage />
+                element: (
+                <Suspense fallback={<Loading/>}>
+                    <HomePage />
+                </Suspense>
+                )
             },
             {
                 path: '/all-donations',
-                element: <AllDonations/>
+                element: (
+                <Suspense fallback={<Loading/>}>
+                <PrivateRoute>
+                    <AllDonations />
+                </PrivateRoute>
+                </Suspense>
+                )
             },
             {
-                path:'/about-us',
-                element: <AboutPage/>
+                path: '/about-us',
+                element: (
+                <Suspense fallback={<Loading/>}>
+                    <PrivateRoute><AboutPage /></PrivateRoute>
+                </Suspense>
+                )
+                
             },
             {
                 path: '/contact',
-                element: <ContactPage/>
+                element: (
+                <Suspense fallback={<Loading/>}>
+                    <PrivateRoute><ContactPage /></PrivateRoute>
+                </Suspense>
+                )
+              
             }
         ]
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout/>,
-        errorElement: <ErrorPage/>,
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+        errorElement: <ErrorPage />,
         children: [
             {
-                
+
             }
         ]
     },

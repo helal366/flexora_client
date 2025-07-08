@@ -1,7 +1,7 @@
 import SignUp from '../lotties/register/SignUp';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from './../hooks/useAxiosSecure';
@@ -12,14 +12,16 @@ const RegisterPage = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
     const { userRegister, userProfileUpdate } = useAuth();
+    const location = useLocation();
+    const desire = location?.desire ? location?.desire : '/';
     const { register,
         formState: { errors },
         handleSubmit,
         reset } = useForm({ criteriaMode: 'all' });
 
-        useEffect(()=>{
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        },[])
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [])
     const mutation = useMutation({
         mutationFn: (userInfo) => axiosSecure.post('/users', userInfo),
         onSuccess: (res) => {
@@ -30,7 +32,7 @@ const RegisterPage = () => {
                 text: 'You have registered successfully.',
                 timer: 1500
             });
-            navigate('/');
+            navigate(desire);
             reset(); // inside onSuccess if you import from react-hook-form
 
         },

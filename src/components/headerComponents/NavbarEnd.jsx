@@ -84,9 +84,9 @@ const NavbarEnd = () => {
                 </>
             ) : (
                 <>
-                    <NavLink to="/auth/login">
+                    <NavLink className='mr-5' to="/auth/login">
                         <button
-                            className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-2 bg-teal-200"
+                            className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 bg-teal-200"
                             style={{ boxShadow: shadowStyle.base }}
                             onMouseEnter={(e) => handleHover(e, true)}
                             onMouseLeave={(e) => handleHover(e, false)}

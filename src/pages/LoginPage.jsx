@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SignUp from '../lotties/register/SignUp';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from './../hooks/useAxiosSecure';
@@ -11,9 +11,13 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm({ criteriaMode: 'all' });
     const axiosSecure = useAxiosSecure();
+    const location=useLocation();
+    const desire=location?.desire? location?.desire : '/';
     const [isLogging, setIsLogging]=useState(false)
     const [loginError,setLoginError]=useState('')
-
+     useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
     const userLoginMutation = useMutation({
         mutationFn: (email) => axiosSecure.patch(`/users/last-login`, { email, last_login: new Date().toISOString() }),
         onSuccess: () => {
@@ -40,7 +44,7 @@ const LoginPage = () => {
             // wait for the last login time update before navigating
             await userLoginMutation.mutateAsync(data?.email);
             // then navigate
-            navigate('/');
+            navigate(desire);
         } catch (error) {
              // Handle specific auth errors
         if (error?.code === 'auth/invalid-credential') {
