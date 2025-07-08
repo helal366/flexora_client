@@ -39,8 +39,8 @@ const Footer = () => {
 
         {/* Center: Navigation */}
         <div className="flex gap-6 text-sm">
-          <NavLink to="/about-us" className="hover:text-teal-700 transition cursor-pointer">About Us</NavLink>
-          <NavLink to="/contact" className="hover:text-teal-700 transition cursor-pointer">Contact</NavLink>
+          <Link to="/about-us" className="hover:text-teal-700 transition cursor-pointer">About Us</Link>
+          <Link to="/contact" className="hover:text-teal-700 transition cursor-pointer">Contact</Link>
         </div>
 
         {/* Right: Social Media Icons */}
