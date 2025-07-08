@@ -53,7 +53,7 @@ const RegisterPage = () => {
             }
             // store user info in the database
             const userResponse=await axiosSecure.post('/users', userInfo);
-            console.log('user data to database', userResponse?.data)
+            console.log('user data to database', userResponse?.data?.message)
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -106,18 +106,16 @@ const RegisterPage = () => {
                                         required: 'Password is required',
                                         validate: (value) => {
                                             const errors = [];
-                                            if (value.length < 6) errors.push('at least 6 characters');
-                                            if (!/[A-Z]/.test(value)) errors.push('one uppercase letter');
-                                            if (!/[a-z]/.test(value)) errors.push('one lowercase letter');
-                                            if (!/[0-9]/.test(value)) errors.push('one number');
-                                            if (!/[\W_]/.test(value)) errors.push('one special character');
+                                            if (value.length < 6) errors.push('Password less than 6 characters');
+                                            if (!/[A-Z]/.test(value)) errors.push('No capital letter in password.');
+                                            if (!/[\W_]/.test(value)) errors.push('No special character in password.');
 
-                                            return errors.length === 0 || `Password must contain ${errors.join(', ')}`;
+                                            return errors.length === 0 || `${errors.join(', ')}`;
                                         }
                                     })}
                                 />
                                 {errors.password && (
-                                    <p className="text-red-600 text-xs">{errors.password.message}</p>
+                                    <p className="text-red-600 text-xs">{errors?.password?.message}</p>
                                 )}
                                 <button type='submit' className="btn btn-neutral mt-4">Register</button>
                             </fieldset>

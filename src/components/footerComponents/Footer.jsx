@@ -26,7 +26,7 @@ const socialStyles = {
 
 const Footer = () => {
   return (
-    <footer className="bg-teal-50 text-gray-800 px-6 py-8 shadow-lg border border-gray-100/50">
+    <footer className="bg-teal-50 text-gray-800 px-6 py-8 shadow-lg border border-gray-500/50">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
 
         {/* Left: Branding */}

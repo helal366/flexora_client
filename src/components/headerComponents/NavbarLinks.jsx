@@ -76,7 +76,7 @@ const NavbarLinks = () => {
       </li>
 
       <li>
-        <NavLink>
+        <NavLink to='/about-us'>
           <button
             className="cursor-pointer rounded px-3 py-1 transition-transform duration-300"
             style={{ 

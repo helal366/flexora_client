@@ -5,7 +5,7 @@ import NavbarEnd from './NavbarEnd';
 
 const Navbar = () => {
     return (
-        <section className='shadow-lg'>
+        <section className='shadow-lg border border-gray-500/50 rounded'>
             <div className="navbar bg-teal-50 shadow-sm">
                 <NavbarStart />
                 <NavbarCenter />
