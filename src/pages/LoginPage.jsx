@@ -4,11 +4,24 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
+import useAxiosSecure from './../hooks/useAxiosSecure';
+import { useMutation } from './../../node_modules/@tanstack/react-query/src/useMutation';
 
 const LoginPage = () => {
     const {userLogin}=useAuth();
-    const navigate=useNavigate()
-    const {register, formState: {errors}, handleSubmit}=useForm({criteriaMode: 'all'})
+    const navigate=useNavigate();
+    const {register, formState: {errors}, handleSubmit}=useForm({criteriaMode: 'all'});
+    const axiosSecure=useAxiosSecure();
+
+    const userLoginMutation=useMutation({
+        mutationFn: (email)=>axiosSecure.patch(`/users/last-login`, {email, last_login:new Date().toISOString()}),
+        onSuccess: ()=>{
+            console.log('Last login updated.')
+        },
+        onError: (err)=>{
+            console.log('Failed to update last login', err?.message)
+        }
+    })
     const onSubmit= data=>{
         console.log(data);
         // user login
@@ -21,6 +34,7 @@ const LoginPage = () => {
                 text: 'You have successfully logged in.',
                 timer: 1500
             });
+            userLoginMutation(data?.email)
             navigate('/')
         }).catch((error)=>{
             console.log(error);
