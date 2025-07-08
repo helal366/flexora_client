@@ -5,11 +5,13 @@ import NavbarEnd from './NavbarEnd';
 
 const Navbar = () => {
     return (
-        <div className="navbar bg-base-100 shadow-sm">
-            <NavbarStart />
-            <NavbarCenter/>
-            <NavbarEnd/>
-        </div>
+        <section className='shadow-lg'>
+            <div className="navbar bg-teal-50 shadow-sm">
+                <NavbarStart />
+                <NavbarCenter />
+                <NavbarEnd />
+            </div>
+        </section>
     );
 };
 

@@ -5,10 +5,14 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake, caramellatte, lemonade, valentine, cyberpunk, retro;
 }
-
 @tailwind utilities;
 .padding{
   @apply px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28 2xl:px-36;
+}
+@layer utilities {
+  .drop-shadow-custom {
+    filter: drop-shadow(0 4px 6px rgba(20, 184, 166, 1));
+  }
 }
 html{
   scroll-behavior: smooth;
@@ -16,8 +20,11 @@ html{
 *{
   font-family:"Poppins", sans-serif;
 }
-a.active{
-  @apply  border border-teal-600 p-1 rounded bg-amber-200
+a.active {
+  @apply  rounded p-1 bg-teal-100;
+  box-shadow: 0 0 2px 1px rgba(20, 184, 166, 0.6);
 }
+
+
 
 /* bg-secondary text-neutral-500 font-semibold */
