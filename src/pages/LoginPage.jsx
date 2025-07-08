@@ -5,14 +5,14 @@ import { Link, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from './../hooks/useAxiosSecure';
-import { useMutation } from './../../node_modules/@tanstack/react-query/src/useMutation';
-
+import { useMutation } from '@tanstack/react-query';
 const LoginPage = () => {
     const { userLogin } = useAuth();
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm({ criteriaMode: 'all' });
     const axiosSecure = useAxiosSecure();
     const [isLogging, setIsLogging]=useState(false)
+    const [loginError,setLoginError]=useState('')
 
     const userLoginMutation = useMutation({
         mutationFn: (email) => axiosSecure.patch(`/users/last-login`, { email, last_login: new Date().toISOString() }),
@@ -20,11 +20,12 @@ const LoginPage = () => {
             console.log('Last login updated.')
         },
         onError: (err) => {
-            console.log('Failed to update last login', err?.message)
+            console.log('Failed to update last login', err?.message);
         }
     })
     const onSubmit = async (data) => {
-        setIsLogging(true)
+        setIsLogging(true);
+        setLoginError(''); // reset previous errors
         try {
             // user login
             const result = await userLogin(data?.email, data?.password);
@@ -41,12 +42,26 @@ const LoginPage = () => {
             // then navigate
             navigate('/');
         } catch (error) {
+             // Handle specific auth errors
+        if (error?.code === 'auth/invalid-credential') {
+            setLoginError('Email or password doesn’t match any account.');
             Swal.fire({
                 icon: 'error',
                 title: 'Logged in failed!',
-                text: `${error?.message}`,
+                text: `Email or password doesn’t match any account.`,
                 showConfirmButton: true
             })
+        }else {
+            setLoginError('Login failed. Please try again.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Logged in failed!',
+                text: `Login failed. Please try again.`,
+                showConfirmButton: true
+            })
+        }
+
+            
         }finally{
             setIsLogging(false)
         }
@@ -90,6 +105,9 @@ const LoginPage = () => {
                                     ) : 'Login'
                                     }
                                 </button>
+                                {
+                                    loginError && <p className='text-xs text-red-600'>{loginError}</p>
+                                }
                             </fieldset>
                         </form>
                         <p>Don't have an account? Please <Link to='/auth/register' className='text-blue-600 underline'>Register </Link> </p>

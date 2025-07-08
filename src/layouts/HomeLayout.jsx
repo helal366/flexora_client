@@ -8,7 +8,7 @@ const HomeLayout = () => {
     const navigation = useNavigation();
     const loading = navigation.state === 'loading';
     return (
-        <section>
+        <section className='padding max-w-[2520px]'>
             <Navbar />
             <section >
                 {

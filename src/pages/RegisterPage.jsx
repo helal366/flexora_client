@@ -84,11 +84,11 @@ const RegisterPage = () => {
             const userInfo = {
                 name: data?.name,
                 email: data?.email,
+                password: data?.password,
                 photoURL: uploadedImageURL,
                 role: 'user',
                 created_at: new Date().toISOString(),
                 last_login: new Date().toISOString(),
-
             }
             // store user info in the database
             mutation.mutate(userInfo)
