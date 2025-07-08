@@ -17,7 +17,7 @@ const RegisterPage = () => {
         const file = data?.image?.[0]
         if (!file) return;
         // cloudinary image upload
-        const formData = new FormData()
+        const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", `${import.meta.env.VITE_upload_preset}`);
         formData.append("cloud_name", `${import.meta.env.VITE_cloud_name}`);
@@ -26,7 +26,7 @@ const RegisterPage = () => {
             const uploadedImageURL = result?.data?.secure_url;
             console.log({ uploadedImageURL });
             console.log(data?.name);
-            if(!uploadedImageURL) throw new Error('Failed to create image url!')
+            if(!uploadedImageURL) throw new Error('Failed to create image url!');
 
             // user registration   
             const userCredential= await userRegister(data?.email, data?.password);
