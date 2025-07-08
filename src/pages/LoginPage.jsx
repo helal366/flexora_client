@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SignUp from '../lotties/register/SignUp';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
@@ -8,45 +8,50 @@ import useAxiosSecure from './../hooks/useAxiosSecure';
 import { useMutation } from './../../node_modules/@tanstack/react-query/src/useMutation';
 
 const LoginPage = () => {
-    const {userLogin}=useAuth();
-    const navigate=useNavigate();
-    const {register, formState: {errors}, handleSubmit}=useForm({criteriaMode: 'all'});
-    const axiosSecure=useAxiosSecure();
+    const { userLogin } = useAuth();
+    const navigate = useNavigate();
+    const { register, formState: { errors }, handleSubmit } = useForm({ criteriaMode: 'all' });
+    const axiosSecure = useAxiosSecure();
+    const [isLogging, setIsLogging]=useState(false)
 
-    const userLoginMutation=useMutation({
-        mutationFn: (email)=>axiosSecure.patch(`/users/last-login`, {email, last_login:new Date().toISOString()}),
-        onSuccess: ()=>{
+    const userLoginMutation = useMutation({
+        mutationFn: (email) => axiosSecure.patch(`/users/last-login`, { email, last_login: new Date().toISOString() }),
+        onSuccess: () => {
             console.log('Last login updated.')
         },
-        onError: (err)=>{
+        onError: (err) => {
             console.log('Failed to update last login', err?.message)
         }
     })
-    const onSubmit= data=>{
-        console.log(data);
-        // user login
-        userLogin(data?.email, data?.password)
-        .then((result)=>{
-            console.log(result?.user)
+    const onSubmit = async (data) => {
+        setIsLogging(true)
+        try {
+            // user login
+            const result = await userLogin(data?.email, data?.password);
+            console.log(result?.user);
+            // success message
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: 'You have successfully logged in.',
                 timer: 1500
             });
-            userLoginMutation(data?.email)
-            navigate('/')
-        }).catch((error)=>{
-            console.log(error);
+            // wait for the last login time update before navigating
+            await userLoginMutation.mutateAsync(data?.email);
+            // then navigate
+            navigate('/');
+        } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Logged in failed!',
                 text: `${error?.message}`,
                 showConfirmButton: true
             })
-        })
+        }finally{
+            setIsLogging(false)
+        }
     }
-     return (
+    return (
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="hidden lg:block">
@@ -76,7 +81,15 @@ const LoginPage = () => {
                                     <p className="text-red-600 text-xs">{errors.password.message}</p>
                                 )}
                                 <div><Link className="link link-hover">Forgot password?</Link></div>
-                                <button className="btn btn-neutral mt-4">Login</button>
+                                <button className="btn btn-neutral mt-4">
+                                    {
+                                        isLogging?(
+                                        <>
+                                            <span className="loading loading-spinner loading-xs mr-1"></span> Logging in...
+                                        </>
+                                    ) : 'Login'
+                                    }
+                                </button>
                             </fieldset>
                         </form>
                         <p>Don't have an account? Please <Link to='/auth/register' className='text-blue-600 underline'>Register </Link> </p>
