@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
 const socialStyles = {
@@ -39,8 +39,8 @@ const Footer = () => {
 
         {/* Center: Navigation */}
         <div className="flex gap-6 text-sm">
-          <a href="/about" className="hover:text-teal-700 transition underline cursor-pointer">About Us</a>
-          <a href="/contact" className="hover:text-teal-700 transition underline cursor-pointer">Contact</a>
+          <NavLink to="/about-us" className="hover:text-teal-700 transition cursor-pointer">About Us</NavLink>
+          <NavLink to="/contact" className="hover:text-teal-700 transition cursor-pointer">Contact</NavLink>
         </div>
 
         {/* Right: Social Media Icons */}
