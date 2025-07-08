@@ -104,7 +104,7 @@ const Footer = () => {
 
       {/* Bottom: Copyright */}
       <div className="mt-6 text-center text-xs text-gray-700">
-        &copy; {new Date().getFullYear()} Flexora. All rights reserved.
+        &copy; {new Date().getFullYear()} <strong><i>flexora</i></strong>. All rights reserved.
       </div>
     </footer>
   );
