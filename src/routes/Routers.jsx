@@ -7,6 +7,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import AboutPage from "../pages/AboutPage";
 import ContactPage from "../pages/ContactPage";
 import HomePage from "../pages/homePage/HomePage";
+import AllDonations from "../pages/allDonationsPage/AllDonations";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const router = createBrowserRouter([
     {
@@ -19,12 +21,26 @@ const router = createBrowserRouter([
                 element: <HomePage />
             },
             {
+                path: '/all-donations',
+                element: <AllDonations/>
+            },
+            {
                 path:'/about-us',
                 element: <AboutPage/>
             },
             {
                 path: '/contact',
                 element: <ContactPage/>
+            }
+        ]
+    },
+    {
+        path: '/dashboard',
+        element: <DashboardLayout/>,
+        errorElement: <ErrorPage/>,
+        children: [
+            {
+                
             }
         ]
     },
