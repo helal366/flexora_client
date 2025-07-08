@@ -5,17 +5,56 @@ import { Link, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from './../hooks/useAxiosSecure';
+import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const RegisterPage = () => {
-    const axiosSecure=useAxiosSecure()
+    const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
     const { userRegister, userProfileUpdate } = useAuth();
     const { register,
         formState: { errors },
-        handleSubmit } = useForm({ criteriaMode: 'all' });
+        handleSubmit,
+        reset } = useForm({ criteriaMode: 'all' });
+
+        useEffect(()=>{
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },[])
+    const mutation = useMutation({
+        mutationFn: (userInfo) => axiosSecure.post('/users', userInfo),
+        onSuccess: (res) => {
+            console.log('user data to database', res?.data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'You have registered successfully.',
+                timer: 1500
+            });
+            navigate('/');
+            reset(); // inside onSuccess if you import from react-hook-form
+
+        },
+        onError: (err) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to store user',
+                text: `${err?.message || err}`,
+                showConfirmButton: true
+            });
+        }
+    })
     const onSubmit = async data => {
         const file = data?.image?.[0]
-        if (!file) return;
+        if (!file) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Image Missing!',
+                text: 'Please upload a profile image.',
+                showConfirmButton: true
+            });
+            return;
+        }
+
         // cloudinary image upload
         const formData = new FormData();
         formData.append("file", file);
@@ -26,12 +65,12 @@ const RegisterPage = () => {
             const uploadedImageURL = result?.data?.secure_url;
             console.log({ uploadedImageURL });
             console.log(data?.name);
-            if(!uploadedImageURL) throw new Error('Failed to create image url!');
+            if (!uploadedImageURL) throw new Error('Failed to create image url!');
 
             // user registration   
-            const userCredential= await userRegister(data?.email, data?.password);
-            if(!userCredential?.user) throw new Error('Registration failed!')
-                
+            const userCredential = await userRegister(data?.email, data?.password);
+            if (!userCredential?.user) throw new Error('Registration failed!')
+
             // updateInfo
             const updateInfo = {
                 displayName: data?.name,
@@ -42,8 +81,8 @@ const RegisterPage = () => {
             await userProfileUpdate(updateInfo);
 
             // user info
-            const userInfo={
-                name:data?.name,
+            const userInfo = {
+                name: data?.name,
                 email: data?.email,
                 photoURL: uploadedImageURL,
                 role: 'user',
@@ -52,15 +91,7 @@ const RegisterPage = () => {
 
             }
             // store user info in the database
-            const userResponse=await axiosSecure.post('/users', userInfo);
-            console.log('user data to database', userResponse?.data?.message)
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'You have registered successfully.',
-                timer: 1500
-            })
-            navigate('/')
+            mutation.mutate(userInfo)
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -117,7 +148,14 @@ const RegisterPage = () => {
                                 {errors.password && (
                                     <p className="text-red-600 text-xs">{errors?.password?.message}</p>
                                 )}
-                                <button type='submit' className="btn btn-neutral mt-4">Register</button>
+                                <button type='submit' disabled={mutation.isPending} className="btn btn-neutral mt-4">
+                                    {mutation.isPending ? (
+                                        <>
+                                            <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
+                                        </>
+                                    ) : 'Register'}
+
+                                </button>
                             </fieldset>
                         </form>
                         <p>Already have an account? Please <Link to='/auth/login' className='text-blue-600 underline'>Login </Link> </p>
