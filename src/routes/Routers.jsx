@@ -12,8 +12,9 @@ import ContactPage from "../pages/ContactPage";
 import HomePage from "../pages/homePage/HomePage";
 import AllDonations from "../pages/allDonationsPage/AllDonations";
 import DashboardLayout from "../layouts/DashboardLayout";
-import UserRoute from "./UserRoute";
+// import UserRoute from "./UserRoute";
 import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
+import ForbiddenPage from './../pages/ForbiddenPage';
 
 const router = createBrowserRouter([
     {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
                 </Suspense>
                 )
               
+            },
+            {
+                path: '/forbidden',
+                element: <ForbiddenPage/>
             }
         ]
     },
@@ -66,7 +71,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: 'profile',
-                element: <UserRoute><MyProfile/></UserRoute>
+                element: <MyProfile/>
             }
         ]
     },

@@ -1,43 +1,51 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
-import { FaUserCircle } from 'react-icons/fa';
+import useAuth from '../../../hooks/useAuth';
+import useUserRole from '../../../hooks/useUserRole';
 
 const MyProfile = () => {
   const { user } = useAuth();
+  const {role}=useUserRole();
 
   const joinedDate = user?.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString()
     : 'N/A';
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10 p-6">
+      {/* Profile Picture Centered */}
+      <div className="flex justify-center mb-4">
         {user?.photoURL ? (
           <img
             src={user.photoURL}
             alt="User"
-            className="w-24 h-24 rounded-full border-4 border-teal-500 shadow-md"
+            className="w-28 h-28 rounded-full border-4 border-teal-500 shadow"
           />
         ) : (
-          <FaUserCircle className="text-7xl text-gray-400" />
+          <div className="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-4xl font-bold text-white">
+            {user?.displayName?.charAt(0) || 'U'}
+          </div>
         )}
-        <div>
-          <h2 className="text-2xl font-semibold">{user?.displayName || 'User'}</h2>
-          <p className="text-gray-600">{user?.email}</p>
-        </div>
       </div>
 
-      <div className="space-y-3">
-        {/* Only show role if not "user" */}
-        {user?.role && user?.role !== 'user' && (
-          <p className="text-sm">
-            <span className="font-medium">Role:</span>{' '}
-            <span className="badge badge-info">{user.role}</span>
+      {/* Name Centered */}
+      <h2 className="text-center text-2xl font-semibold mb-8">{user?.displayName || 'User'}</h2>
+
+      {/* Info Left-Aligned */}
+      
+      <div className="space-y-2 text-sm text-gray-700">
+        {role !== 'user' && (
+          <p>
+            <span className="font-medium">Role:</span> {role}
           </p>
         )}
-        <p className="text-sm">
-          <span className="font-medium">Joined:</span> {joinedDate}
+        <p>
+          <span className="font-medium">Email:</span> {user?.email || 'N/A'}
         </p>
+        <p>
+          <span className="font-medium">Joined at:</span> {joinedDate}
+        </p>
+        {/* Role shown only if not a regular user */}
+        
       </div>
     </div>
   );

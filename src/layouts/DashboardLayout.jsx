@@ -5,7 +5,7 @@ import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai'; // Home icon
 
 const DashboardLayout = () => {
-    const { role, roleLoading,isUser } = useUserRole();
+    const { role, roleLoading, isUser } = useUserRole();
     if (roleLoading) return <Loading />
     console.log({ role })
     return (
@@ -63,6 +63,12 @@ const DashboardLayout = () => {
                             <NavLink to="/" className="flex items-center gap-2">
                                 <AiFillHome className="text-xl text-orange-500" />
                                 Home
+                            </NavLink>
+                        </li>
+                        <li className='shadow-md mb-2 shadow-blue-300'>
+                            <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                <AiOutlineUser className="text-xl text-blue-600" />
+                                My Profile
                             </NavLink>
                         </li>
                         {
