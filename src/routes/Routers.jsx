@@ -12,6 +12,8 @@ import ContactPage from "../pages/ContactPage";
 import HomePage from "../pages/homePage/HomePage";
 import AllDonations from "../pages/allDonationsPage/AllDonations";
 import DashboardLayout from "../layouts/DashboardLayout";
+import UserRoute from "./UserRoute";
+import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
 
 const router = createBrowserRouter([
     {
@@ -63,7 +65,8 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-
+                path: 'profile',
+                element: <UserRoute><MyProfile/></UserRoute>
             }
         ]
     },
