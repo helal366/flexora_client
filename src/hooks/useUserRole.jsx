@@ -16,7 +16,11 @@ const useUserRole = () => {
             }
         }
     )
-    return {role, roleLoading, isError, error}
+    const isUser=role==='user';
+    const isCharity=role==='charity';
+    const isRestaurant=role==='restaurant';
+    const isAdmin=role==='admin'
+    return {role, roleLoading, isError, error, isUser, isCharity, isRestaurant, isAdmin}
 };
 
 export default useUserRole;

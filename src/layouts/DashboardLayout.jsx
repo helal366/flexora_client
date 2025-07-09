@@ -2,10 +2,10 @@ import React from 'react';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
-import { AiFillHome } from 'react-icons/ai'; // Home icon
+import { AiFillHome, AiOutlineUser } from 'react-icons/ai'; // Home icon
 
 const DashboardLayout = () => {
-    const { role, roleLoading } = useUserRole();
+    const { role, roleLoading,isUser } = useUserRole();
     if (roleLoading) return <Loading />
     console.log({ role })
     return (
@@ -47,7 +47,7 @@ const DashboardLayout = () => {
                                 </div>
                             </div>
                             {/* Page content here */}
-                            <Outlet/>
+                            <Outlet />
                         </div>
 
                     </div>
@@ -59,12 +59,20 @@ const DashboardLayout = () => {
                         <Link to='/'>
                             <button className='btn bg-teal-50 text-3xl italic text-gray-700 shadow-inner border border-gray-400/50 cursor-pointer mb-6 w-full'>flexora </button>
                         </Link>
-                        <li>
+                        <li className='shadow-md mb-2 shadow-orange-300 '>
                             <NavLink to="/" className="flex items-center gap-2">
-                                <AiFillHome className="text-xl text-orange-500 transition-transform duration-300 group-hover:rotate-6" />
+                                <AiFillHome className="text-xl text-orange-500" />
                                 Home
                             </NavLink>
                         </li>
+                        {
+                            !roleLoading && isUser && <li className='shadow-md mb-2 shadow-blue-300'>
+                                <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                    <AiOutlineUser className="text-xl text-blue-600" />
+                                    My Profile
+                                </NavLink>
+                            </li>
+                        }
                         <li><a>Sidebar Item 2</a></li>
                     </ul>
                 </div>
