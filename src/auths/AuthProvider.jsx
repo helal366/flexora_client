@@ -6,7 +6,7 @@ import AuthContext from './AuthContext';
 const auth=getAuth(app);
 const googleProvider= new GoogleAuthProvider()
 const AuthProvider = ({children}) => {
-    const [authLoading, setAuthLoading]=useState(false)
+    const [authLoading, setAuthLoading]=useState(true)
     const [user, setUser]=useState(null)
     const userRegister=(email, password)=>{
         setAuthLoading(true)
