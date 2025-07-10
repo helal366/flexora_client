@@ -4,14 +4,15 @@ import useUserRole from '../../../hooks/useUserRole';
 
 const MyProfile = () => {
   const { user } = useAuth();
-  const {role}=useUserRole();
+  const {role, userInfo}=useUserRole();
 
+  const contact=userInfo?.contact_number;
   const joinedDate = user?.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString()
     : 'N/A';
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10 p-6">
+    <div className="max-w-md mx-auto bg-white shadow-lg shadow-amber-200 rounded-lg mt-10 p-6">
       {/* Profile Picture Centered */}
       <div className="flex justify-center mb-4">
         {user?.photoURL ? (
@@ -38,6 +39,9 @@ const MyProfile = () => {
             <span className="font-medium">Role:</span> {role}
           </p>
         )}
+        <p>
+          <span className="font-medium">Contact Number:</span> {contact || 'N/A'}
+        </p>
         <p>
           <span className="font-medium">Email:</span> {user?.email || 'N/A'}
         </p>

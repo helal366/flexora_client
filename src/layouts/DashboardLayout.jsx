@@ -54,7 +54,7 @@ const DashboardLayout = () => {
                 </div>
                 <div className="drawer-side shadow-[4px_0px_10px_rgba(0,0,0,0.2)]">
                     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu bg-teal-100 border border-gray-500/50  text-base-content min-h-full w-80 p-4">
+                    <ul className="menu bg-teal-100/50 border border-gray-500/50  text-base-content min-h-full w-80 p-4">
                         {/* Sidebar content here */}
                         <Link to='/'>
                             <button className='btn bg-teal-50 text-3xl italic text-gray-700 shadow-inner border border-gray-400/50 cursor-pointer mb-6 w-full'>flexora </button>

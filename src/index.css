@@ -21,7 +21,7 @@ html{
   font-family:"Poppins", sans-serif;
 }
 a.active {
-  @apply  rounded p-1 bg-teal-100;
+  @apply  rounded p-1 bg-teal-800 text-gray-200;
   box-shadow: 0 0 2px 1px rgba(20, 184, 166, 0.6);
 }
 

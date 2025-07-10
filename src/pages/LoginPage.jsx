@@ -99,7 +99,6 @@ const LoginPage = () => {
                                 {errors.password && (
                                     <p className="text-red-600 text-xs">{errors.password.message}</p>
                                 )}
-                                <div><Link className="link link-hover">Forgot password?</Link></div>
                                 <button className="btn btn-neutral mt-4">
                                     {
                                         isLogging?(

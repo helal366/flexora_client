@@ -74,20 +74,26 @@ const RegisterPage = () => {
             if (!userCredential?.user) throw new Error('Registration failed!')
 
             // updateInfo
+            console.log('from registration page, data: ',data)
             const updateInfo = {
                 displayName: data?.name,
-                photoURL: uploadedImageURL
+                photoURL: uploadedImageURL,
             }
             console.log({ updateInfo })
             // update profile info
             await userProfileUpdate(updateInfo);
 
             // user info
+            let rawNumber=data?.contact_number? data?.contact_number.trim():'';
+            if(rawNumber.startsWith('0')){
+                rawNumber='+880'+rawNumber.slice(1)
+            }
             const userInfo = {
                 name: data?.name,
                 email: data?.email,
                 photoURL: uploadedImageURL,
                 role: 'user',
+                contact_number:  rawNumber,
                 created_at: new Date().toISOString(),
                 last_login: new Date().toISOString(),
             }
@@ -128,6 +134,13 @@ const RegisterPage = () => {
                                 <label className="label">Email</label>
                                 <input type="email" {...register("email", { required: true })} className="input" placeholder="Email" />
                                 {errors.email?.type === 'required' && <p className='text-red-600 text-xs'>Email is required</p>}
+
+                                {/* mobile number */}
+                                <label className="label">Contact number</label>
+                                <input type="tel" inputMode='numeric' maxLength={11}
+                                {...register("contact_number", { required: 'Contact number is required', pattern:{value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit Bangladeshi mobile number.'} })} 
+                                className="input" placeholder="01*********" />
+                                {errors.contact_number && <p className='text-red-600 text-xs'>{errors.contact_number.message}</p>}
 
                                 {/* password */}
                                 <label className="label">Password</label>

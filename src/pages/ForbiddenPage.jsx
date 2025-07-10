@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdBlock } from 'react-icons/md'; // forbidden / block icon
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const ForbiddenPage = () => {
   return (

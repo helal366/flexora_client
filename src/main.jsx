@@ -9,10 +9,13 @@ import { RouterProvider } from 'react-router'
 import router from './routes/Routers';
 import { ToastContainer } from 'react-toastify'
 import AuthProvider from './auths/AuthProvider.jsx'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
-
+AOS.init()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+     <div className='padding max-w-[2520px]'>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterProvider router={router}></RouterProvider>
@@ -31,5 +34,6 @@ createRoot(document.getElementById('root')).render(
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
+    </div>
   </StrictMode>,
 )
