@@ -3,6 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai'; // Home icon
+import { FaRegAddressCard } from 'react-icons/fa';
 
 const DashboardLayout = () => {
     const { role, roleLoading, isUser } = useUserRole();
@@ -72,12 +73,15 @@ const DashboardLayout = () => {
                             </NavLink>
                         </li>
                         {
-                            !roleLoading && isUser && <li className='shadow-md mb-2 shadow-blue-300'>
-                                <NavLink to="/dashboard/profile" className="flex items-center gap-2">
-                                    <AiOutlineUser className="text-xl text-blue-600" />
-                                    My Profile
-                                </NavLink>
-                            </li>
+                            !roleLoading && isUser &&
+                            <>
+                                <li className="shadow-md mb-2 shadow-orange-300">
+                                    <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
+                                        <FaRegAddressCard className="text-xl text-orange-500" />
+                                        Request Charity Role
+                                    </NavLink>
+                                </li>
+                            </>
                         }
                         <li><a>Sidebar Item 2</a></li>
                     </ul>

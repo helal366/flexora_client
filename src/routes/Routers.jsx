@@ -12,9 +12,10 @@ import ContactPage from "../pages/ContactPage";
 import HomePage from "../pages/homePage/HomePage";
 import AllDonations from "../pages/allDonationsPage/AllDonations";
 import DashboardLayout from "../layouts/DashboardLayout";
-// import UserRoute from "./UserRoute";
+import UserRoute from "./UserRoute";
 import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
 import ForbiddenPage from './../pages/ForbiddenPage';
+import RequestCherityRole from "../pages/dashboardPages/userPages/RequestCherityRole";
 
 const router = createBrowserRouter([
     {
@@ -66,12 +67,20 @@ const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+        element: (
+                <Suspense fallback={<Loading/>}>
+                    <PrivateRoute><DashboardLayout /></PrivateRoute>
+                </Suspense>
+                ),
         errorElement: <ErrorPage />,
         children: [
             {
                 path: 'profile',
                 element: <MyProfile/>
+            },
+            {
+                path: 'request_charity_role',
+                element: <UserRoute><RequestCherityRole/></UserRoute>
             }
         ]
     },
