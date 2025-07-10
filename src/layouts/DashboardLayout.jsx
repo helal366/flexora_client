@@ -53,20 +53,20 @@ const DashboardLayout = () => {
 
                     </div>
                 </div>
-                <div className="drawer-side shadow-[4px_0px_10px_rgba(0,0,0,0.2)]">
+                <div className="drawer-side shadow-[4px_0px_10px_rgba(0,0,0,0.2)] z-10">
                     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu bg-teal-100/50 border border-gray-500/50  text-base-content min-h-full w-80 p-4">
                         {/* Sidebar content here */}
                         <Link to='/'>
                             <button className='btn bg-teal-50 text-3xl italic text-gray-700 shadow-inner border border-gray-400/50 cursor-pointer mb-6 w-full'>flexora </button>
                         </Link>
-                        <li className='shadow-md mb-2 shadow-orange-300 '>
+                        <li className='shadow-md mb-3 shadow-orange-200 '>
                             <NavLink to="/" className="flex items-center gap-2">
                                 <AiFillHome className="text-xl text-orange-500" />
                                 Home
                             </NavLink>
                         </li>
-                        <li className='shadow-md mb-2 shadow-blue-300'>
+                        <li className='shadow-md mb-3 shadow-orange-200'>
                             <NavLink to="/dashboard/profile" className="flex items-center gap-2">
                                 <AiOutlineUser className="text-xl text-blue-600" />
                                 My Profile
@@ -75,7 +75,7 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isUser &&
                             <>
-                                <li className="shadow-md mb-2 shadow-orange-300">
+                                <li className="shadow-md mb-3 shadow-orange-200">
                                     <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-orange-500" />
                                         Request Charity Role

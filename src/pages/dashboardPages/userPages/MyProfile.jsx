@@ -12,7 +12,7 @@ const MyProfile = () => {
     : 'N/A';
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-lg shadow-teal-500 rounded-lg mt-10 p-6">
+    <div className="max-w-md mx-auto bg-white shadow-lg shadow-teal-200 rounded-lg mt-10 p-6">
       {/* Profile Picture Centered */}
       <div className="flex justify-center mb-4">
         {user?.photoURL ? (
