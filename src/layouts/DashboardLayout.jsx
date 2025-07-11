@@ -4,10 +4,15 @@ import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai'; // Home icon
 import { FaRegAddressCard } from 'react-icons/fa';
+import useAuth from '../hooks/useAuth';
+import { useNavigation } from 'react-router';
 
 const DashboardLayout = () => {
+    const navigation = useNavigation();
+    const navigationLoading = navigation.state === 'loading'
+    const { authLoading } = useAuth()
     const { role, roleLoading, isUser } = useUserRole();
-    if (roleLoading) return <Loading />
+    if (roleLoading || authLoading) return <Loading />
     console.log({ role })
     return (
         <>
@@ -48,7 +53,10 @@ const DashboardLayout = () => {
                                 </div>
                             </div>
                             {/* Page content here */}
-                            <Outlet />
+                            {
+                                navigationLoading ? <Loading /> : <Outlet />
+                            }
+
                         </div>
 
                     </div>
@@ -58,15 +66,15 @@ const DashboardLayout = () => {
                     <ul className="menu bg-teal-100/50 border border-gray-500/50  text-base-content min-h-full w-80 p-4">
                         {/* Sidebar content here */}
                         <Link to='/'>
-                            <button className='btn bg-teal-50 text-3xl italic text-gray-700 shadow-inner border border-gray-400/50 cursor-pointer mb-6 w-full'>flexora </button>
+                            <button className='btn bg-teal-200 text-3xl italic text-gray-700 shadow-inner border border-gray-400/50 cursor-pointer mb-6 w-full'>flexora </button>
                         </Link>
-                        <li className='shadow-md mb-3 shadow-orange-200 '>
+                        <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
                             <NavLink to="/" className="flex items-center gap-2">
                                 <AiFillHome className="text-xl text-orange-500" />
                                 Home
                             </NavLink>
                         </li>
-                        <li className='shadow-md mb-3 shadow-orange-200'>
+                        <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
                             <NavLink to="/dashboard/profile" className="flex items-center gap-2">
                                 <AiOutlineUser className="text-xl text-blue-600" />
                                 My Profile
@@ -75,7 +83,7 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isUser &&
                             <>
-                                <li className="shadow-md mb-3 shadow-orange-200">
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                     <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-orange-500" />
                                         Request Charity Role
