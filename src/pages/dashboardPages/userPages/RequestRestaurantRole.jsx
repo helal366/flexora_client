@@ -41,6 +41,24 @@ const RequestRestaurantRole = () => {
                     />
                     {errors?.restaurant_email && <p className='text-xs text-red-500'>{errors.restaurant_email?.message}</p>}
                 </div>
+                {/* restaurant location */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Restaurant Location</label>
+                    <input type="text"  className='input w-full'
+                    placeholder='Restaurant location'
+                    {...register('restaurant_location', {required: 'Restaurant location is required.'})}
+                    />
+                    {errors?.restaurant_location && <p className='text-xs text-red-500'>{errors.restaurant_location?.message}</p>}
+                </div>
+                {/* restaurant contact number */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Restaurant Contact Number</label>
+                    <input type="tel"  className='input w-full'
+                    placeholder='Restaurant contact number'
+                    {...register('restaurant_contact', {required: 'Restaurant contact number is required.'})}
+                    />
+                    {errors?.restaurant_contact && <p className='text-xs text-red-500'>{errors.restaurant_contact?.message}</p>}
+                </div>
             </form>
         </section>
     );
