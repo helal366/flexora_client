@@ -19,7 +19,7 @@ const RequestCherityRole = () => {
 
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
-            const paymentIntentRes = await axiosSecure.post('/create-payment-intent', { amount: 50 })
+            const paymentIntentRes = await axiosSecure.post('/create-payment-intent', { amount: 25 })
             return paymentIntentRes?.data?.clientSecret
         }
     })
@@ -36,7 +36,7 @@ const RequestCherityRole = () => {
             const charityRequestRes = await axiosSecure.patch(`/users/charity_request/${userEmail}`, patchData)
             return charityRequestRes
         },
-        onSuccess: ()=>{
+        onSuccess: () => {
             queryClient.invalidateQueries(['userInfo', userEmail])
         }
     })
@@ -101,7 +101,7 @@ const RequestCherityRole = () => {
                 // save transection
                 await saveTransection.mutateAsync({
                     transection_id: paymentIntent.id,
-                    amount: 50,
+                    amount: 25,
                     currency: 'USD',
                     user_email: userEmail,
                     user_name: userName,
@@ -112,10 +112,13 @@ const RequestCherityRole = () => {
             // PATCH user in DB with organization_name, mission, role
             const res = await patchCharityRequest.mutateAsync({
                 organization_name: formData?.organization_name,
+                organization_email: formData?.organization_email,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
-                amount: 50,
-                currency: 'USD'
+                amount: 25,
+                currency: 'USD',
+                role: 'charity_role_request',
+                charity_request_time: new Date()
             });
             if (res?.data?.updateResult?.modifiedCount > 0) {
                 Swal.fire({
@@ -180,6 +183,16 @@ const RequestCherityRole = () => {
                     />
                     {errors?.organization_name && <p className='text-xs text-red-500'>{errors.organization_name?.message}</p>}
                 </div>
+                {/* organization email */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Organization Email</label>
+                    <input type='text'
+                        className='input w-full'
+                        placeholder='Organization Email'
+                        {...register('organization_email', { required: 'Organization email is required.' })}
+                    />
+                    {errors?.organization_email && <p className='text-xs text-red-500'>{errors.organization_email?.message}</p>}
+                </div>
                 {/* mission statement */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Mission Statement</label>
@@ -195,14 +208,14 @@ const RequestCherityRole = () => {
                 <div className='p-4 border rounded'>
                     <p className='text-lg font-medium mb-3'>Payment amount:
                         <span className='text-green-800 font-semibold ml-2'>
-                            $50
+                            $25
                         </span>
                     </p>
                     <CardElement className='p-2 border border-gray-400/50 shadow-md bg-teal-100 min-h-[50px]' />
                     {/* payment  */}
                     <button type='submit' disabled={!stripe}
                         className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'>
-                        Pay $50
+                        Pay $25
                     </button>
                 </div>
             </form>

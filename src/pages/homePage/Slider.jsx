@@ -7,7 +7,7 @@ import slideThree from '../../assets/bannerThree.png'
 
 const Slider = () => {
     return (
-        <Carousel autoPlay={true} infiniteLoop={true} interval={1500}>
+        <Carousel autoPlay={true} infiniteLoop={true} interval={1500} showThumbs={false}>
             <div className='border border-gray-400/50 rounded'>
                 <img className='roounded' src={slideOne} alt="slide one" />
                 <p></p>

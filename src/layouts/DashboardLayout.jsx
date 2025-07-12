@@ -12,7 +12,9 @@ const DashboardLayout = () => {
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
     const { role, roleLoading, isUser } = useUserRole();
-    if (roleLoading || authLoading) return <Loading />
+    if (roleLoading || authLoading){
+        return <Loading />
+    }
     console.log({ role })
     return (
         <>

@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useAuth from './useAuth';
 import useAxiosSecure from './useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import queryClient from '../api/queryClient';
 
 const useUserRole = () => {
     const {user, authLoading}=useAuth();
     const axiosSecure=useAxiosSecure();
+     // Force refetch when user becomes available
+  useEffect(() => {
+    if (user?.email) {
+      queryClient.invalidateQueries(['userInfo', user.email]);
+    }
+  }, [user?.email]);
     const {data: userInfo, isPending:roleLoading, isError, error}=useQuery(
         {
             queryKey: ['userInfo', user?.email],
-            enabled: !!user?.email && !authLoading,
             queryFn: async()=>{
                 const res=await axiosSecure.get(`/users?email=${user?.email}`);
                 // console.log('response', res)
                 return res?.data;
-            }
+            },
+            refetchOnWindowFocus: true,
+            retry: 2,
+            enabled: !!user?.email && !authLoading,
         }
     );
-    // console.log(userInfo)
+    console.log('roleLoading:', roleLoading, 'userInfo:', userInfo);
     const role=userInfo?.user_by_email?.role
     const isUser=role==='user';
     const isCharity=role==='charity';
