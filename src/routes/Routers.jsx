@@ -15,8 +15,9 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import UserRoute from "./UserRoute";
 import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
 import ForbiddenPage from './../pages/ForbiddenPage';
-import RequestCherityRole from "../pages/dashboardPages/userPages/RequestCherityRole";
 import StripeProviderRoute from "./StripeProviderRoute";
+import RequestRestaurantRole from "../pages/dashboardPages/userPages/RequestRestaurantRole";
+import RequestCharityRole from "../pages/dashboardPages/userPages/RequestCharityRole";
 
 const router = createBrowserRouter([
     {
@@ -83,8 +84,14 @@ const router = createBrowserRouter([
                 path: 'request_charity_role',
                 element: <UserRoute>
                     <StripeProviderRoute>
-                        <RequestCherityRole />
+                        <RequestCharityRole />
                     </StripeProviderRoute>
+                </UserRoute>
+            },
+            {
+                path: 'request_restaurant_role',
+                element: <UserRoute>
+                        <RequestRestaurantRole />
                 </UserRoute>
             }
         ]

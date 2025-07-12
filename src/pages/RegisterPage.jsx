@@ -46,6 +46,7 @@ const RegisterPage = () => {
         }
     })
     const onSubmit = async data => {
+        // image file
         const file = data?.image?.[0]
         if (!file) {
             Swal.fire({
@@ -64,10 +65,10 @@ const RegisterPage = () => {
         formData.append("cloud_name", `${import.meta.env.VITE_cloud_name}`);
         try {
             const result = await axios.post(`${import.meta.env.VITE_cloudinary_url}`, formData);
-            const uploadedImageURL = result?.data?.secure_url;
-            console.log({ uploadedImageURL });
+            const uploadedProfileImageURL = result?.data?.secure_url;
+            console.log({ uploadedProfileImageURL });
             console.log(data?.name);
-            if (!uploadedImageURL) throw new Error('Failed to create image url!');
+            if (!uploadedProfileImageURL) throw new Error('Failed to create image url!');
 
             // user registration   
             const userCredential = await userRegister(data?.email, data?.password);
@@ -77,7 +78,7 @@ const RegisterPage = () => {
             console.log('from registration page, data: ',data)
             const updateInfo = {
                 displayName: data?.name,
-                photoURL: uploadedImageURL,
+                photoURL: uploadedProfileImageURL,
             }
             console.log({ updateInfo })
             // update profile info
@@ -91,7 +92,7 @@ const RegisterPage = () => {
             const userInfo = {
                 name: data?.name,
                 email: data?.email,
-                photoURL: uploadedImageURL,
+                photoURL: uploadedProfileImageURL,
                 role: 'user',
                 contact_number:  rawNumber,
                 created_at: new Date().toISOString(),

@@ -12,7 +12,7 @@ const DashboardLayout = () => {
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
     const { role, roleLoading, isUser } = useUserRole();
-    if (roleLoading || authLoading){
+    if (roleLoading || authLoading) {
         return <Loading />
     }
     console.log({ role })
@@ -91,6 +91,13 @@ const DashboardLayout = () => {
                                         Request Charity Role
                                     </NavLink>
                                 </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/request_restaurant_role" className="flex items-center gap-2">
+                                        <FaRegAddressCard className="text-xl text-green-600" />
+                                        Request Restaurant Role
+                                    </NavLink>
+                                </li>
+
                             </>
                         }
                     </ul>

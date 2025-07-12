@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import queryClient from './../../../api/queryClient';
 
 
-const RequestCherityRole = () => {
+const RequestCharityRole = () => {
     const axiosSecure = useAxiosSecure()
     const { user } = useAuth();
     const userEmail = user?.email;
@@ -223,4 +223,4 @@ const RequestCherityRole = () => {
     );
 };
 
-export default RequestCherityRole;
+export default RequestCharityRole;
