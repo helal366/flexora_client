@@ -12,12 +12,13 @@ const useUserRole = () => {
             enabled: !!user?.email && !authLoading,
             queryFn: async()=>{
                 const res=await axiosSecure.get(`/users?email=${user?.email}`);
-                console.log('response', res)
+                // console.log('response', res)
                 return res?.data;
             }
         }
     );
-    const role=userInfo?.role
+    // console.log(userInfo)
+    const role=userInfo?.user_by_email?.role
     const isUser=role==='user';
     const isCharity=role==='charity';
     const isRestaurant=role==='restaurant';

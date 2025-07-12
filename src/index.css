@@ -25,7 +25,7 @@ a.active {
   box-shadow: 0 0 2px 1px rgba(20, 184, 166, 0.6);
 }
 .myButton{
-  @apply rounded-lg py-2 text-gray-200 bg-teal-700 data-hover:bg-teal-800 data-active:bg-teal-950 cursor-pointer
+  @apply rounded-lg py-2 px-5 text-gray-200 bg-teal-700 data-hover:bg-teal-800 data-active:bg-teal-950 cursor-pointer
 }
 
 

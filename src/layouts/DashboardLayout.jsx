@@ -10,7 +10,7 @@ import { useNavigation } from 'react-router';
 const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
-    const { authLoading } = useAuth()
+    const { authLoading, user } = useAuth()
     const { role, roleLoading, isUser } = useUserRole();
     if (roleLoading || authLoading) return <Loading />
     console.log({ role })
@@ -47,8 +47,8 @@ const DashboardLayout = () => {
                                     <ul className="menu menu-horizontal">
                                         {/* Navbar menu content here */}
 
-                                        <li><a>Navbar Item 1</a></li>
-                                        <li><a>Navbar Item 2</a></li>
+                                        <li><a>{role}</a></li>
+                                        <li><a>{user?.email}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -91,7 +91,6 @@ const DashboardLayout = () => {
                                 </li>
                             </>
                         }
-                        <li><a>Sidebar Item 2</a></li>
                     </ul>
                 </div>
             </section>

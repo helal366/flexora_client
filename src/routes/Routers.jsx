@@ -16,6 +16,7 @@ import UserRoute from "./UserRoute";
 import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
 import ForbiddenPage from './../pages/ForbiddenPage';
 import RequestCherityRole from "../pages/dashboardPages/userPages/RequestCherityRole";
+import StripeProviderRoute from "./StripeProviderRoute";
 
 const router = createBrowserRouter([
     {
@@ -26,61 +27,65 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: (
-                <Suspense fallback={<Loading/>}>
-                    <HomePage />
-                </Suspense>
+                    <Suspense fallback={<Loading />}>
+                        <HomePage />
+                    </Suspense>
                 )
             },
             {
                 path: '/all-donations',
                 element: (
-                <Suspense fallback={<Loading/>}>
-                <PrivateRoute>
-                    <AllDonations />
-                </PrivateRoute>
-                </Suspense>
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute>
+                            <AllDonations />
+                        </PrivateRoute>
+                    </Suspense>
                 )
             },
             {
                 path: '/about-us',
                 element: (
-                <Suspense fallback={<Loading/>}>
-                    <PrivateRoute><AboutPage /></PrivateRoute>
-                </Suspense>
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute><AboutPage /></PrivateRoute>
+                    </Suspense>
                 )
-                
+
             },
             {
                 path: '/contact',
                 element: (
-                <Suspense fallback={<Loading/>}>
-                    <PrivateRoute><ContactPage /></PrivateRoute>
-                </Suspense>
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute><ContactPage /></PrivateRoute>
+                    </Suspense>
                 )
-              
+
             },
             {
                 path: '/forbidden',
-                element: <ForbiddenPage/>
+                element: <ForbiddenPage />
             }
         ]
     },
     {
         path: '/dashboard',
         element: (
-                <Suspense fallback={<Loading/>}>
-                    <PrivateRoute><DashboardLayout /></PrivateRoute>
-                </Suspense>
-                ),
+            <Suspense fallback={<Loading />}>
+                <PrivateRoute><DashboardLayout /></PrivateRoute>
+            </Suspense>
+        ),
         errorElement: <ErrorPage />,
         children: [
             {
                 path: 'profile',
-                element: <MyProfile/>
+                element: <MyProfile />
             },
             {
                 path: 'request_charity_role',
-                element: <UserRoute><RequestCherityRole/></UserRoute>
+                element: <UserRoute>
+                    <StripeProviderRoute>
+                        <RequestCherityRole />
+                    </StripeProviderRoute>
+                </UserRoute>
             }
         ]
     },
