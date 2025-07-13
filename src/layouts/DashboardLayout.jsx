@@ -2,8 +2,8 @@ import React from 'react';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
-import { AiFillHome, AiOutlineUser } from 'react-icons/ai'; // Home icon
-import { FaRegAddressCard } from 'react-icons/fa';
+import { AiFillHome  } from 'react-icons/ai'; // Home icon
+import { FaRegAddressCard, FaUser, FaUsersCog } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 
@@ -11,7 +11,7 @@ const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
-    const { role, roleLoading, isUser } = useUserRole();
+    const { role, roleLoading, isUser, isAdmin } = useUserRole();
     if (roleLoading || authLoading) {
         return <Loading />
     }
@@ -76,15 +76,16 @@ const DashboardLayout = () => {
                                 Home
                             </NavLink>
                         </li>
-                        <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
-                            <NavLink to="/dashboard/profile" className="flex items-center gap-2">
-                                <AiOutlineUser className="text-xl text-blue-600" />
-                                My Profile
-                            </NavLink>
-                        </li>
+
                         {
                             !roleLoading && isUser &&
                             <>
+                                <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                    <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                        <FaUser className="text-xl text-blue-600" />
+                                        My Profile
+                                    </NavLink>
+                                </li>
                                 <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                     <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-orange-500" />
@@ -98,6 +99,23 @@ const DashboardLayout = () => {
                                     </NavLink>
                                 </li>
 
+                            </>
+                        }
+                        {
+                            !roleLoading && isAdmin &&
+                            <>
+                                <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                    <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                        <FaUser className="text-xl text-blue-600" />
+                                        Admin Profile
+                                    </NavLink>
+                                </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/manage_users" className="flex items-center gap-2">
+                                        <FaUsersCog className="text-xl text-purple-600" />
+                                        Manage Users
+                                    </NavLink>
+                                </li>
                             </>
                         }
                     </ul>

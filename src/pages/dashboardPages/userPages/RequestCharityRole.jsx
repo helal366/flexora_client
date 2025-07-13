@@ -12,7 +12,7 @@ const RequestCharityRole = () => {
     const axiosSecure = useAxiosSecure()
     const { user } = useAuth();
     const userEmail = user?.email;
-    const userName = user?.displayName
+    const userName = user?.displayName;
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const stripe = useStripe();
     const elements = useElements();
@@ -33,7 +33,7 @@ const RequestCharityRole = () => {
 
     const patchCharityRequest = useMutation({
         mutationFn: async (patchData) => {
-            const charityRequestRes = await axiosSecure.patch(`/users/charity_request/${userEmail}`, patchData)
+            const charityRequestRes = await axiosSecure.patch(`/users/role_request/${userEmail}`, patchData)
             return charityRequestRes
         },
         onSuccess: () => {

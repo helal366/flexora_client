@@ -1,9 +1,9 @@
 import React from 'react';
-import useAuth from '../../../hooks/useAuth';
-import useUserRole from '../../../hooks/useUserRole';
+import useAuth from '../../hooks/useAuth';
+import useUserRole from '../../hooks/useUserRole';
 
-const MyProfile = () => {
-  const { user } = useAuth();
+const ProfilePage = () => {
+    const { user } = useAuth();
   const {role, userInfo}=useUserRole();
   // console.log('user info from my profile', userInfo)
   const contact=userInfo?.user_by_email?.contact_number;
@@ -11,9 +11,8 @@ const MyProfile = () => {
   const joinedDate = user?.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString()
     : 'N/A';
-
-  return (
-    <div className="max-w-md mx-auto bg-white shadow-lg shadow-teal-200 rounded-lg mt-10 p-6">
+    return (
+       <section className="max-w-md mx-auto bg-white shadow-lg shadow-teal-200 rounded-lg mt-10 p-6">
       {/* Profile Picture Centered */}
       <div className="flex justify-center mb-4">
         {user?.photoURL ? (
@@ -52,8 +51,8 @@ const MyProfile = () => {
         {/* Role shown only if not a regular user */}
         
       </div>
-    </div>
-  );
+    </section>
+    );
 };
 
-export default MyProfile;
+export default ProfilePage;

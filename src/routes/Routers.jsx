@@ -13,11 +13,13 @@ import HomePage from "../pages/homePage/HomePage";
 import AllDonations from "../pages/allDonationsPage/AllDonations";
 import DashboardLayout from "../layouts/DashboardLayout";
 import UserRoute from "./UserRoute";
-import MyProfile from "../pages/dashboardPages/userPages/MyProfile";
 import ForbiddenPage from './../pages/ForbiddenPage';
 import StripeProviderRoute from "./StripeProviderRoute";
 import RequestRestaurantRole from "../pages/dashboardPages/userPages/RequestRestaurantRole";
 import RequestCharityRole from "../pages/dashboardPages/userPages/RequestCharityRole";
+import ProfilePage from "../pages/dashboardPages/ProfilePage";
+import AdminRoute from "./AdminRoute";
+import ManageUsers from "../pages/dashboardPages/adminPages/ManageUsers";
 
 const router = createBrowserRouter([
     {
@@ -78,7 +80,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: 'profile',
-                element: <MyProfile />
+                element: <ProfilePage />
             },
             {
                 path: 'request_charity_role',
@@ -93,6 +95,12 @@ const router = createBrowserRouter([
                 element: <UserRoute>
                         <RequestRestaurantRole />
                 </UserRoute>
+            },
+            {
+                path: 'manage_users',
+                element: <AdminRoute>
+                    <ManageUsers/>
+                </AdminRoute>
             }
         ]
     },

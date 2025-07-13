@@ -18,8 +18,25 @@ const RequestRestaurantRole = () => {
 
     const patchRestaurantRequest = useMutation({
         mutationFn: async (patchData) => {
-            const restaurantRequestRes = await axiosSecure.patch('/users/restaurant_request', patchData)
+            const restaurantRequestRes = await axiosSecure.patch(`/users/role_request/${userEmail}`, patchData)
             return restaurantRequestRes
+        },
+        onSuccess: (res) => {
+            if (res?.data?.updateResult?.modifiedCount > 0) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Restaurant role request submitted successfully.',
+                    timer: 1500
+                });
+                reset();
+            }
+        },
+        onError: () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Update failed!',
+                timer: 1500
+            });
         }
     })
     const onSubmit = async (data) => {
@@ -54,17 +71,20 @@ const RequestRestaurantRole = () => {
             }
             // patch user in database
             const res = await patchRestaurantRequest.mutateAsync({
-                restaurant_name: formData?.restaurant_name,
-                restaurant_email: formData?.restaurant_email,
+                restaurant_name: data?.restaurant_name,
+                restaurant_tagline: data?.restaurant_tagline,
+                restaurant_email: data?.restaurant_email,
                 restaurant_contact: formattedContact,
-                restaurant_location: formData?.restaurant_location,
-                restaurant_address: formData?.restaurant_address,
-                restaurant_logo: uploadedRestaurantLogo
+                restaurant_location: data?.restaurant_location,
+                restaurant_address: data?.restaurant_address,
+                restaurant_logo: uploadedRestaurantLogo,
+                role: 'restaurant_role_request',
+                restaurant_request_time: new Date()
             })
             if (res?.data?.updateResult?.modifiedCount > 0) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Charity role request submitted successfully.',
+                    title: 'Restaurant role request submitted successfully.',
                     timer: 1500
                 }),
                     reset()
@@ -108,6 +128,15 @@ const RequestRestaurantRole = () => {
                         {...register('restaurant_name', { required: 'Restaurant name is required.' })}
                     />
                     {errors?.restaurant_name && <p className='text-xs text-red-500'>{errors.restaurant_name?.message}</p>}
+                </div>
+                {/* restaurant tagline */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Restaurant Tag Line</label>
+                    <input type="text" className='input w-full'
+                        placeholder='Restaurant tag line'
+                        {...register('restaurant_tagline', { required: 'Restaurant tag line is required.' })}
+                    />
+                    {errors?.restaurant_tagline && <p className='text-xs text-red-500'>{errors.restaurant_tagline?.message}</p>}
                 </div>
                 {/* restaurant email */}
                 <div>
