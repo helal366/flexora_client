@@ -19,7 +19,7 @@ import RequestRestaurantRole from "../pages/dashboardPages/userPages/RequestRest
 import RequestCharityRole from "../pages/dashboardPages/userPages/RequestCharityRole";
 import ProfilePage from "../pages/dashboardPages/ProfilePage";
 import AdminRoute from "./AdminRoute";
-import ManageUsers from "../pages/dashboardPages/adminPages/ManageUsers";
+import ManageUsers from "../pages/dashboardPages/adminPages/manageUsers/ManageUsers";
 
 const router = createBrowserRouter([
     {

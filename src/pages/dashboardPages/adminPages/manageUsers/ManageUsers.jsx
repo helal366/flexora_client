@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import Loading from '../../../components/loadingComponents/Loading';
+import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import Loading from '../../../../components/loadingComponents/Loading';
 
 const ManageUsers = () => {
     const axiosSecure=useAxiosSecure()
@@ -41,7 +41,11 @@ const ManageUsers = () => {
                             <td>{user?.email}</td>
                             <td className='capitalize'>{user?.role || 'user'}</td>
                             <td className='flex gap-2 '>
-                                <button className='btn whitespace-nowrap bg-teal-700 text-gray-200 hover:bg-teal-800'>Make Admin</button>
+                                <button 
+                                onClick={handleMakeAdmin}
+                                className='btn whitespace-nowrap bg-teal-700 text-gray-200 hover:bg-teal-800'>
+                                    Make Admin
+                                </button>
                                 <button className='btn whitespace-nowrap bg-green-700 text-gray-200 hover:bg-green-800'>Make Restaurant</button>
                                 <button className='btn whitespace-nowrap bg-yellow-700 text-gray-200 hover:bg-yellow-800'>Make Charity</button>
                                 <button className='btn whitespace-nowrap bg-red-700 text-gray-200 hover:bg-red-800'>Delete User</button>
