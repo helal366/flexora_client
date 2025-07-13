@@ -126,7 +126,7 @@ const RequestCharityRole = () => {
                 organization_contact: formattedContact,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
-                amount: 25,
+                amount_paid: 25,
                 currency: 'USD',
                 role: 'charity_role_request',
                 charity_request_time: new Date()

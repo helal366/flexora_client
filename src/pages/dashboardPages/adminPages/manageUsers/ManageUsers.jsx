@@ -5,6 +5,7 @@ import Loading from '../../../../components/loadingComponents/Loading';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
 import queryClient from '../../../../api/queryClient';
+import RoleButton from './RoleButton';
 
 const ManageUsers = () => {
     const { user } = useAuth();
@@ -41,6 +42,34 @@ const ManageUsers = () => {
             });
         }
     })
+    const deleteUserMutation=useMutation({
+        mutationFn: async({id})=>{
+            return axiosSecure.delete(`/users/${id}`)
+        },
+        onSuccess: (_, variables)=>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: `${variables?.email} has been deleted!`,
+                showConfirmButton: true,
+            })
+        }
+    })
+    const confirmRoleChange = (candidateEmail, role, updateInfo) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: `You  want to make this user ${role}`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: `Yes, make ${role.charAt(0).toUpperCase() + role.slice(1)}`
+        }).then((result) => {
+            if (result?.isConfirmed) {
+                changeRoleMutation.mutate({ candidateEmail, updateInfo })
+            }
+        })
+    }
     const handleRoleChange = (candidateEmail, role) => {
         const updateInfo = {
             role,
@@ -48,39 +77,32 @@ const ManageUsers = () => {
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
         }
-        Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure?',
-            text: 'You  want to make this user Admin',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, make Admin'
-        }).then((result) => {
-            if (result?.isConfirmed) {
-                changeRoleMutation.mutate({ candidateEmail, updateInfo })
-            }
-        })
+        confirmRoleChange(candidateEmail, role, updateInfo)
+
     }
     const handleCharityRoleChange = (candidateEmail, role) => {
         const updateInfo = {
             role,
             assigned_admin_name: adminName,
             transection_id: 'not_applicable',
+            amount_paid: 'not_applicable',
+            currency: 'not_applicable',
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
         }
+        confirmRoleChange(candidateEmail, role, updateInfo)
+
+    }
+    const handleDeleteUser = ({id, name, email}) => {
         Swal.fire({
-            icon: 'warning',
             title: 'Are you sure?',
-            text: 'You  want to make this user Admin',
+            text: `This will permanently delete ${name}`,
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, make Admin'
-        }).then((result) => {
-            if (result?.isConfirmed) {
-                changeRoleMutation.mutate({ candidateEmail, updateInfo })
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result)=>{
+            if(result?.isConfirmed){
+                 deleteUserMutation.mutate({id, email});
             }
         })
     }
@@ -112,28 +134,38 @@ const ManageUsers = () => {
                                     <td>{u?.email}</td>
                                     <td className='capitalize'>{u?.role || 'user'}</td>
                                     <td className='flex gap-2 '>
-                                        <button
+
+                                        <RoleButton
+                                            userRole={u?.role}
+                                            label='Make Admin'
+                                            bgColor='bg-teal-700'
+                                            hoverColor='hover:bg-teal-900'
+                                            isLoading={changeRoleMutation?.isPending}
                                             onClick={() => handleRoleChange({ candidateEmail: u?.email, role: 'admin' })}
-                                            className='btn whitespace-nowrap bg-teal-700 text-gray-200 hover:bg-teal-800'
-                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
-                                        >
-                                            Make Admin
-                                        </button>
-                                        <button
+                                        />
+
+                                        <RoleButton
+                                            userRole={u?.role}
+                                            label='Make Restaurant'
+                                            bgColor='bg-green-700'
+                                            hoverColor='hover:bg-green-900'
+                                            isLoading={changeRoleMutation?.isPending}
                                             onClick={() => handleRoleChange({ candidateEmail: u?.email, role: 'restaurant' })}
-                                            className='btn whitespace-nowrap bg-green-700 text-gray-200 hover:bg-green-800'
-                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
-                                        >
-                                            Make Restaurant
-                                        </button>
-                                        <button
+                                        />
+
+                                        <RoleButton
+                                            userRole={u?.role}
+                                            label='Make Charity'
+                                            bgColor='bg-yellow-700'
+                                            hoverColor='hover:bg-yellow-900'
+                                            isLoading={changeRoleMutation?.isPending}
                                             onClick={() => handleCharityRoleChange({ candidateEmail: u?.email, role: 'charity' })}
-                                            className='btn whitespace-nowrap bg-yellow-700 text-gray-200 hover:bg-yellow-800'
-                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
-                                        >
-                                            Make Charity
+                                        />
+                                        <button
+                                            onClick={() => handleDeleteUser({ id: u?._id, name: u?.name, email: u?.email })}
+                                            className='btn whitespace-nowrap bg-red-700 text-gray-200 hover:bg-red-800'>
+                                            Delete User
                                         </button>
-                                        <button className='btn whitespace-nowrap bg-red-700 text-gray-200 hover:bg-red-800'>Delete User</button>
                                     </td>
                                 </tr>
                             ))
