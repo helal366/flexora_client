@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 const RegisterPage = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
-    const { userRegister, userProfileUpdate } = useAuth();
+    const { userRegister, userProfileUpdate, authLoading } = useAuth();
     const location = useLocation();
     const desire = location?.desire ? location?.desire : '/';
     const { register,
@@ -163,13 +163,14 @@ const RegisterPage = () => {
                                 {errors.password && (
                                     <p className="text-red-600 text-xs">{errors?.password?.message}</p>
                                 )}
-                                <button type='submit' disabled={mutation.isPending} className="btn btn-neutral mt-4">
-                                    {mutation.isPending ? (
+                                <button type='submit' 
+                                disabled={mutation.isPending || authLoading} 
+                                className={`btn mt-4 ${mutation.isPending || authLoading ?'bg-gray-300 text-black cursor-not-allowed':'btn-neutral'}`}>
+                                    {mutation.isPending || authLoading ? (
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
                                         </>
                                     ) : 'Register'}
-
                                 </button>
                             </fieldset>
                         </form>

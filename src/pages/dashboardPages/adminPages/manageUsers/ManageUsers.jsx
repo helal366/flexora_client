@@ -2,12 +2,14 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Loading from '../../../../components/loadingComponents/Loading';
-import { Swal } from 'sweetalert2';
+import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
+import queryClient from '../../../../api/queryClient';
 
 const ManageUsers = () => {
-    const {user}=useAuth();
-    const adminEmail=user?.email
+    const { user } = useAuth();
+    const adminEmail = user?.email;
+    const adminName = user?.name;
     const axiosSecure = useAxiosSecure()
     const { data: users = [], isPending } = useQuery({
         queryKey: ['users'],
@@ -17,14 +19,35 @@ const ManageUsers = () => {
         }
     });
     // console.log(users)
-    const makeAdminMutation=useMutation({
-        mutationFn: async(candidateEmail)=>{
-            const res=await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`)
+    const changeRoleMutation = useMutation({
+        mutationFn: async ({ candidateEmail, updateInfo }) => {
+            return await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
         },
-        onSuccess:
-        onError:
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries(['users']),
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: `${variables?.candidateEmail} has been made an admin.`,
+                    showConfirmButton: true
+                });
+        },
+        onError: () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to directly update role by admin.',
+                showConfirmButton: true
+            });
+        }
     })
-    const handleMakeAdmin = (candidateEmail) => {
+    const handleRoleChange = (candidateEmail, role) => {
+        const updateInfo = {
+            role,
+            assigned_admin_name: adminName,
+            assigned_admin_email: adminEmail,
+            assigned_at: new Date().toISOString()
+        }
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -32,10 +55,32 @@ const ManageUsers = () => {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText:'Yes, make Admin'
-        }).then((result)=>{
-            if(result?.isConfirmed){
-                makeAdminMutation.mutate(candidateEmail)
+            confirmButtonText: 'Yes, make Admin'
+        }).then((result) => {
+            if (result?.isConfirmed) {
+                changeRoleMutation.mutate({ candidateEmail, updateInfo })
+            }
+        })
+    }
+    const handleCharityRoleChange = (candidateEmail, role) => {
+        const updateInfo = {
+            role,
+            assigned_admin_name: adminName,
+            transection_id: 'not_applicable',
+            assigned_admin_email: adminEmail,
+            assigned_at: new Date().toISOString()
+        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'You  want to make this user Admin',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, make Admin'
+        }).then((result) => {
+            if (result?.isConfirmed) {
+                changeRoleMutation.mutate({ candidateEmail, updateInfo })
             }
         })
     }
@@ -68,13 +113,26 @@ const ManageUsers = () => {
                                     <td className='capitalize'>{u?.role || 'user'}</td>
                                     <td className='flex gap-2 '>
                                         <button
-                                            onClick={()=>handleMakeAdmin({candidateEmail: u?.email})}
+                                            onClick={() => handleRoleChange({ candidateEmail: u?.email, role: 'admin' })}
                                             className='btn whitespace-nowrap bg-teal-700 text-gray-200 hover:bg-teal-800'
-                                            disabled={u?.role='admin'}>
+                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
+                                        >
                                             Make Admin
                                         </button>
-                                        <button className='btn whitespace-nowrap bg-green-700 text-gray-200 hover:bg-green-800'>Make Restaurant</button>
-                                        <button className='btn whitespace-nowrap bg-yellow-700 text-gray-200 hover:bg-yellow-800'>Make Charity</button>
+                                        <button
+                                            onClick={() => handleRoleChange({ candidateEmail: u?.email, role: 'restaurant' })}
+                                            className='btn whitespace-nowrap bg-green-700 text-gray-200 hover:bg-green-800'
+                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
+                                        >
+                                            Make Restaurant
+                                        </button>
+                                        <button
+                                            onClick={() => handleCharityRoleChange({ candidateEmail: u?.email, role: 'charity' })}
+                                            className='btn whitespace-nowrap bg-yellow-700 text-gray-200 hover:bg-yellow-800'
+                                            disabled={changeRoleMutation?.isPending || ['admin', 'restaurant', 'charity'].includes(u?.role)}
+                                        >
+                                            Make Charity
+                                        </button>
                                         <button className='btn whitespace-nowrap bg-red-700 text-gray-200 hover:bg-red-800'>Delete User</button>
                                     </td>
                                 </tr>

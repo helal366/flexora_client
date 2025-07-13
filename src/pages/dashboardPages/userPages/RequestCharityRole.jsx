@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import queryClient from './../../../api/queryClient';
+import { useNavigate } from 'react-router';
 
 
 const RequestCharityRole = () => {
@@ -16,6 +17,7 @@ const RequestCharityRole = () => {
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const stripe = useStripe();
     const elements = useElements();
+    const navigate=useNavigate()
 
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
@@ -109,10 +111,19 @@ const RequestCharityRole = () => {
 
                 })
             }
+            let formattedContact = formData?.organization_contact ? formData.organization_contact.trim() : '';
+            formattedContact = formattedContact.replace(/\D/g, ''); // remove any non-digit
+            if (formattedContact.length === 11 && formattedContact.startsWith('0')) {
+                formattedContact = '+880' + formattedContact.slice(1)
+            } else {
+                // Handle invalid or unexpected formats
+                throw new Error('Invalid contact number format. Please enter a valid 11 digit bangladeshi number.');
+            }
             // PATCH user in DB with organization_name, mission, role
             const res = await patchCharityRequest.mutateAsync({
                 organization_name: formData?.organization_name,
                 organization_email: formData?.organization_email,
+                organization_contact: formattedContact,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
                 amount: 25,
@@ -126,7 +137,8 @@ const RequestCharityRole = () => {
                     title: 'Charity role request submitted successfully.',
                     timer: 1500
                 }),
-                    reset()
+                    reset();
+                    navigate('/')
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -192,6 +204,18 @@ const RequestCharityRole = () => {
                         {...register('organization_email', { required: 'Organization email is required.' })}
                     />
                     {errors?.organization_email && <p className='text-xs text-red-500'>{errors.organization_email?.message}</p>}
+                </div>
+                {/* organization contact */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Organization Contact</label>
+                    <input type='tel'
+                        inputMode='numeric'
+                        maxLength={11}
+                        className='input w-full'
+                        placeholder='Organization Contact'
+                        {...register('organization_contact', { required: 'Organization contact is required.', pattern: { value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit bangladeshi mobile number.' } })}
+                    />
+                    {errors?.organization_contact && <p className='text-xs text-red-500'>{errors.organization_contact?.message}</p>}
                 </div>
                 {/* mission statement */}
                 <div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
@@ -6,12 +6,18 @@ import { AiFillHome  } from 'react-icons/ai'; // Home icon
 import { FaRegAddressCard, FaUser, FaUsersCog } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
+import queryClient from '../api/queryClient';
 
 const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
     const { role, roleLoading, isUser, isAdmin } = useUserRole();
+    useEffect(() => {
+  if (user?.email) {
+    queryClient.invalidateQueries(['userInfo', user.email]);
+  }
+}, [user?.email]);
     if (roleLoading || authLoading) {
         return <Loading />
     }
