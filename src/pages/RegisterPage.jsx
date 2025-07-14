@@ -66,13 +66,14 @@ const RegisterPage = () => {
         try {
             const result = await axios.post(`${import.meta.env.VITE_cloudinary_url}`, formData);
             const uploadedProfileImageURL = result?.data?.secure_url;
-            console.log({ uploadedProfileImageURL });
+            console.log({ uploadedProfileImageURL});
             console.log(data?.name);
             if (!uploadedProfileImageURL) throw new Error('Failed to create image url!');
 
             // user registration   
             const userCredential = await userRegister(data?.email, data?.password);
             if (!userCredential?.user) throw new Error('Registration failed!')
+            const uid_firebase=userCredential?.user?.uid
 
             // updateInfo
             console.log('from registration page, data: ',data)
@@ -80,10 +81,8 @@ const RegisterPage = () => {
                 displayName: data?.name,
                 photoURL: uploadedProfileImageURL,
             }
-            console.log({ updateInfo })
             // update profile info
             await userProfileUpdate(updateInfo);
-
             // user info
             let rawNumber=data?.contact_number? data?.contact_number.trim():'';
             if(rawNumber.startsWith('0')){
@@ -97,7 +96,9 @@ const RegisterPage = () => {
                 contact_number:  rawNumber,
                 created_at: new Date().toISOString(),
                 last_login: new Date().toISOString(),
+                uid: uid_firebase
             }
+            console.log({ userInfo })
             // store user info in the database
             mutation.mutate(userInfo)
         } catch (err) {
@@ -106,7 +107,8 @@ const RegisterPage = () => {
                 title: 'Something went wrong!',
                 text: `${err}`,
                 showConfirmButton: true
-            })
+            });
+            return;
         }
     }
     return (

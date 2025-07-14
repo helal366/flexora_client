@@ -4,43 +4,47 @@ import app from './../firebase/firebase.config';
 import AuthContext from './AuthContext';
 import queryClient from '../api/queryClient';
 
-const auth=getAuth(app);
-const googleProvider= new GoogleAuthProvider()
-const AuthProvider = ({children}) => {
-    const [authLoading, setAuthLoading]=useState(true)
-    const [user, setUser]=useState(null)
-    const userRegister=(email, password)=>{
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider()
+const AuthProvider = ({ children }) => {
+    const [authLoading, setAuthLoading] = useState(true)
+    const [user, setUser] = useState(null)
+    const userRegister = (email, password) => {
         setAuthLoading(true)
-        return createUserWithEmailAndPassword(auth, email, password)
+        try {
+            return createUserWithEmailAndPassword(auth, email, password)
+        } finally {
+            setAuthLoading(false)
+        }
     }
-    const userLogin=(email, password)=>{
+    const userLogin = (email, password) => {
         setAuthLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
-    const googleLogin=()=>{
+    const googleLogin = () => {
         setAuthLoading(true)
         return signInWithPopup(auth, googleProvider)
     }
-    const userProfileUpdate=(updataInfo)=>{
+    const userProfileUpdate = (updataInfo) => {
         setAuthLoading(true)
         return updateProfile(auth.currentUser, updataInfo)
     }
-    const userLogout=()=>{
+    const userLogout = () => {
         setAuthLoading(true);
         queryClient.clear();
         return signOut(auth)
     }
-    useEffect(()=>{
-        const unSubscribe=onAuthStateChanged(auth, currentUser=>{
+    useEffect(() => {
+        const unSubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser);
             setAuthLoading(false)
         });
-        return ()=>{
+        return () => {
             unSubscribe()
         }
-    },[])
+    }, [])
     console.log('authLoading:', authLoading, 'user:', user);
-    const authInfo={
+    const authInfo = {
         user,
         setUser,
         authLoading,
@@ -52,9 +56,9 @@ const AuthProvider = ({children}) => {
         userLogout,
     }
     return (
-       <AuthContext value={authInfo}>
-        {children}
-       </AuthContext>
+        <AuthContext value={authInfo}>
+            {children}
+        </AuthContext>
     );
 };
 
