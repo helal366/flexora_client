@@ -17,7 +17,7 @@ const RequestCharityRole = () => {
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const stripe = useStripe();
     const elements = useElements();
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
@@ -138,7 +138,7 @@ const RequestCharityRole = () => {
                     timer: 1500
                 }),
                     reset();
-                    navigate('/')
+                navigate('/')
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -162,12 +162,6 @@ const RequestCharityRole = () => {
                 Request charity role
             </h2>
 
-            {/* Status indicators */}
-            <div className="mb-4 space-y-1 text-sm text-teal-700 font-medium">
-                {createPaymentIntent.isPending && <p>🔄 Creating payment intent...</p>}
-                {saveTransection.isPending && <p>💾 Saving payment details...</p>}
-                {patchCharityRequest.isPending && <p>📥 Updating charity request...</p>}
-            </div>
             <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
                 {/* name */}
                 <div>
@@ -236,9 +230,17 @@ const RequestCharityRole = () => {
                         </span>
                     </p>
                     <CardElement className='p-2 border border-gray-400/50 shadow-md bg-teal-100 min-h-[50px]' />
+                    {/* Status indicators */}
+                    <div className="my-4 space-y-1 text-sm text-teal-700 font-medium">
+                        {createPaymentIntent.isPending && <p>🔄 Creating payment intent...</p>}
+                        {saveTransection.isPending && <p>💾 Saving payment details...</p>}
+                        {patchCharityRequest.isPending && <p>📥 Updating charity request...</p>}
+                    </div>
                     {/* payment  */}
-                    <button type='submit' disabled={!stripe}
-                        className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'>
+                    <button type='submit' 
+                        disabled={!stripe}
+                        className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'
+                    >
                         Pay $25
                     </button>
                 </div>

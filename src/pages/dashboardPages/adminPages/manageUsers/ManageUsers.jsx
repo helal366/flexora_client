@@ -10,7 +10,7 @@ import RoleButton from './RoleButton';
 const ManageUsers = () => {
     const { user } = useAuth();
     const adminEmail = user?.email;
-    const adminName = user?.name;
+    const adminName = user?.displayName;
     const axiosSecure = useAxiosSecure()
     const { data: users = [], isPending } = useQuery({
         queryKey: ['users'],
@@ -22,14 +22,15 @@ const ManageUsers = () => {
     // console.log(users)
     const changeRoleMutation = useMutation({
         mutationFn: async ({ candidateEmail, updateInfo }) => {
-            return await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
+            const res= await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
+            return res
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries(['users']),
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: `${variables?.candidateEmail} has been made an admin.`,
+                    text: `${variables?.candidateEmail} has been updated as ${variables.role}.`,
                     showConfirmButton: true
                 });
         },
@@ -53,6 +54,15 @@ const ManageUsers = () => {
                 text: `${variables?.email} has been deleted!`,
                 showConfirmButton: true,
             })
+        },
+        onError: (error)=>{
+            console.log('delete user error', error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to delete user.',
+                showConfirmButton: true
+            });
         }
     })
     const confirmRoleChange = (candidateEmail, role, updateInfo) => {
@@ -63,16 +73,16 @@ const ManageUsers = () => {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: `Yes, make ${role.charAt(0).toUpperCase() + role.slice(1)}`
+            confirmButtonText: `Yes, make ${role}`
         }).then((result) => {
             if (result?.isConfirmed) {
-                changeRoleMutation.mutate({ candidateEmail, updateInfo })
+                changeRoleMutation.mutate({ candidateEmail,role, updateInfo })
             }
         })
     }
-    const handleRoleChange = (candidateEmail, role) => {
+    const handleRoleChange = ({candidateEmail, role}) => {
         const updateInfo = {
-            role,
+            role:role,
             assigned_admin_name: adminName,
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
@@ -80,7 +90,7 @@ const ManageUsers = () => {
         confirmRoleChange(candidateEmail, role, updateInfo)
 
     }
-    const handleCharityRoleChange = (candidateEmail, role) => {
+    const handleCharityRoleChange = ({candidateEmail, role}) => {
         const updateInfo = {
             role,
             assigned_admin_name: adminName,

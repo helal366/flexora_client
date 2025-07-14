@@ -7,12 +7,14 @@ import Swal from 'sweetalert2';
 import useAxiosSecure from './../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { useState } from 'react';
 
 const RegisterPage = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
     const { userRegister, userProfileUpdate, authLoading } = useAuth();
     const location = useLocation();
+    const [registerLoading, setRegisterLoading]=useState(false)
     const desire = location?.desire ? location?.desire : '/';
     const { register,
         formState: { errors },
@@ -47,6 +49,7 @@ const RegisterPage = () => {
     })
     const onSubmit = async data => {
         // image file
+        setRegisterLoading(true)
         const file = data?.image?.[0]
         if (!file) {
             Swal.fire({
@@ -109,6 +112,8 @@ const RegisterPage = () => {
                 showConfirmButton: true
             });
             return;
+        }finally{
+            setRegisterLoading(false)
         }
     }
     return (
@@ -166,9 +171,9 @@ const RegisterPage = () => {
                                     <p className="text-red-600 text-xs">{errors?.password?.message}</p>
                                 )}
                                 <button type='submit' 
-                                disabled={mutation.isPending || authLoading} 
-                                className={`btn mt-4 ${mutation.isPending || authLoading ?'bg-gray-300 text-black cursor-not-allowed':'btn-neutral'}`}>
-                                    {mutation.isPending || authLoading ? (
+                                disabled={mutation.isPending || authLoading || registerLoading} 
+                                className={`btn mt-4 ${mutation.isPending || authLoading || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'btn-neutral'}`}>
+                                    {mutation.isPending || authLoading || registerLoading? (
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
                                         </>

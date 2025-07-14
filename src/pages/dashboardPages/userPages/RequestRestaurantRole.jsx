@@ -5,11 +5,16 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import Loading from '../../../components/loadingComponents/Loading';
 
 const RequestRestaurantRole = () => {
     const { user } = useAuth();
     const userName = user?.displayName;
     const userEmail = user?.email;
+    const navigate=useNavigate();
+    const [restaurantLoading, setRestaurantLoading]=useState(false)
     const axiosSecure = useAxiosSecure()
     const { register, formState: { errors }, handleSubmit, reset } = useForm()
     useEffect(() => {
@@ -41,6 +46,7 @@ const RequestRestaurantRole = () => {
     })
     const onSubmit = async (data) => {
         // image file
+        setRestaurantLoading(true)
         const file = data?.restaurant_logo?.[0];
         if (!file) {
             Swal.fire({
@@ -87,7 +93,9 @@ const RequestRestaurantRole = () => {
                     title: 'Restaurant role request submitted successfully.',
                     timer: 1500
                 }),
-                    reset()
+                    reset();
+                    setRestaurantLoading(false)
+                    navigate('/')
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -101,7 +109,8 @@ const RequestRestaurantRole = () => {
                 title: 'Something went wrong!',
                 text: `${err}`,
                 showConfirmButton: true
-            })
+            });
+            setRestaurantLoading(false)
         }
     }
     return (
@@ -185,8 +194,18 @@ const RequestRestaurantRole = () => {
                     />
                     {errors?.restaurant_address && <p className='text-xs text-red-500'>{errors.restaurant_address?.message} </p>}
                 </div>
+                {
+                    <div className="my-4 space-y-1 text-sm text-teal-700 font-medium">
+                        {restaurantLoading && <Loading/>}
+                        {patchRestaurantRequest.isPending && <p>📥 Updating charity request...</p>}
+                    </div>
+                }
                 <div>
-                    <button type='submit' className='btn bg-teal-900 text-gray-100 rounded border w-full'>Submit</button>
+                    <button type='submit' 
+                        className='btn bg-teal-900 text-gray-100 rounded border w-full'
+                        disabled={patchRestaurantRequest.isPending || restaurantLoading}>
+                            Submit
+                    </button>
                 </div>
             </form>
         </section>
