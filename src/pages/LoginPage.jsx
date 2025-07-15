@@ -64,9 +64,7 @@ const LoginPage = () => {
                 text: `Login failed. Please try again.`,
                 showConfirmButton: true
             })
-        }
-
-            
+        }            
         }finally{
             setIsLogging(false)
         }

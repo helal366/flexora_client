@@ -182,7 +182,7 @@ const RegisterPage = () => {
                                 </button>
                             </fieldset>
                         </form>
-                        <GoogleLogin desire={desire}/>
+                        <GoogleLogin desire={desire} />
                         <p>Already have an account? Please <Link to='/auth/login' className='text-blue-600 underline'>Login </Link> </p>
                     </div>
                 </div>
