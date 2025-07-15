@@ -85,6 +85,7 @@ const RequestRestaurantRole = () => {
                 restaurant_address: data?.restaurant_address,
                 restaurant_logo: uploadedRestaurantLogo,
                 role: 'restaurant_role_request',
+                status: 'Pending',
                 restaurant_request_time: new Date()
             })
             if (res?.data?.updateResult?.modifiedCount > 0) {

@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
-import { AiFillHome  } from 'react-icons/ai'; // Home icon
-import { FaRegAddressCard, FaUser, FaUsersCog } from 'react-icons/fa';
+import { AiFillHome } from 'react-icons/ai'; // Home icon
+import { FaRegAddressCard, FaUser, FaUsersCog, FaUserShield } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -14,10 +14,10 @@ const DashboardLayout = () => {
     const { authLoading, user } = useAuth()
     const { role, roleLoading, isUser, isAdmin } = useUserRole();
     useEffect(() => {
-  if (user?.email) {
-    queryClient.invalidateQueries(['userInfo', user.email]);
-  }
-}, [user?.email]);
+        if (user?.email) {
+            queryClient.invalidateQueries(['userInfo', user.email]);
+        }
+    }, [user?.email]);
     if (roleLoading || authLoading) {
         return <Loading />
     }
@@ -122,6 +122,13 @@ const DashboardLayout = () => {
                                         Manage Users
                                     </NavLink>
                                 </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/manage_role_requests" className="flex items-center gap-2">
+                                        <FaUserShield className="text-xl text-green-700" />
+                                        Manage Role Requests
+                                    </NavLink>
+                                </li>
+
                             </>
                         }
                     </ul>

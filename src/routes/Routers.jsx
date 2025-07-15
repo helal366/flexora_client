@@ -20,6 +20,7 @@ import RequestCharityRole from "../pages/dashboardPages/userPages/RequestCharity
 import ProfilePage from "../pages/dashboardPages/ProfilePage";
 import AdminRoute from "./AdminRoute";
 import ManageUsers from "../pages/dashboardPages/adminPages/manageUsers/ManageUsers";
+import ManageRoleRequest from "../pages/dashboardPages/adminPages/manageRoleRequests/ManageRoleRequest";
 
 const router = createBrowserRouter([
     {
@@ -84,23 +85,37 @@ const router = createBrowserRouter([
             },
             {
                 path: 'request_charity_role',
-                element: <UserRoute>
-                    <StripeProviderRoute>
-                        <RequestCharityRole />
-                    </StripeProviderRoute>
-                </UserRoute>
+                element: (
+                    <UserRoute>
+                        <StripeProviderRoute>
+                            <RequestCharityRole />
+                        </StripeProviderRoute>
+                    </UserRoute>
+                )
             },
             {
                 path: 'request_restaurant_role',
-                element: <UserRoute>
+                element: (
+                    <UserRoute>
                         <RequestRestaurantRole />
-                </UserRoute>
+                    </UserRoute>
+                )
             },
             {
                 path: 'manage_users',
-                element: <AdminRoute>
-                    <ManageUsers/>
-                </AdminRoute>
+                element: (
+                    <AdminRoute>
+                        <ManageUsers />
+                    </AdminRoute>
+                )
+            },
+            {
+                path: 'manage_role_requests',
+                element: (
+                    <AdminRoute>
+                        <ManageRoleRequest />
+                    </AdminRoute>
+                )
             }
         ]
     },

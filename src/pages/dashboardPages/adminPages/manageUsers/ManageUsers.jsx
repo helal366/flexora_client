@@ -22,7 +22,7 @@ const ManageUsers = () => {
     // console.log(users)
     const changeRoleMutation = useMutation({
         mutationFn: async ({ candidateEmail, updateInfo }) => {
-            const res= await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
+            const res = await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
             return res
         },
         onSuccess: (_, variables) => {
@@ -43,11 +43,12 @@ const ManageUsers = () => {
             });
         }
     })
-    const deleteUserMutation=useMutation({
-        mutationFn: async({id})=>{
+    const deleteUserMutation = useMutation({
+        mutationFn: async ({ id }) => {
             return axiosSecure.delete(`/users/${id}`)
         },
-        onSuccess: (_, variables)=>{
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries(['users'])
             Swal.fire({
                 icon: 'success',
                 title: 'Deleted!',
@@ -55,7 +56,7 @@ const ManageUsers = () => {
                 showConfirmButton: true,
             })
         },
-        onError: (error)=>{
+        onError: (error) => {
             console.log('delete user error', error)
             Swal.fire({
                 icon: 'error',
@@ -76,13 +77,13 @@ const ManageUsers = () => {
             confirmButtonText: `Yes, make ${role}`
         }).then((result) => {
             if (result?.isConfirmed) {
-                changeRoleMutation.mutate({ candidateEmail,role, updateInfo })
+                changeRoleMutation.mutate({ candidateEmail, role, updateInfo })
             }
         })
     }
-    const handleRoleChange = ({candidateEmail, role}) => {
+    const handleRoleChange = ({ candidateEmail, role }) => {
         const updateInfo = {
-            role:role,
+            role: role,
             assigned_admin_name: adminName,
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
@@ -90,7 +91,7 @@ const ManageUsers = () => {
         confirmRoleChange(candidateEmail, role, updateInfo)
 
     }
-    const handleCharityRoleChange = ({candidateEmail, role}) => {
+    const handleCharityRoleChange = ({ candidateEmail, role }) => {
         const updateInfo = {
             role,
             assigned_admin_name: adminName,
@@ -103,16 +104,19 @@ const ManageUsers = () => {
         confirmRoleChange(candidateEmail, role, updateInfo)
 
     }
-    const handleDeleteUser = ({id, name, email}) => {
+    const handleDeleteUser = ({ id, name, email }) => {
         Swal.fire({
             title: 'Are you sure?',
             text: `This will permanently delete ${name}`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result)=>{
-            if(result?.isConfirmed){
-                 deleteUserMutation.mutate({id, email});
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+        }).then((result) => {
+            if (result?.isConfirmed) {
+                deleteUserMutation.mutate({ id, email });
             }
         })
     }
@@ -121,12 +125,12 @@ const ManageUsers = () => {
     }
     return (
         <>
-            <section className='my-5'>
-                <h2 className='text-2xl font-semibold text-gray-950 text-center'>All the users listed here</h2>
+            <section className='my-5 px-4'>
+                <h2 className='text-2xl font-semibold text-gray-950 text-center'>Total users: {users.length || 0} </h2>
             </section>
-            <section className='overflow-x-auto'>
-                <table className='table table-zebra w-full'>
-                    <thead className='bg-gray-200'>
+            <section className='overflow-x-auto p-4'>
+                <table className='table table-zebra min-w-full'>
+                    <thead className='bg-gray-600 text-gray-100'>
                         <tr>
                             <th>#</th>
                             <th>Name</th>
@@ -173,6 +177,7 @@ const ManageUsers = () => {
                                         />
                                         <button
                                             onClick={() => handleDeleteUser({ id: u?._id, name: u?.name, email: u?.email })}
+                                            disabled={deleteUserMutation.isPending}
                                             className='btn whitespace-nowrap bg-red-700 text-gray-200 hover:bg-red-800'>
                                             Delete User
                                         </button>

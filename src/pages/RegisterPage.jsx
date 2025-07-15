@@ -8,6 +8,7 @@ import useAxiosSecure from './../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import GoogleLogin from '../components/loginRegisterComponents/GoogleLogin';
 
 const RegisterPage = () => {
     const axiosSecure = useAxiosSecure()
@@ -172,7 +173,7 @@ const RegisterPage = () => {
                                 )}
                                 <button type='submit' 
                                 disabled={mutation.isPending || authLoading || registerLoading} 
-                                className={`btn mt-4 ${mutation.isPending || authLoading || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'btn-neutral'}`}>
+                                className={`btn mt-4 ${mutation.isPending || authLoading || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'bg-gray-800 text-gray-100 hover:bg-teal-700'}`}>
                                     {mutation.isPending || authLoading || registerLoading? (
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
@@ -181,6 +182,7 @@ const RegisterPage = () => {
                                 </button>
                             </fieldset>
                         </form>
+                        <GoogleLogin desire={desire}/>
                         <p>Already have an account? Please <Link to='/auth/login' className='text-blue-600 underline'>Login </Link> </p>
                     </div>
                 </div>

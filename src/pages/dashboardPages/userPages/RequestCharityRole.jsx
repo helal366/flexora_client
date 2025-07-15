@@ -79,7 +79,8 @@ const RequestCharityRole = () => {
                     icon: 'success',
                     title: 'Create payment method successful!',
                     text: `${paymentMethod}`,
-                    showConfirmButton: true
+                    showConfirmButton: true,
+                    timer:1500
                 })
                 console.log('[Payment method]', paymentMethod)
             }
@@ -128,6 +129,7 @@ const RequestCharityRole = () => {
                 transection_id: paymentIntent.id, //stripe's id
                 amount_paid: 25,
                 currency: 'USD',
+                status: 'Pending',
                 role: 'charity_role_request',
                 charity_request_time: new Date()
             });
