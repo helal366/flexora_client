@@ -12,7 +12,7 @@ const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
-    const { role, roleLoading, isUser, isAdmin } = useUserRole();
+    const { role, roleLoading, isUser, isAdmin, isCharity } = useUserRole();
     useEffect(() => {
         if (user?.email) {
             queryClient.invalidateQueries(['userInfo', user.email]);
@@ -131,11 +131,22 @@ const DashboardLayout = () => {
 
                             </>
                         }
+                        {
+                            !roleLoading && isCharity && (
+                                <>
+                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                        <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                            <FaUser className="text-xl text-blue-600" />
+                                            Charity Profile
+                                        </NavLink>
+                                    </li>
+                                </>
+                            )
+
+                        }
                     </ul>
                 </div>
             </section>
-
-
         </>
     );
 };
