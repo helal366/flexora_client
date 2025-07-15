@@ -125,6 +125,7 @@ const RequestCharityRole = () => {
                 organization_name: formData?.organization_name,
                 organization_email: formData?.organization_email,
                 organization_contact: formattedContact,
+                organization_address: formData?.organization_address,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
                 amount_paid: 25,
@@ -212,6 +213,18 @@ const RequestCharityRole = () => {
                         {...register('organization_contact', { required: 'Organization contact is required.', pattern: { value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit bangladeshi mobile number.' } })}
                     />
                     {errors?.organization_contact && <p className='text-xs text-red-500'>{errors.organization_contact?.message}</p>}
+                </div>
+                {/* organization address */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Organization Address</label>
+                    <input type='tel'
+                        inputMode='numeric'
+                        maxLength={11}
+                        className='input w-full'
+                        placeholder='Organization address'
+                        {...register('organization_address', { required: 'Organization address is required.' })}
+                    />
+                    {errors?.organization_address && <p className='text-xs text-red-500'>{errors.organization_address?.message}</p>}
                 </div>
                 {/* mission statement */}
                 <div>

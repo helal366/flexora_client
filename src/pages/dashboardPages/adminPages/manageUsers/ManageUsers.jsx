@@ -84,6 +84,7 @@ const ManageUsers = () => {
     const handleRoleChange = ({ candidateEmail, role }) => {
         const updateInfo = {
             role: role,
+            status: 'Approved',
             assigned_admin_name: adminName,
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
@@ -98,6 +99,8 @@ const ManageUsers = () => {
             transection_id: 'not_applicable',
             amount_paid: 'not_applicable',
             currency: 'not_applicable',
+            charity_request_time: 'not_applicable',
+            status: 'Approved',
             assigned_admin_email: adminEmail,
             assigned_at: new Date().toISOString()
         }

@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaRegAddressCard, FaUser, FaUsersCog, FaUserShield } from 'react-icons/fa';
+import { FaHandHoldingHeart, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -12,7 +12,7 @@ const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
     const { authLoading, user } = useAuth()
-    const { role, roleLoading, isUser, isAdmin, isCharity } = useUserRole();
+    const { role, roleLoading, isUser, isAdmin, isCharity, isRestaurant } = useUserRole();
     useEffect(() => {
         if (user?.email) {
             queryClient.invalidateQueries(['userInfo', user.email]);
@@ -131,12 +131,38 @@ const DashboardLayout = () => {
 
                             </>
                         }
+                        {/* restaurant dashboard */}
+                        {
+                            !roleLoading && isRestaurant && (
+                                <>
+                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                        <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                            <FaUser className="text-xl text-blue-600" />
+                                            My Profile
+                                        </NavLink>
+                                    </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/restaurant_profile" className="flex items-center gap-2">
+                                            <FaUtensils className="text-xl text-green-700" />
+                                            Restaurant Profile
+                                        </NavLink>
+                                    </li>
+                                </>
+                            )
+                        }
+                        {/* charity dashboard */}
                         {
                             !roleLoading && isCharity && (
                                 <>
                                     <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
                                         <NavLink to="/dashboard/profile" className="flex items-center gap-2">
                                             <FaUser className="text-xl text-blue-600" />
+                                            My Profile
+                                        </NavLink>
+                                    </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/charity_profile" className="flex items-center gap-2">
+                                            <FaHandHoldingHeart className="text-xl text-pink-600" />
                                             Charity Profile
                                         </NavLink>
                                     </li>
