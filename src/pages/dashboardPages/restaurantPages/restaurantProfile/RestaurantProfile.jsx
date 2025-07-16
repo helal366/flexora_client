@@ -1,6 +1,6 @@
 import React from 'react';
-import useAuth from '../../../hooks/useAuth';
-import useUserRole from '../../../hooks/useUserRole';
+import useAuth from '../../../../hooks/useAuth';
+import useUserRole from '../../../../hooks/useUserRole';
 
 const RestaurantProfile = () => {
     const { user } = useAuth();

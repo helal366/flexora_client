@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';
 import Loading from '../../../../components/loadingComponents/Loading';
 
-const CharityProfileUpdate = () => {
+const RestaurantProfileUpdate = () => {
   const { userInfo, roleLoading } = useUserRole();
   const axiosSecure = useAxiosSecure();
   const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
@@ -30,10 +30,9 @@ const CharityProfileUpdate = () => {
       organization_contact: user?.organization_contact || '',
       organization_email: user?.organization_email || '',
       organization_name: user?.organization_name || '',
-      transection_id: user?.transection_id || '',
       status: user?.status || 'Pending',
       organization_address: user?.organization_address || '',
-    },
+    }, 
     mode: 'onChange'
   });
 
@@ -50,7 +49,6 @@ const CharityProfileUpdate = () => {
         organization_contact: user.organization_contact || '',
         organization_email: user.organization_email || '',
         organization_name: user.organization_name || '',
-        transection_id: user.transection_id || '',
         status: user.status || 'Pending',
         organization_address: user.organization_address || '',
       });
@@ -79,7 +77,7 @@ const CharityProfileUpdate = () => {
         updatedData.photoURL = user.photoURL || '';
       }
 
-      const res = await axiosSecure.patch(`/users/update-charity-profile/${user?.email}`, updatedData);
+      const res = await axiosSecure.patch(`/users/update-restaurant-profile/${user?.email}`, updatedData);
       if (res?.data?.modifiedCount > 0) {
         Swal.fire({
           icon: 'success',
@@ -112,7 +110,7 @@ const CharityProfileUpdate = () => {
       )}
 
       <section className='mb-20'>
-        <p className='text-center my-5 text-xl font-semibold italic bg-teal-400 text-gray-700'>Charity Profile Update Form</p>
+        <p className='text-center my-5 text-xl font-semibold italic bg-teal-400 text-gray-700'>Restaurant Profile Update Form</p>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto p-4 bg-white rounded shadow">
           {/* Name */}
           <div className="mb-4">
@@ -263,17 +261,6 @@ const CharityProfileUpdate = () => {
             )}
           </div>
 
-          {/* Transection ID */}
-          <div className="mb-4">
-            <label className="block font-medium mb-1">Transaction ID</label>
-            <input
-              type="text"
-              {...register('transection_id')}
-              disabled
-              className="input input-bordered w-full"
-            />
-          </div>
-
           {/* Status */}
           <div className="mb-4">
             <label className="block font-medium mb-1">Status</label>
@@ -299,4 +286,4 @@ const CharityProfileUpdate = () => {
   );
 };
 
-export default CharityProfileUpdate;
+export default RestaurantProfileUpdate;

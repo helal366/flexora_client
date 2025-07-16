@@ -48,20 +48,24 @@ const CharityProfile = () => {
                         <span className="font-medium">Role:</span> {role? role.charAt(0).toUpperCase() + role.slice(1): 'user'}
                     </p>
                 )}
-                <p>
-                    <span className="font-medium">Contact Number:</span> {contact}
+
+                <p className='my-2 text-lg italic font-semibold text-teal-950'>
+                    Organization Information
                 </p>
                 <p>
-                    <span className="font-medium">Email:</span> {organizationEmail}
+                    <span className="font-medium italic text-teal-700 text-[15px]">Organization Contact Number:</span> {contact}
                 </p>
                 <p>
-                    <span className="font-medium">Address:</span> {organizationAddress}
+                    <span className="font-medium italic text-teal-700 text-[15px]">Organization Email:</span> {organizationEmail}
                 </p>
                 <p>
-                    <span className="font-medium">Mission :</span> {missionStatement}
+                    <span className="font-medium italic text-teal-700 text-[15px]">Organization Address:</span> {organizationAddress}
+                </p>
+                <p>
+                    <span className="font-medium italic text-teal-700 text-[15px]">Organization Mission :</span> {missionStatement}
                 </p>
                 <div>
-                    <p className="font-medium text-center mb-1 text-teal-200 bg-gray-800 py-2 rounded flex gap-2 justify-center">You can update your profile here: <FaHandPointDown className="text-2xl text-yellow-300" /></p>
+                    <p className="font-medium italic text-center mb-1 text-teal-200 bg-gray-800 py-2 px-4 rounded flex gap-2 justify-center">You can update your profile here: <FaHandPointDown className="text-2xl text-yellow-300" /></p>
                     <button
                         onClick={handleUpdate}
                         className='btn bg-teal-700 text-gray-100 hover:bg-teal-800 w-full'>

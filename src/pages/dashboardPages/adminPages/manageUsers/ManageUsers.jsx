@@ -22,11 +22,11 @@ const ManageUsers = () => {
     // console.log(users)
     const changeRoleMutation = useMutation({
         mutationFn: async ({ candidateEmail, updateInfo }) => {
-            const res = await axiosSecure.patch(`user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
+            const res = await axiosSecure.patch(`/user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
             return res
         },
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['users']),
+            queryClient.invalidateQueries(['users']);
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',

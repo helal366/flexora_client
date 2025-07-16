@@ -16,10 +16,10 @@ const NavbarStart = () => {
                         <NavbarLinks />
                     </ul>
                 </div>
-                <span className="hidden lg:block font-semibold text-xl mr-4">
+                <span className="hidden lg:block font-semibold text-xl mr-4 text-teal-600">
                     <i>flexora</i>
                 </span>
-                <ThemeToggle/>
+                <ThemeToggle />
             </div>
         </>
     );

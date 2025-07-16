@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -7,6 +7,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import queryClient from './../../../api/queryClient';
 import { useNavigate } from 'react-router';
+import useCloudinaryImageUpload from '../../../hooks/useCloudinaryImageUpload'
 
 
 const RequestCharityRole = () => {
@@ -14,10 +15,12 @@ const RequestCharityRole = () => {
     const { user } = useAuth();
     const userEmail = user?.email;
     const userName = user?.displayName;
-    const { register, formState: { errors }, handleSubmit, reset } = useForm();
+    const [uploadLogo, setUploadLogo] = useState('')
+    const { register, formState: { errors, isSubmitting }, handleSubmit, reset } = useForm();
     const stripe = useStripe();
     const elements = useElements();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
 
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
@@ -43,6 +46,30 @@ const RequestCharityRole = () => {
         }
     })
     const onSubmit = async (formData) => {
+
+        const file = formData?.organization_logo?.[0];
+        let uploadedUrl=''
+        if (!file) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Image Missing!',
+                text: 'Please upload a profile image.',
+                showConfirmButton: true
+            });
+            return;
+        }
+        // cloudinary image upload by hook
+        try {
+            uploadedUrl = await uploadImage(file)
+            setUploadLogo(uploadedUrl)
+        } catch (err) {
+            Swal.fire({
+                icon: 'error', title: 'Upload failed!', text: err?.message, showConfirmButton: true, timer: 2500
+            });
+            return;
+        }
+
+        // stripe payment
         if (!stripe || !elements) {
             Swal.fire({
                 icon: 'error',
@@ -50,7 +77,7 @@ const RequestCharityRole = () => {
                 showConfirmButton: true,
                 timer: 1500
             })
-            return
+            return;
         }
         const card = elements.getElement(CardElement);
         if (!card) {
@@ -59,7 +86,8 @@ const RequestCharityRole = () => {
                 title: 'Card element not found!',
                 timer: 1500,
                 showConfirmButton: true
-            })
+            });
+            return
         }
         try {
             const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -80,9 +108,8 @@ const RequestCharityRole = () => {
                     title: 'Create payment method successful!',
                     text: `${paymentMethod}`,
                     showConfirmButton: true,
-                    timer:1500
+                    timer: 1500
                 })
-                console.log('[Payment method]', paymentMethod)
             }
             //  todo
             // Optional: show loader or disable button here
@@ -126,6 +153,8 @@ const RequestCharityRole = () => {
                 organization_email: formData?.organization_email,
                 organization_contact: formattedContact,
                 organization_address: formData?.organization_address,
+                organization_logo: uploadedUrl,
+                organization_tagline: formData?.organization_tagline,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
                 amount_paid: 25,
@@ -159,6 +188,7 @@ const RequestCharityRole = () => {
             console.log(err)
         }
     }
+    console.log({uploadLogo})
     return (
         <section className='max-w-4xl mx-auto my-8 bg-white p-6 rounded shadow-lg shadow-gray-600'>
             <h2 className='font-semibold text-2xl text-center mb-4'>
@@ -217,22 +247,41 @@ const RequestCharityRole = () => {
                 {/* organization address */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Organization Address</label>
-                    <input type='tel'
-                        inputMode='numeric'
-                        maxLength={11}
+                    <input type='text'
                         className='input w-full'
                         placeholder='Organization address'
                         {...register('organization_address', { required: 'Organization address is required.' })}
                     />
                     {errors?.organization_address && <p className='text-xs text-red-500'>{errors.organization_address?.message}</p>}
                 </div>
+
+                {/* charity logo upload */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Upload Organization Logo</label>
+                    <input type="file" accept="image/*" className='input w-full'
+                        placeholder='Organization logo'
+                        {...register('organization_logo', { required: 'Organization logo is required.' })}
+                    />
+                    {errors?.organization_logo && <p className='text-xs text-red-500'>{errors.organization_logo?.message}</p>}
+                </div>
+                {/* tag line statement */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Organization Tag line</label>
+                    <textarea
+                        rows={1}
+                        className='textarea w-full'
+                        placeholder='Organization tag line'
+                        {...register('organization_tagline', { required: 'Organization tagline is required' })}
+                    />
+                    {errors?.organization_tagline && <p className='text-xs text-red-500'>{errors.organization_tagline?.message} </p>}
+                </div>
                 {/* mission statement */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Mission Statement</label>
                     <textarea
-                        rows={10}
+                        rows={3}
                         className='textarea w-full'
-                        placeholder='Describe your mission'
+                        placeholder='Write organization mission'
                         {...register('mission', { required: 'Mission statement is required' })}
                     />
                     {errors?.mission && <p className='text-xs text-red-500'>{errors.mission?.message} </p>}
@@ -252,12 +301,15 @@ const RequestCharityRole = () => {
                         {patchCharityRequest.isPending && <p>📥 Updating charity request...</p>}
                     </div>
                     {/* payment  */}
-                    <button type='submit' 
-                        disabled={!stripe}
+                    <button type='submit'
+                        disabled={!stripe || isSubmitting ||isPending}
                         className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'
                     >
-                        Pay $25
+                        {isSubmitting ? 'Submitting...' : 'Pay $25'}
                     </button>
+                    {isPending && <p className="text-blue-500 font-medium">Uploading image...</p>}
+                    {isError && <p className="text-red-600 text-sm">Upload error: {error?.message}</p>}
+
                 </div>
             </form>
         </section>

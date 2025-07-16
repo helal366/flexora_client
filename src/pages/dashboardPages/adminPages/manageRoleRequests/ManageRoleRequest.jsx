@@ -112,7 +112,7 @@ const ManageRoleRequest = () => {
                                         <td>{index + 1}</td>
                                         <td>{request?.name}</td>
                                         <td>{request?.email}</td>
-                                        <td>{request?.organization_name}</td>
+                                        <td>{request?.organization_name }</td>
                                         <td className='whitespace-normal break-words min-w-[250px]'>{request?.mission}</td>
                                         <td>{request?.transection_id}</td>
                                         <td>{request?.status}</td>

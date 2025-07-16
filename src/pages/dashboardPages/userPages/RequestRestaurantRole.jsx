@@ -2,20 +2,22 @@ import React, { useEffect } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import Loading from '../../../components/loadingComponents/Loading';
+import useCloudinaryImageUpload from '../../../hooks/useCloudinaryImageUpload';
 
 const RequestRestaurantRole = () => {
     const { user } = useAuth();
     const userName = user?.displayName;
     const userEmail = user?.email;
-    const navigate=useNavigate();
-    const [restaurantLoading, setRestaurantLoading]=useState(false)
-    const axiosSecure = useAxiosSecure()
+    const navigate = useNavigate();
+    const [restaurantLoading, setRestaurantLoading] = useState(false)
+    const axiosSecure = useAxiosSecure();
+    const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
+    const [uploadLogo, setUploadLogo] = useState('')
     const { register, formState: { errors }, handleSubmit, reset } = useForm()
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -47,7 +49,7 @@ const RequestRestaurantRole = () => {
     const onSubmit = async (data) => {
         // image file
         setRestaurantLoading(true)
-        const file = data?.restaurant_logo?.[0];
+        const file = data?.organization_logo?.[0];
         if (!file) {
             Swal.fire({
                 icon: 'error',
@@ -58,35 +60,38 @@ const RequestRestaurantRole = () => {
             return;
         }
 
-        // cloudinary image upload
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", `${import.meta.env.VITE_upload_preset}`);
-        formData.append("cloud_name", `${import.meta.env.VITE_cloud_name}`)
+        // cloudinary image upload by hook
         try {
-            const result = await axios.post(`${import.meta.env.VITE_cloudinary_url}`, formData);
-            const uploadedRestaurantLogo = result?.data?.secure_url;
-            console.log('restaurent request logo', uploadedRestaurantLogo);
-            if (!uploadedRestaurantLogo) {
-                throw new Error('Failed to upload restaurant logo.')
-            }
+            const uploadedUrl = await uploadImage(file)
+            setUploadLogo(uploadedUrl)
+        } catch (err) {
+            Swal.fire({
+                icon: 'error', title: 'Upload failed!', text: err?.message, showConfirmButton: true, timer: 2500
+            });
+            return;
+        }
+
+
+        try {
+
             // format mobile number to start with +880
-            let formattedContact = data?.restaurant_contact ? data.restaurant_contact.trim() : '';
+            let formattedContact = data?.organization_contact ? data.organization_contact.trim() : '';
             if (formattedContact.startsWith('0')) {
                 formattedContact = '+880' + formattedContact.slice(1)
             }
             // patch user in database
             const res = await patchRestaurantRequest.mutateAsync({
-                restaurant_name: data?.restaurant_name,
-                restaurant_tagline: data?.restaurant_tagline,
-                restaurant_email: data?.restaurant_email,
-                restaurant_contact: formattedContact,
-                restaurant_location: data?.restaurant_location,
-                restaurant_address: data?.restaurant_address,
-                restaurant_logo: uploadedRestaurantLogo,
+                organization_name: data?.organization_name,
+                organization_tagline: data?.organization_tagline,
+                mission: data?.mission,
+                organization_email: data?.organization_email,
+                organization_contact: formattedContact,
+                organization_location: data?.organization_location,
+                organization_address: data?.organization_address,
+                organization_logo: uploadLogo,
                 role: 'restaurant_role_request',
                 status: 'Pending',
-                restaurant_request_time: new Date()
+                organization_request_time: new Date()
             })
             if (res?.data?.updateResult?.modifiedCount > 0) {
                 Swal.fire({
@@ -95,8 +100,8 @@ const RequestRestaurantRole = () => {
                     timer: 1500
                 }),
                     reset();
-                    setRestaurantLoading(false)
-                    navigate('/')
+                setRestaurantLoading(false)
+                navigate('/')
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -135,54 +140,63 @@ const RequestRestaurantRole = () => {
                     <label className='label text-teal-900 font-medium'>Restaurant Name</label>
                     <input type="text" className='input w-full'
                         placeholder='Restaurant name'
-                        {...register('restaurant_name', { required: 'Restaurant name is required.' })}
+                        {...register('organization_name', { required: 'Restaurant name is required.' })}
                     />
-                    {errors?.restaurant_name && <p className='text-xs text-red-500'>{errors.restaurant_name?.message}</p>}
+                    {errors?.organization_name && <p className='text-xs text-red-500'>{errors.organization_name?.message}</p>}
                 </div>
                 {/* restaurant tagline */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Restaurant Tag Line</label>
                     <input type="text" className='input w-full'
                         placeholder='Restaurant tag line'
-                        {...register('restaurant_tagline', { required: 'Restaurant tag line is required.' })}
+                        {...register('organization_tagline', { required: 'Restaurant tag line is required.' })}
                     />
-                    {errors?.restaurant_tagline && <p className='text-xs text-red-500'>{errors.restaurant_tagline?.message}</p>}
+                    {errors?.organization_tagline && <p className='text-xs text-red-500'>{errors.organization_tagline?.message}</p>}
+                </div>
+                {/* restaurant mission */}
+                <div>
+                    <label className='label text-teal-900 font-medium'>Restaurant Mission</label>
+                    <input type="text" className='input w-full'
+                        placeholder='Restaurant mission'
+                        {...register('mission', { required: 'Restaurant mission is required.' })}
+                    />
+                    {errors?.mission && <p className='text-xs text-red-500'>{errors.mission?.message}</p>}
                 </div>
                 {/* restaurant email */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Restaurant Email</label>
                     <input type="text" className='input w-full'
                         placeholder='Restaurant email'
-                        {...register('restaurant_email', { required: 'Restaurant email is required.' })}
+                        {...register('organization_email', { required: 'Restaurant email is required.' })}
                     />
-                    {errors?.restaurant_email && <p className='text-xs text-red-500'>{errors.restaurant_email?.message}</p>}
+                    {errors?.organization_email && <p className='text-xs text-red-500'>{errors.organization_email?.message}</p>}
                 </div>
                 {/* restaurant location */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Restaurant Location</label>
                     <input type="text" className='input w-full'
                         placeholder='Restaurant location'
-                        {...register('restaurant_location', { required: 'Restaurant location is required.' })}
+                        {...register('organization_location', { required: 'Restaurant location is required.' })}
                     />
-                    {errors?.restaurant_location && <p className='text-xs text-red-500'>{errors.restaurant_location?.message}</p>}
+                    {errors?.organization_location && <p className='text-xs text-red-500'>{errors.organization_location?.message}</p>}
                 </div>
                 {/* restaurant contact number */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Restaurant Contact Number</label>
                     <input type="tel" inputMode='numeric' maxLength={11} className='input w-full'
                         placeholder='Restaurant contact number'
-                        {...register('restaurant_contact', { required: 'Restaurant contact number is required.', pattern: { value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit Bangladeshi mobile number.' } })}
+                        {...register('organization_contact', { required: 'Restaurant contact number is required.', pattern: { value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit Bangladeshi mobile number.' } })}
                     />
-                    {errors?.restaurant_contact && <p className='text-xs text-red-500'>{errors.restaurant_contact?.message}</p>}
+                    {errors?.organization_contact && <p className='text-xs text-red-500'>{errors.organization_contact?.message}</p>}
                 </div>
                 {/* restaurant logo upload */}
                 <div>
                     <label className='label text-teal-900 font-medium'>Upload restaurant logo</label>
-                    <input type="file" accept='image/*' inputMode='numeric' maxLength={11} className='input w-full'
+                    <input type="file" accept='image/*' className='input w-full'
                         placeholder='Restaurant logo'
-                        {...register('restaurant_logo', { required: 'Restaurant logo is required.' })}
+                        {...register('organization_logo', { required: 'Restaurant logo is required.' })}
                     />
-                    {errors?.restaurant_logo && <p className='text-xs text-red-500'>{errors.restaurant_logo?.message}</p>}
+                    {errors?.organization_logo && <p className='text-xs text-red-500'>{errors.organization_logo?.message}</p>}
                 </div>
                 {/* restaurant address */}
                 <div>
@@ -191,23 +205,25 @@ const RequestRestaurantRole = () => {
                         rows={5}
                         className='textarea w-full'
                         placeholder='Restaurant address here!'
-                        {...register('restaurant_address', { required: 'Restaurant address is required' })}
+                        {...register('organization_address', { required: 'Restaurant address is required' })}
                     />
-                    {errors?.restaurant_address && <p className='text-xs text-red-500'>{errors.restaurant_address?.message} </p>}
+                    {errors?.organization_address && <p className='text-xs text-red-500'>{errors.organization_address?.message} </p>}
                 </div>
                 {
                     <div className="my-4 space-y-1 text-sm text-teal-700 font-medium">
-                        {restaurantLoading && <Loading/>}
+                        {restaurantLoading && <Loading />}
                         {patchRestaurantRequest.isPending && <p>📥 Updating charity request...</p>}
                     </div>
                 }
                 <div>
-                    <button type='submit' 
+                    <button type='submit'
                         className='btn bg-teal-900 text-gray-100 rounded border w-full'
-                        disabled={patchRestaurantRequest.isPending || restaurantLoading}>
-                            Submit
+                        disabled={patchRestaurantRequest.isPending || restaurantLoading || isPending}>
+                        Submit
                     </button>
                 </div>
+                {isPending && <p className="text-blue-500 font-medium">Uploading image...</p>}
+                {isError && <p className="text-red-600 text-sm">Upload error: {error?.message}</p>}
             </form>
         </section>
     );
