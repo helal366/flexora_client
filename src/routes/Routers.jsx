@@ -28,6 +28,7 @@ import CharityProfileUpdate from "../pages/dashboardPages/charityPages/charityPr
 import RestaurantProfile from "../pages/dashboardPages/restaurantPages/restaurantProfile/RestaurantProfile";
 import RestaurantProfileUpdate from "../pages/dashboardPages/restaurantPages/restaurantProfile/RestaurantProfileUpdate";
 import AddDonation from "../pages/dashboardPages/restaurantPages/addDonations/AddDonation";
+import ManageDonations from "../pages/dashboardPages/adminPages/manageDonations/ManageDonations";
 
 const router = createBrowserRouter([
     {
@@ -108,6 +109,7 @@ const router = createBrowserRouter([
                     </UserRoute>
                 )
             },
+            // admin routes
             {
                 path: 'manage_users',
                 element: (
@@ -121,6 +123,14 @@ const router = createBrowserRouter([
                 element: (
                     <AdminRoute>
                         <ManageRoleRequest />
+                    </AdminRoute>
+                )
+            },
+            {
+                path: 'manage_donations',
+                element: (
+                    <AdminRoute>
+                        <ManageDonations/>
                     </AdminRoute>
                 )
             },
