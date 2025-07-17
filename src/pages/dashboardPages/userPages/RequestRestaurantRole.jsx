@@ -17,7 +17,6 @@ const RequestRestaurantRole = () => {
     const [restaurantLoading, setRestaurantLoading] = useState(false)
     const axiosSecure = useAxiosSecure();
     const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
-    const [uploadLogo, setUploadLogo] = useState('')
     const { register, formState: { errors }, handleSubmit, reset } = useForm()
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -49,6 +48,7 @@ const RequestRestaurantRole = () => {
     const onSubmit = async (data) => {
         // image file
         setRestaurantLoading(true)
+        let uploadedUrl = '';
         const file = data?.organization_logo?.[0];
         if (!file) {
             Swal.fire({
@@ -57,17 +57,18 @@ const RequestRestaurantRole = () => {
                 text: 'Please upload a profile image.',
                 showConfirmButton: true
             });
+            setRestaurantLoading(false); // early return still needs cleanup
             return;
         }
 
         // cloudinary image upload by hook
         try {
-            const uploadedUrl = await uploadImage(file)
-            setUploadLogo(uploadedUrl)
+            uploadedUrl = await uploadImage(file)
         } catch (err) {
             Swal.fire({
                 icon: 'error', title: 'Upload failed!', text: err?.message, showConfirmButton: true, timer: 2500
             });
+            setRestaurantLoading(false); // early return still needs cleanup
             return;
         }
 
@@ -88,24 +89,23 @@ const RequestRestaurantRole = () => {
                 organization_contact: formattedContact,
                 organization_location: data?.organization_location,
                 organization_address: data?.organization_address,
-                organization_logo: uploadLogo,
+                organization_logo: uploadedUrl,
                 role: 'restaurant_role_request',
                 status: 'Pending',
                 organization_request_time: new Date()
             })
-            if (res?.data?.updateResult?.modifiedCount > 0) {
+            if (res?.data?.userUpdate?.modifiedCount > 0) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Restaurant role request submitted successfully.',
                     timer: 1500
                 }),
                     reset();
-                setRestaurantLoading(false)
                 navigate('/')
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Payment or update failed!',
+                    title: 'Update failed!',
                     timer: 1500
                 })
             }
@@ -116,7 +116,8 @@ const RequestRestaurantRole = () => {
                 text: `${err}`,
                 showConfirmButton: true
             });
-            setRestaurantLoading(false)
+        } finally {
+            setRestaurantLoading(false); // ✅ always reset loading
         }
     }
     return (

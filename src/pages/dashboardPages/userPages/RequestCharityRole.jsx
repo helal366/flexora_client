@@ -24,7 +24,7 @@ const RequestCharityRole = () => {
 
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
-            const paymentIntentRes = await axiosSecure.post('/create-payment-intent', { amount: 25 })
+            const paymentIntentRes = await axiosSecure.post('/create-payment-intent', { amount: 5 })
             return paymentIntentRes?.data?.clientSecret
         }
     })
@@ -42,7 +42,8 @@ const RequestCharityRole = () => {
             return charityRequestRes
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(['userInfo', userEmail])
+            queryClient.invalidateQueries(['userInfo', userEmail]);
+            navigate('/')
         }
     })
     const onSubmit = async (formData) => {
@@ -131,11 +132,12 @@ const RequestCharityRole = () => {
                 // save transection
                 await saveTransection.mutateAsync({
                     transection_id: paymentIntent.id,
-                    amount: 25,
+                    amount: 5,
                     currency: 'USD',
                     user_email: userEmail,
                     user_name: userName,
                     purpose: 'Charity role request',
+                    status: 'Pending'
 
                 })
             }
@@ -157,13 +159,13 @@ const RequestCharityRole = () => {
                 organization_tagline: formData?.organization_tagline,
                 mission: formData?.mission,
                 transection_id: paymentIntent.id, //stripe's id
-                amount_paid: 25,
+                amount_paid: 5,
                 currency: 'USD',
                 status: 'Pending',
                 role: 'charity_role_request',
                 charity_request_time: new Date()
             });
-            if (res?.data?.updateResult?.modifiedCount > 0) {
+            if (res?.data?.userUpdate?.modifiedCount > 0){
                 Swal.fire({
                     icon: 'success',
                     title: 'Charity role request submitted successfully.',
@@ -175,8 +177,10 @@ const RequestCharityRole = () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Payment or update failed!',
-                    timer: 1500
+                    showConfirmButton: true,
                 })
+                console.log('Payment or update failed!  from modified count not grater than zero')
+                navigate('/')
             }
         } catch (err) {
             Swal.fire({
@@ -290,7 +294,7 @@ const RequestCharityRole = () => {
                 <div className='p-4 border rounded'>
                     <p className='text-lg font-medium mb-3'>Payment amount:
                         <span className='text-green-800 font-semibold ml-2'>
-                            $25
+                            $5
                         </span>
                     </p>
                     <CardElement className='p-2 border border-gray-400/50 shadow-md bg-teal-100 min-h-[50px]' />
@@ -305,7 +309,7 @@ const RequestCharityRole = () => {
                         disabled={!stripe || isSubmitting ||isPending}
                         className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'
                     >
-                        {isSubmitting ? 'Submitting...' : 'Pay $25'}
+                        {isSubmitting ? 'Submitting...' : 'Pay $5'}
                     </button>
                     {isPending && <p className="text-blue-500 font-medium">Uploading image...</p>}
                     {isError && <p className="text-red-600 text-sm">Upload error: {error?.message}</p>}

@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaHandHoldingHeart, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -82,16 +82,21 @@ const DashboardLayout = () => {
                                 Home
                             </NavLink>
                         </li>
-
                         {
-                            !roleLoading && isUser &&
-                            <>
+                            !isAdmin && (
                                 <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
                                     <NavLink to="/dashboard/profile" className="flex items-center gap-2">
                                         <FaUser className="text-xl text-blue-600" />
                                         My Profile
                                     </NavLink>
                                 </li>
+                            )
+                        }
+
+                        {
+                            !roleLoading && isUser &&
+                            <>
+
                                 <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                     <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-orange-500" />
@@ -135,18 +140,19 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isRestaurant && (
                                 <>
-                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
-                                        <NavLink to="/dashboard/profile" className="flex items-center gap-2">
-                                            <FaUser className="text-xl text-blue-600" />
-                                            My Profile
-                                        </NavLink>
-                                    </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/restaurant_profile" className="flex items-center gap-2">
                                             <FaUtensils className="text-xl text-green-700" />
                                             Restaurant Profile
                                         </NavLink>
                                     </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/add-donation" className="flex items-center gap-2">
+                                            <FaPlusCircle className="text-xl text-green-700" />
+                                            Add Donation
+                                        </NavLink>
+                                    </li>
+
                                 </>
                             )
                         }
@@ -154,12 +160,6 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isCharity && (
                                 <>
-                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
-                                        <NavLink to="/dashboard/profile" className="flex items-center gap-2">
-                                            <FaUser className="text-xl text-blue-600" />
-                                            My Profile
-                                        </NavLink>
-                                    </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/charity_profile" className="flex items-center gap-2">
                                             <FaHandHoldingHeart className="text-xl text-pink-600" />

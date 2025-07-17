@@ -22,10 +22,12 @@ import AdminRoute from "./AdminRoute";
 import ManageUsers from "../pages/dashboardPages/adminPages/manageUsers/ManageUsers";
 import ManageRoleRequest from "../pages/dashboardPages/adminPages/manageRoleRequests/ManageRoleRequest";
 import RestaurantRoute from "./RestaurantRoute";
-import RestaurantProfile from "../pages/dashboardPages/restaurantPages/RestaurantProfile";
 import CharityRoute from "./CharityRoute";
 import CharityProfile from "../pages/dashboardPages/charityPages/charityProfile/CharityProfile";
 import CharityProfileUpdate from "../pages/dashboardPages/charityPages/charityProfile/CharityProfileUpdate";
+import RestaurantProfile from "../pages/dashboardPages/restaurantPages/restaurantProfile/RestaurantProfile";
+import RestaurantProfileUpdate from "../pages/dashboardPages/restaurantPages/restaurantProfile/RestaurantProfileUpdate";
+import AddDonation from "../pages/dashboardPages/restaurantPages/addDonations/AddDonation";
 
 const router = createBrowserRouter([
     {
@@ -128,6 +130,20 @@ const router = createBrowserRouter([
                 element: (
                     <RestaurantRoute>
                         <RestaurantProfile/>
+                    </RestaurantRoute>
+                )
+            },
+            {
+                path: 'restaurant_profile_update',
+                element: <RestaurantRoute>
+                    <RestaurantProfileUpdate/>
+                </RestaurantRoute>
+            },
+            {
+                path: 'add-donation',
+                element: (
+                    <RestaurantRoute>
+                        <AddDonation/>
                     </RestaurantRoute>
                 )
             },

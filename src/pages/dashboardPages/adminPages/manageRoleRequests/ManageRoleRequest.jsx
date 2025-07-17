@@ -14,13 +14,15 @@ const ManageRoleRequest = () => {
         queryKey: ['roleRequests'],
         queryFn: async () => {
             const res = await axiosSecure.get('/users/role_requests');
-            return res?.data;
+            if (!res?.data?.data) throw new Error('Failed to fetch role requests');
+            return res?.data?.data;
+
         }
     })
 
     const updateStatusMutation = useMutation({
         mutationFn: async ({ candidateEmail, status, role }) => {
-            const res = await axiosSecure.patch(`/users/role_request_update/${candidateEmail}/${adminEmail}`,
+            const res = await axiosSecure.patch(`/users/role_request_update/${encodeURIComponent(candidateEmail)}/${encodeURIComponent(adminEmail)}`,
                 {
                     status,
                     role,
@@ -51,13 +53,13 @@ const ManageRoleRequest = () => {
                 })
             }
         },
-        onError: () => {
+        onError: (error) => {
             Swal.fire({
                 icon: 'error',
-                text: 'Something went wrong!',
-                timer: 2000,
+                text: 'Something went wrong! from onError',
                 showConfirmButton: true
-            })
+            });
+            console.log(error)
         }
     })
     const handleAction = (candidate, status) => {
@@ -70,7 +72,7 @@ const ManageRoleRequest = () => {
             updatedRole = 'user'
         }
         Swal.fire({
-            title: `Are you sure you want to ${status.toLowerCase()} this request?`,
+            title: `Are you sure you want to ${status.toLowerCase('en-US', { timeZone: 'Asia/Dhaka' })} this request?`,
             icon: status === 'Approved' ? 'success' : 'warning',
             showCancelButton: true,
             confirmButtonColor: status === 'Approved' ? '#3085d6' : '#d33',
@@ -107,7 +109,6 @@ const ManageRoleRequest = () => {
                     <tbody>
                         {
                             role_requests.map((request, index) => (
-                                <>
                                     <tr key={request._id}>
                                         <td>{index + 1}</td>
                                         <td>{request?.name}</td>
@@ -132,7 +133,6 @@ const ManageRoleRequest = () => {
                                         </td>
 
                                     </tr>
-                                </>
                             ))
                         }
                     </tbody>
