@@ -5,6 +5,8 @@ import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';  // optional custom hook
 import useRestaurantProfile from '../../../../hooks/useRestaurantProfile';
+import Loading from '../../../../components/loadingComponents/Loading';
+import useAddDonation from '../../../../hooks/useAddDonation';
 
 const pickupDate = new Date().toLocaleDateString(); // e.g., "7/17/2025"
 const pickupTimeWindows = {
@@ -19,7 +21,8 @@ const AddDonation = () => {
     const axiosSecure = useAxiosSecure();
     const { uploadImage } = useCloudinaryImageUpload(); // optional
     const [imagePreview, setImagePreview] = useState(null);
-    const { restaurantProfile } = useRestaurantProfile()
+    const { restaurantProfile } = useRestaurantProfile();
+    const { mutate: addDonation, isPending } = useAddDonation();
 
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
@@ -38,9 +41,11 @@ const AddDonation = () => {
                 quantity: data.quantity,
                 unit: data.unit,
                 pickup_time_window: pickupTimeWindows[data.meal_time],
-                restaurant_name: user?.displayName,
-                restaurant_email: user?.email,
+                restaurant_name: restaurantProfile?.organization_name || '',
+                restaurant_email: restaurantProfile?.organization_email || '',
                 location: data.location,
+                user_name: user?.displayName,
+                user_email: user?.email,
                 image: imageUrl,
                 status: 'Pending',
                 created_at: new Date().toISOString()
@@ -56,6 +61,7 @@ const AddDonation = () => {
 
             reset();
             setImagePreview(null);
+            addDonation(data);
         } catch (err) {
             console.error(err);
             Swal.fire({
@@ -65,6 +71,9 @@ const AddDonation = () => {
             });
         }
     };
+    if (isPending) {
+        return <Loading />
+    }
     const now = new Date().toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
 
     return (
