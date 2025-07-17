@@ -32,6 +32,7 @@ const RestaurantProfileUpdate = () => {
       organization_name: user?.organization_name || '',
       status: user?.status || 'Pending',
       organization_address: user?.organization_address || '',
+      organization_location: user?.organization_location || '',
     }, 
     mode: 'onChange'
   });
@@ -51,6 +52,7 @@ const RestaurantProfileUpdate = () => {
         organization_name: user.organization_name || '',
         status: user.status || 'Pending',
         organization_address: user.organization_address || '',
+        organization_location: user?.organization_location || '',
       });
     }
   }, [user, reset]);
@@ -218,6 +220,19 @@ const RestaurantProfileUpdate = () => {
             />
             {errors.organization_address && (
               <p className="text-red-600">{errors.organization_address.message}</p>
+            )}
+          </div>
+
+          {/* Organization Location */}
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Organization Location</label>
+            <input
+              type="text"
+              {...register('organization_location', { required: 'Organization location is required' })}
+              className="input input-bordered w-full"
+            />
+            {errors.organization_location && (
+              <p className="text-red-600">{errors.organization_location.message}</p>
             )}
           </div>
 

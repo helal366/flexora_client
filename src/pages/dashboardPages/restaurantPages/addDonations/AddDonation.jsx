@@ -19,7 +19,7 @@ const pickupTimeWindows = {
 const AddDonation = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { uploadImage } = useCloudinaryImageUpload(); // optional
+    const { mutateAsync: uploadImage } = useCloudinaryImageUpload(); // optional
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();
     const { mutate: addDonation, isPending } = useAddDonation();
@@ -31,24 +31,25 @@ const AddDonation = () => {
     const onSubmit = async (data) => {
         try {
             let imageUrl = '';
-            if (data.image[0]) {
-                imageUrl = await uploadImage(data.image[0]); // Upload to Cloudinary or any service
+            if (data?.image[0]) {
+                imageUrl = await uploadImage(data?.image[0]); // Upload to Cloudinary or any service
             }
 
             const donationData = {
-                donation_title: data.donation_title,
-                food_type: data.food_type,
-                quantity: data.quantity,
-                unit: data.unit,
-                pickup_time_window: pickupTimeWindows[data.meal_time],
+                donation_title: data?.donation_title,
+                food_type: data?.food_type,
+                quantity: data?.quantity,
+                unit: data?.unit,
+                pickup_time_window: pickupTimeWindows[data?.meal_time],
+                pickup_date: new Date().toISOString().slice(0, 10),
                 restaurant_name: restaurantProfile?.organization_name || '',
                 restaurant_email: restaurantProfile?.organization_email || '',
-                location: data.location,
+                location: restaurantProfile?.organization_location || '',
                 user_name: user?.displayName,
                 user_email: user?.email,
                 image: imageUrl,
                 status: 'Pending',
-                created_at: new Date().toISOString()
+                posted_at: new Date().toISOString()
             };
 
             await axiosSecure.post('/donations', donationData);
@@ -74,22 +75,31 @@ const AddDonation = () => {
     if (isPending) {
         return <Loading />
     }
-    const now = new Date().toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
+    // const now = new Date().toISOString().slice(0, 16); // Format: "YYYY-MM-DDTHH:MM"
 
     return (
-        <div className="max-w-xl mx-auto p-6 bg-white shadow rounded">
+        <div className="w-full p-6 bg-white shadow rounded">
             <h2 className="text-2xl font-bold mb-4 text-center">Add Food Donation</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Donation title */}
                 <div>
-                    <label className="label">Donation Title</label>
-                    <input className="input input-bordered w-full" {...register('donation_title', { required: true })} />
-                    {errors.donation_title && <span className="text-red-500 text-xs">Required</span>}
+                    <label className="label text-teal-800 font-medium italic">Donation Title</label>
+                    <input
+                        className="input input-bordered w-full"
+                        {...register('donation_title', { required: 'Donation title is required' })}
+                    />
+                    {errors.donation_title && (
+                        <p className="text-red-500 text-sm mt-1">{errors.donation_title.message}</p>
+                    )}
                 </div>
+
                 {/* food type */}
                 <div>
-                    <label className="label">Food Type</label>
-                    <select className="select select-bordered w-full" {...register('food_type', { required: true })}>
+                    <label className="label text-teal-800 font-medium italic">Food Type</label>
+                    <select
+                        className="select select-bordered w-full"
+                        {...register('food_type', { required: 'Food type is required' })}
+                    >
                         <option value="">-- Select Food Type --</option>
                         <option value="cooked_meal">Cooked Meal</option>
                         <option value="cooked_rice_dish">Cooked Rice Dish</option>
@@ -103,76 +113,114 @@ const AddDonation = () => {
                         <option value="snack">Snack</option>
                         <option value="soft_drinks">Soft Drinks</option>
                     </select>
+                    {errors.food_type && (
+                        <p className="text-red-500 text-sm mt-1">{errors.food_type.message}</p>
+                    )}
                 </div>
+
                 {/* quantity */}
-                <div >
-                    <label className="label">Quantity</label>
-                    <input type="number" className="input input-bordered w-full" {...register('quantity', { required: true })} />
+                <div>
+                    <label className="label text-teal-800 font-medium italic">Quantity</label>
+                    <input
+                        type="number"
+                        className="input input-bordered w-full"
+                        {...register('quantity', { required: 'Quantity is required' })}
+                    />
+                    {errors.quantity && (
+                        <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>
+                    )}
                 </div>
                 {/* unit */}
-                <div >
-                    <label className="label">Unit</label>
-                    <select className="select select-bordered w-full" {...register('unit', { required: true })}>
+                <div>
+                    <label className="label text-teal-800 font-medium italic">Unit</label>
+                    <select
+                        className="select select-bordered w-full"
+                        {...register('unit', { required: 'Unit is required' })}
+                    >
+                        <option value="">-- Select Unit --</option>
                         <option value="kg">kg</option>
                         <option value="portions">portions</option>
                         <option value="meal">meal</option>
                         <option value="pound">pound</option>
                         <option value="piece">piece</option>
                     </select>
+                    {errors.unit && (
+                        <p className="text-red-500 text-sm mt-1">{errors.unit.message}</p>
+                    )}
                 </div>
+
                 {/* meal time */}
                 <div>
-                    <label className="label">Meal Time</label>
-                    <select className="select select-bordered w-full" {...register('meal_time', { required: true })}>
+                    <label className="label text-teal-800 font-medium italic">Meal Time</label>
+                    <select
+                        className="select select-bordered w-full"
+                        {...register('meal_time', { required: 'Meal time is required' })}
+                    >
                         <option value="">-- Select Meal Time --</option>
                         <option value="breakfast">Breakfast</option>
                         <option value="lunch">Lunch</option>
                         <option value="dinner">Dinner</option>
                     </select>
-                    {selectedMeal && (
+
+                    {errors.meal_time && (
+                        <p className="text-red-500 text-sm mt-1">{errors.meal_time.message}</p>
+                    )}
+
+                    {selectedMeal && !errors.meal_time && (
                         <p className="text-xs text-green-600 mt-1">
                             Pickup Window: {pickupTimeWindows[selectedMeal]}
                         </p>
                     )}
                 </div>
 
-                {/* donation post time */}
+                {/* location */}
                 <div>
-                    <label className="label">Donation Post Time</label>
+                    <label className="label text-teal-800 font-medium italic">Location</label>
                     <input
-                        type="datetime-local"
-                        defaultValue={now}
-                        {...register('post_time', { required: true })}
                         className="input input-bordered w-full"
+                        value={restaurantProfile?.organization_location || ''}
+                        readOnly
                     />
                 </div>
 
-                {/* location */}
-                <div>
-                    <label className="label">Location</label>
-                    <input type="text" className="input input-bordered w-full" placeholder="e.g., Motijheel" {...register('location', { required: true })} />
-                </div>
                 {/* image upload */}
                 <div>
-                    <label className="label">Image Upload</label>
-                    <input type="file" accept="image/*" className="file-input file-input-bordered w-full" {...register('image')}
-                        onChange={(e) => setImagePreview(URL.createObjectURL(e.target.files[0]))}
+                    <label className="label text-teal-800 font-medium italic">Image Upload</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        className="file-input file-input-bordered w-full"
+                        {...register('image', { required: 'Image is required' })}
+                        onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                                setImagePreview(URL.createObjectURL(file));
+                            }
+                        }}
                     />
-                    {imagePreview && (
-                        <img src={imagePreview} alt="preview" className="mt-2 w-32 h-24 object-cover rounded border" />
+                    {errors.image && (
+                        <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
+                    )}
+                    {imagePreview && !errors.image && (
+                        <img
+                            src={imagePreview}
+                            alt="preview"
+                            className="mt-2 w-32 h-24 object-cover rounded border"
+                        />
                     )}
                 </div>
+                    {/* restaurant name */}
                 <div>
-                    <label className="label">Restaurant Name</label>
+                    <label className="label text-teal-800 font-medium italic">Restaurant Name</label>
                     <input
                         className="input input-bordered w-full"
                         value={restaurantProfile?.organization_name || ''}
                         readOnly
                     />
                 </div>
-
+                    {/* restaurant email */}
                 <div>
-                    <label className="label">Restaurant Email</label>
+                    <label className="label text-teal-800 font-medium italic">Restaurant Email</label>
                     <input
                         className="input input-bordered w-full"
                         value={restaurantProfile?.organization_email || ''}
@@ -180,17 +228,14 @@ const AddDonation = () => {
                     />
                 </div>
 
-                <div>
-                    <label className="label">Account Created At</label>
-                    <input
-                        className="input input-bordered w-full"
-                        value={restaurantProfile?.created_at ? new Date(restaurantProfile.created_at).toLocaleString() : ''}
-                        readOnly
-                    />
-                </div>
-
                 {/* add donation button */}
-                <button type="submit" className="btn btn-primary w-full">Add Donation</button>
+                <button 
+                type="submit" 
+                className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 disabled:bg-teal-200 disabled:text-gray-500/50 w-full mb-16"
+                disabled={isPending}
+                >
+                    Add Donation
+                </button>
             </form>
         </div>
     );
