@@ -8,7 +8,7 @@ const useAddDonation = () => {
   const mutation = useMutation({
     mutationFn: async (donationData) => {
       const res = await axiosSecure.post('/donations', donationData);
-      return res.data;
+      return res?.data;
     },
     onSuccess: () => {
       Swal.fire({

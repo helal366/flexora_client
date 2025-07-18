@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '../../../../api/queryClient';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const ManageDonations = () => {
     const axiosSecure = useAxiosSecure()
@@ -15,7 +16,7 @@ const ManageDonations = () => {
         return res?.data;
     };
 
-    const { data: donations = [], isLoading, isError } = useQuery({
+    const { data: donations = [], isPending, isError } = useQuery({
         queryKey: ['donations'],
         queryFn: fetchDonations,
     });
@@ -31,15 +32,41 @@ const ManageDonations = () => {
 
 
     const handleVerify = (id) => {
-        mutation.mutate({ id, status: 'Verified' });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to verify this donation.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, verify it!',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                mutation.mutate({ id, status: 'Verified' });
+            }
+        });
     };
 
     const handleReject = (id) => {
-        mutation.mutate({ id, status: 'Rejected' });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to reject this donation.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, reject it!',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                mutation.mutate({ id, status: 'Rejected' });
+            }
+        });
     };
 
-    if (isLoading) return <p>Loading donations...</p>;
-    if (isError) return <p>Error loading donations.</p>;
+    if (isPending){
+        return <p>Loading donations...</p>;
+    }
+    if (isError){
+        return <p>Error loading donations.</p>;
+    }
 
     return (
         <div className="overflow-x-auto p-4 bg-white rounded shadow">
@@ -78,14 +105,14 @@ const ManageDonations = () => {
                                         <button
                                             className="btn btn-sm bg-teal-700 hover:bg-teal-800 text-gray-100"
                                             onClick={() => handleVerify(donation._id)}
-                                            disabled={mutation.isLoading}
+                                            disabled={mutation.isPending}
                                         >
                                             Verify
                                         </button>
                                         <button
                                             className="btn btn-sm bg-red-700 hover:bg-red-800 text-gray-100"
                                             onClick={() => handleReject(donation._id)}
-                                            disabled={mutation.isLoading}
+                                            disabled={mutation.isPending}
                                         >
                                             Reject
                                         </button>
@@ -100,7 +127,8 @@ const ManageDonations = () => {
                 </tbody>
             </table>
             {mutation.isLoading && <p className="mt-2 text-blue-600">Updating status...</p>}
-            {mutation.isError && <p className="mt-2 text-red-600">Error updating status.</p>}
+            {mutation.isError && <p className="mt-2 text-red-600">Error updating status: {mutation.error.message}</p>}
+
         </div>
     );
 };

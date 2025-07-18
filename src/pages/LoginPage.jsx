@@ -98,7 +98,7 @@ const LoginPage = () => {
                                 {errors.password && (
                                     <p className="text-red-600 text-xs">{errors.password.message}</p>
                                 )}
-                                <button className="btn btn-neutral mt-4">
+                                <button className="btn btn-neutral mt-4 hover:bg-teal-800">
                                     {
                                         isLogging || userLoginMutation.isPending || authLoading?(
                                         <>

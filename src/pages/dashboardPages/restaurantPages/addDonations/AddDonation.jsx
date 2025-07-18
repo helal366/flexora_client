@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
-import useAxiosSecure from '../../../../hooks/useAxiosSecure';
-import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';  // optional custom hook
+// import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload'; 
 import useRestaurantProfile from '../../../../hooks/useRestaurantProfile';
 import Loading from '../../../../components/loadingComponents/Loading';
 import useAddDonation from '../../../../hooks/useAddDonation';
@@ -18,7 +18,7 @@ const pickupTimeWindows = {
 
 const AddDonation = () => {
     const { user } = useAuth();
-    const axiosSecure = useAxiosSecure();
+    // const axiosSecure = useAxiosSecure();
     const { mutateAsync: uploadImage } = useCloudinaryImageUpload(); // optional
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();
@@ -29,6 +29,16 @@ const AddDonation = () => {
     const selectedMeal = watch('meal_time'); // to derive time window
 
     const onSubmit = async (data) => {
+        const result = await Swal.fire({
+            title: 'Confirm Donation',
+            text: 'Do you want to submit this donation?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'Cancel',
+        });
+
+        if (!result.isConfirmed) return;
         try {
             let imageUrl = '';
             if (data?.image[0]) {
@@ -45,24 +55,32 @@ const AddDonation = () => {
                 restaurant_name: restaurantProfile?.organization_name || '',
                 restaurant_email: restaurantProfile?.organization_email || '',
                 location: restaurantProfile?.organization_location || '',
-                user_name: user?.displayName,
-                user_email: user?.email,
+                restaurant_user_name: user?.displayName,
+                restaurant_user_email: user?.email,
                 image: imageUrl,
                 status: 'Pending',
                 posted_at: new Date().toISOString()
             };
 
-            await axiosSecure.post('/donations', donationData);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Donation Added!',
-                text: 'Your food donation has been submitted for review.',
-            });
-
-            reset();
-            setImagePreview(null);
-            addDonation(data);
+            addDonation(donationData, {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Donation Added!',
+                    text: 'Your food donation has been submitted.',
+                });
+                reset();
+                setImagePreview(null);
+            },
+            onError: (err) => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: err?.message || 'Failed to add donation.',
+                });
+            },
+        });
         } catch (err) {
             console.error(err);
             Swal.fire({
@@ -101,17 +119,17 @@ const AddDonation = () => {
                         {...register('food_type', { required: 'Food type is required' })}
                     >
                         <option value="">-- Select Food Type --</option>
-                        <option value="cooked_meal">Cooked Meal</option>
-                        <option value="cooked_rice_dish">Cooked Rice Dish</option>
-                        <option value="Traditional_meal">Traditional Meal</option>
-                        <option value="bakery">Bakery</option>
-                        <option value="produce">Produce</option>
-                        <option value="dairy">Dairy</option>
-                        <option value="meat">Meat</option>
-                        <option value="beverages">Beverages</option>
-                        <option value="dry-goods">Dry Goods</option>
-                        <option value="snack">Snack</option>
-                        <option value="soft_drinks">Soft Drinks</option>
+                        <option value="Cooked Meal">Cooked Meal</option>
+                        <option value="Cooked Rice Dish">Cooked Rice Dish</option>
+                        <option value="Traditional Meal">Traditional Meal</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Produce">Produce</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Meat">Meat</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Dry Goods">Dry Goods</option>
+                        <option value="Snack">Snack</option>
+                        <option value="Soft Drinks">Soft Drinks</option>
                     </select>
                     {errors.food_type && (
                         <p className="text-red-500 text-sm mt-1">{errors.food_type.message}</p>
@@ -209,7 +227,7 @@ const AddDonation = () => {
                         />
                     )}
                 </div>
-                    {/* restaurant name */}
+                {/* restaurant name */}
                 <div>
                     <label className="label text-teal-800 font-medium italic">Restaurant Name</label>
                     <input
@@ -218,7 +236,7 @@ const AddDonation = () => {
                         readOnly
                     />
                 </div>
-                    {/* restaurant email */}
+                {/* restaurant email */}
                 <div>
                     <label className="label text-teal-800 font-medium italic">Restaurant Email</label>
                     <input
@@ -229,10 +247,10 @@ const AddDonation = () => {
                 </div>
 
                 {/* add donation button */}
-                <button 
-                type="submit" 
-                className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 disabled:bg-teal-200 disabled:text-gray-500/50 w-full mb-16"
-                disabled={isPending}
+                <button
+                    type="submit"
+                    className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 disabled:bg-teal-200 disabled:text-gray-500/50 w-full mb-16"
+                    disabled={isPending}
                 >
                     Add Donation
                 </button>
