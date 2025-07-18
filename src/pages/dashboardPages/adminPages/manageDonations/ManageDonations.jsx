@@ -12,7 +12,7 @@ const ManageDonations = () => {
         return res.data;
     };
     const updateDonationStatus = async ({ id, status }) => {
-        const res = await axiosSecure.patch(`/donations/${id}`, { status });
+        const res = await axiosSecure.patch(`/donations/${id}`, { status, donation_status: "Available" });
         return res?.data;
     };
 

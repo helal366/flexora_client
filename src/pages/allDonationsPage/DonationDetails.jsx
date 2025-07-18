@@ -5,6 +5,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
+import useUserRole from './../../hooks/useUserRole';
 
 const DonationDetails = () => {
   const { id } = useParams();
@@ -12,12 +13,18 @@ const DonationDetails = () => {
   const axiosSecure = useAxiosSecure();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-
+  const { isUser, isCharity } = useUserRole()
+  const date = new Date();
+const formattedDate = date.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+});
   const { data: donation = {}, isLoading } = useQuery({
     queryKey: ['donation', id],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations/${id}`);
-      return res.data;
+      const res = await axiosSecure.get(`/donations/${id}?email=${user?.email}`);
+      return res?.data;
     },
     enabled: !!id,
   });
@@ -42,9 +49,11 @@ const DonationDetails = () => {
           charity_email: user.email,
           request_description: data.request_description,
           pickup_time: data.pickup_time,
+          pickup_date: formattedDate,
           request_status: 'Pending',
         },
-        status: 'Requested',
+        status: 'Verified',
+        donation_status: 'Requested'
       });
       return res.data;
     },
@@ -62,10 +71,12 @@ const DonationDetails = () => {
     mutationFn: async (data) => {
       const reviewData = {
         donation_id: id,
-        reviewer_name: data.reviewer_name,
-        description: data.description,
+        reviewer_name: data?.reviewer_name,
+        reviewer_email: data?.reviewer_email,
+        description: data?.description,
         rating: parseInt(data.rating),
       };
+      console.log({reviewData})
       const res = await axiosSecure.post('/donation-reviews', reviewData);
       return res.data;
     },
@@ -82,67 +93,248 @@ const DonationDetails = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold">{donation.donation_title}</h2>
-      <p className="text-gray-600">{donation.description}</p>
-      <p><strong>Restaurant:</strong> {donation.restaurant_name}</p>
-      <p><strong>Location:</strong> {donation.location}</p>
-      <p><strong>Quantity:</strong> {donation.quantity}</p>
-      <p><strong>Status:</strong> {donation.status}</p>
-
-      {donation.request && (
-        <div className="mt-4 border-t pt-4">
-          <p><strong>Requested by:</strong> {donation.request.charity_name}</p>
-          <p><strong>Description:</strong> {donation.request.request_description}</p>
-          <p><strong>Pickup Time:</strong> {donation.request.pickup_time}</p>
-          <p><strong>Request Status:</strong> {donation.request.request_status}</p>
+    <section className="p-4 my-10 mx-auto bg-teal-50 border border-gray-500/50 rounded">
+      <section className='flex flex-col lg:flex-row gap-8 justify-items-center lg:items-center'>
+        {/* Donation Image */}
+        <div>
+          {donation.image && (
+            <img
+              src={donation.image}
+              alt={donation.donation_title}
+              className="w-full max-w-sm rounded-lg mb-4"
+            />
+          )}
         </div>
-      )}
+        {/* other texts */}
+        <div className=''>
+          <h2 className="text-2xl font-bold mb-4 text-teal-800 italic">{donation.donation_title}</h2>
+          <p className="text-teal-800">{donation.description}</p>
+          <p><strong className='text-teal-800 italic'>Restaurant : </strong>
+            <span className='text-gray-800'>{donation.restaurant_name}</span>
+          </p>
+          <p><strong className='text-teal-800 italic'>Restaurant Location : </strong>
+            <span className='text-gray-800'>{donation.location}</span>
+          </p>
+          <p><strong className='text-teal-800 italic'>Quantity : </strong>
+            <span className='text-gray-800'>{donation.quantity}</span> </p>
+          <p><strong className='text-teal-800 italic'>Status : </strong>
+            <span className='text-gray-800'>{donation.status}</span></p>
+
+          {donation.request && (
+            <div className="mt-4 border-t pt-4">
+              <p>
+                <strong className="text-teal-800 italic">Requested by : </strong>
+                <span className="text-gray-800">{donation.request.charity_name}</span>
+              </p>
+              <p>
+                <strong className="text-teal-800 italic">Description : </strong>
+                <span className="text-gray-800">{donation.request.request_description}</span>
+              </p>
+              <p>
+                <strong className="text-teal-800 italic">Pick up Time : </strong>
+                <span className="text-gray-800">{donation.request.pickup_time}</span>
+              </p>
+              <p>
+                <strong className="text-teal-800 italic">Pick up Date : </strong>
+                <span className="text-gray-800">{formattedDate}</span>
+              </p>
+              <p>
+                <strong className="text-teal-800 italic">Request Status : </strong>
+                <span className="text-gray-800">{donation.request.request_status}</span>
+              </p>
+
+            </div>
+          )}
+
+          {/* Buttons */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            {(isUser || isCharity) && (
+              <button onClick={() => setShowReviewModal(true)} className="btn btn-outline btn-secondary">Add Review</button>
+            )}
+            {
+              isCharity && <button
+                onClick={() => setShowRequestModal(true)}
+                className="btn btn-outline btn-info disabled:bg-teal-100"
+                disabled={donation?.donation_status !== 'Available'}
+              >
+                Request Donation
+              </button>
+            }
+          </div>
+        </div>
+      </section>
 
       {/* Modals */}
       {showRequestModal && (
-        <dialog className="modal modal-open">
-          <div className="modal-box">
+        <dialog className="modal modal-open ">
+          <section className="modal-box">
             <h3 className="font-bold text-lg mb-2">Request Donation</h3>
             <form onSubmit={handleRequestSubmit(submitRequest)} className="space-y-3">
-              <input readOnly defaultValue={donation.donation_title} className="input input-bordered w-full" />
-              <input readOnly defaultValue={donation.restaurant_name} className="input input-bordered w-full" />
-              <input readOnly {...requestRegister('charity_name')} defaultValue={user.displayName} className="input input-bordered w-full" />
-              <input readOnly {...requestRegister('charity_email')} defaultValue={user.email} className="input input-bordered w-full" />
-              <textarea {...requestRegister('request_description', { required: true })} placeholder="Request details..." className="textarea textarea-bordered w-full" />
-              <input type="time" {...requestRegister('pickup_time', { required: true })} className="input input-bordered w-full" />
+              {/* donation image */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Donation Image</span>
+                </label>
+                <img
+                  src={donation?.image}
+                  alt="Donation"
+                  className="w-full max-h-64 object-cover rounded-lg border"
+                />
+              </div>
+              {/* donation title */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Donation Title</span>
+                </label>
+                <input
+                  readOnly
+                  defaultValue={donation?.donation_title}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              {/* donation restaurant */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Restaurant Name</span>
+                </label>
+                <input
+                  readOnly
+                  defaultValue={donation?.restaurant_name}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              {/* charity name */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Charity Name</span>
+                </label>
+                <input
+                  readOnly
+                  {...requestRegister('charity_name')}
+                  defaultValue={user?.displayName}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              {/* charity email */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Charity Email</span>
+                </label>
+                <input
+                  readOnly
+                  {...requestRegister('charity_email')}
+                  defaultValue={user?.email}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              {/* request description */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Request Description</span>
+                </label>
+                <textarea
+                  {...requestRegister('request_description', { required: true })}
+                  placeholder="Request details..."
+                  className="textarea textarea-bordered w-full"
+                />
+              </div>
+
+              {/* prefferred pickup time */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Preferred Pickup Time</span>
+                </label>
+                <input
+                  type="time"
+                  {...requestRegister('pickup_time', { required: true })}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
               <div className="modal-action">
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" onClick={() => setShowRequestModal(false)} className="btn">Cancel</button>
               </div>
             </form>
-          </div>
+          </section>
         </dialog>
       )}
 
       {showReviewModal && (
         <dialog className="modal modal-open">
-          <div className="modal-box">
+          <section className="modal-box">
             <h3 className="font-bold text-lg mb-2">Add Review</h3>
             <form onSubmit={handleReviewSubmit(submitReview)} className="space-y-3">
-              <input {...reviewRegister('reviewer_name')} defaultValue={user.displayName} className="input input-bordered w-full" />
-              <textarea {...reviewRegister('description', { required: true })} placeholder="Write your review..." className="textarea textarea-bordered w-full" />
-              <input type="number" min="1" max="5" {...reviewRegister('rating', { required: true })} className="input input-bordered w-full" />
+              <div className="space-y-4">
+                {/* Reviewer Name */}
+                <div>
+                  <label className="label">
+                    <span className="label-text font-semibold">Your Name</span>
+                  </label>
+                  <input
+                    {...reviewRegister('reviewer_name')}
+                    defaultValue={user.displayName}
+                    className="input input-bordered w-full"
+                    readOnly
+                  />
+                </div>
+
+                {/* Reviewer Email */}
+                <div>
+                  <label className="label">
+                    <span className="label-text font-semibold">Your Email</span>
+                  </label>
+                  <input
+                    {...reviewRegister('reviewer_email')}
+                    defaultValue={user.email}
+                    className="input input-bordered w-full"
+                    readOnly
+                  />
+                </div>
+
+                {/* Review Description */}
+                <div>
+                  <label className="label">
+                    <span className="label-text font-semibold">Review</span>
+                  </label>
+                  <textarea
+                    {...reviewRegister('description', { required: true })}
+                    placeholder="Write your review..."
+                    className="textarea textarea-bordered w-full"
+                  />
+                </div>
+
+                {/* Rating */}
+                <div>
+                  <label className="label">
+                    <span className="label-text font-semibold">Rating (1-5)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    placeholder="Give your rating out of five"
+                    {...reviewRegister('rating', { required: true })}
+                    className="input input-bordered w-full"
+                  />
+                </div>
+              </div>
+
               <div className="modal-action">
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" onClick={() => setShowReviewModal(false)} className="btn">Cancel</button>
               </div>
             </form>
-          </div>
+          </section>
         </dialog>
       )}
 
-      {/* Buttons */}
-      <div className="mt-6 flex gap-3">
-        <button onClick={() => setShowRequestModal(true)} className="btn btn-outline btn-info">Request Donation</button>
-        <button onClick={() => setShowReviewModal(true)} className="btn btn-outline btn-secondary">Add Review</button>
-      </div>
-    </div>
+
+    </section>
   );
 };
 
