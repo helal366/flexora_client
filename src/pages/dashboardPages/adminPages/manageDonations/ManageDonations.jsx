@@ -27,7 +27,19 @@ const ManageDonations = () => {
         mutationFn: updateDonationStatus,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['donations'] }); // refetch donations after update
-        }
+            Swal.fire({
+                icon: 'success',
+                title: 'Status Updated',
+                text: 'Donation status has been updated successfully.',
+            });
+        },
+        onError: (error) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Update Failed!',
+                text: error?.response?.data?.message || 'Something went wrong.',
+            });
+        },
     });
 
 
@@ -61,10 +73,10 @@ const ManageDonations = () => {
         });
     };
 
-    if (isPending){
+    if (isPending) {
         return <p>Loading donations...</p>;
     }
-    if (isError){
+    if (isError) {
         return <p>Error loading donations.</p>;
     }
 

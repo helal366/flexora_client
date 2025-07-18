@@ -23,7 +23,6 @@ const AddDonation = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();
     const { mutate: addDonation, isPending } = useAddDonation();
-
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const selectedMeal = watch('meal_time'); // to derive time window
