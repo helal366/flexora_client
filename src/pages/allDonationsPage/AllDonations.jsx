@@ -19,7 +19,7 @@ const AllDonations = () => {
     return (
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-6 py-6">
             {donations.map(donation => (
-                <div key={donation._id} className="border rounded-xl shadow-md p-4 bg-[#fffaf0]">
+                <div key={donation._id} className="border border-gray-500/50 rounded shadow-lg p-4 bg-[#fffaf0]">
                     <img src={donation.image} alt={donation.donation_title} className="h-48 w-full object-cover rounded-md mb-3" />
                     <h2 className="text-xl font-semibold mb-4 text-teal-900">{donation.donation_title}</h2>
                     <p className="text-sm text-gray-600">

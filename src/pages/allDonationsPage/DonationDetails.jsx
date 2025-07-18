@@ -2,82 +2,115 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import queryClient from '../../api/queryClient';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router';
 
-const DonationDetails = ({ donation }) => {
+const DonationDetails = () => {
+  const { id } = useParams();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
-const reviewMutation = useMutation({
-  mutationFn: async (reviewData) => {
-    const res = await axiosSecure.post('/donation-reviews', reviewData);
-    return res.data;
-  },
-  onSuccess: () => {
-    Swal.fire('Review Submitted!', '', 'success');
-    setShowReviewModal(false);
-    queryClient.invalidateQueries({ queryKey: ['donation-reviews', donation._id] }); // optional if fetching review list
-  },
-  onError: (err) => {
-    console.error(err);
-    Swal.fire('Error', 'Failed to submit review.', 'error');
-  }
-});
+  const { data: donation = {}, isLoading } = useQuery({
+    queryKey: ['donation', id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donations/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
 
+  const {
+    register: requestRegister,
+    handleSubmit: handleRequestSubmit,
+    reset: resetRequestForm,
+  } = useForm();
 
-  const handleRequestSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const requestData = {
-      donation_id: donation._id,
-      donation_title: donation.donation_title,
-      restaurant_name: donation.restaurant_name,
-      charity_name: form.charity_name.value,
-      charity_email: form.charity_email.value,
-      request_description: form.request_description.value,
-      pickup_time: form.pickup_time.value,
-      donation_status: "Requested",
-    };
+  const {
+    register: reviewRegister,
+    handleSubmit: handleReviewSubmit,
+    reset: resetReviewForm,
+  } = useForm();
 
-    try {
-      await axiosSecure.post('/donation-requests', requestData);
+  const { mutate: submitRequest } = useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosSecure.patch(`/donations/${id}`, {
+        request: {
+          charity_name: user.displayName,
+          charity_email: user.email,
+          request_description: data.request_description,
+          pickup_time: data.pickup_time,
+          request_status: 'Pending',
+        },
+        status: 'Requested',
+      });
+      return res.data;
+    },
+    onSuccess: () => {
       Swal.fire('Requested!', 'Donation request submitted.', 'success');
       setShowRequestModal(false);
-    } catch (err) {
-      console.error(err);
+      resetRequestForm();
+    },
+    onError: () => {
       Swal.fire('Error', 'Could not submit request', 'error');
-    }
-  };
+    },
+  });
 
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const reviewData = {
-      donation_id: donation._id,
-      reviewer_name: form.reviewer_name.value,
-      description: form.description.value,
-      rating: parseInt(form.rating.value),
-    };
-    reviewMutation.mutate(reviewData);
-  };
+  const { mutate: submitReview } = useMutation({
+    mutationFn: async (data) => {
+      const reviewData = {
+        donation_id: id,
+        reviewer_name: data.reviewer_name,
+        description: data.description,
+        rating: parseInt(data.rating),
+      };
+      const res = await axiosSecure.post('/donation-reviews', reviewData);
+      return res.data;
+    },
+    onSuccess: () => {
+      Swal.fire('Review Submitted!', '', 'success');
+      setShowReviewModal(false);
+      resetReviewForm();
+    },
+    onError: () => {
+      Swal.fire('Error', 'Failed to submit review.', 'error');
+    },
+  });
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div>
-      {/* Request Donation Modal */}
+    <div className="p-4">
+      <h2 className="text-2xl font-bold">{donation.donation_title}</h2>
+      <p className="text-gray-600">{donation.description}</p>
+      <p><strong>Restaurant:</strong> {donation.restaurant_name}</p>
+      <p><strong>Location:</strong> {donation.location}</p>
+      <p><strong>Quantity:</strong> {donation.quantity}</p>
+      <p><strong>Status:</strong> {donation.status}</p>
+
+      {donation.request && (
+        <div className="mt-4 border-t pt-4">
+          <p><strong>Requested by:</strong> {donation.request.charity_name}</p>
+          <p><strong>Description:</strong> {donation.request.request_description}</p>
+          <p><strong>Pickup Time:</strong> {donation.request.pickup_time}</p>
+          <p><strong>Request Status:</strong> {donation.request.request_status}</p>
+        </div>
+      )}
+
+      {/* Modals */}
       {showRequestModal && (
         <dialog className="modal modal-open">
           <div className="modal-box">
             <h3 className="font-bold text-lg mb-2">Request Donation</h3>
-            <form onSubmit={handleRequestSubmit} className="space-y-3">
+            <form onSubmit={handleRequestSubmit(submitRequest)} className="space-y-3">
               <input readOnly defaultValue={donation.donation_title} className="input input-bordered w-full" />
               <input readOnly defaultValue={donation.restaurant_name} className="input input-bordered w-full" />
-              <input name="charity_name" defaultValue={user.displayName} className="input input-bordered w-full" />
-              <input name="charity_email" defaultValue={user.email} className="input input-bordered w-full" />
-              <textarea name="request_description" required placeholder="Request details..." className="textarea textarea-bordered w-full" />
-              <input name="pickup_time" required type="time" className="input input-bordered w-full" />
+              <input readOnly {...requestRegister('charity_name')} defaultValue={user.displayName} className="input input-bordered w-full" />
+              <input readOnly {...requestRegister('charity_email')} defaultValue={user.email} className="input input-bordered w-full" />
+              <textarea {...requestRegister('request_description', { required: true })} placeholder="Request details..." className="textarea textarea-bordered w-full" />
+              <input type="time" {...requestRegister('pickup_time', { required: true })} className="input input-bordered w-full" />
               <div className="modal-action">
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" onClick={() => setShowRequestModal(false)} className="btn">Cancel</button>
@@ -87,15 +120,14 @@ const reviewMutation = useMutation({
         </dialog>
       )}
 
-      {/* Review Modal */}
       {showReviewModal && (
         <dialog className="modal modal-open">
           <div className="modal-box">
             <h3 className="font-bold text-lg mb-2">Add Review</h3>
-            <form onSubmit={handleReviewSubmit} className="space-y-3">
-              <input name="reviewer_name" defaultValue={user.displayName} className="input input-bordered w-full" />
-              <textarea name="description" required placeholder="Write your review..." className="textarea textarea-bordered w-full" />
-              <input name="rating" type="number" min="1" max="5" required className="input input-bordered w-full" />
+            <form onSubmit={handleReviewSubmit(submitReview)} className="space-y-3">
+              <input {...reviewRegister('reviewer_name')} defaultValue={user.displayName} className="input input-bordered w-full" />
+              <textarea {...reviewRegister('description', { required: true })} placeholder="Write your review..." className="textarea textarea-bordered w-full" />
+              <input type="number" min="1" max="5" {...reviewRegister('rating', { required: true })} className="input input-bordered w-full" />
               <div className="modal-action">
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <button type="button" onClick={() => setShowReviewModal(false)} className="btn">Cancel</button>
@@ -105,7 +137,7 @@ const reviewMutation = useMutation({
         </dialog>
       )}
 
-      {/* Trigger Buttons */}
+      {/* Buttons */}
       <div className="mt-6 flex gap-3">
         <button onClick={() => setShowRequestModal(true)} className="btn btn-outline btn-info">Request Donation</button>
         <button onClick={() => setShowReviewModal(true)} className="btn btn-outline btn-secondary">Add Review</button>
@@ -115,3 +147,4 @@ const reviewMutation = useMutation({
 };
 
 export default DonationDetails;
+
