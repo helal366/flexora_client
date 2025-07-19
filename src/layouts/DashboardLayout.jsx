@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -158,7 +158,7 @@ const DashboardLayout = () => {
                                             Add Donation
                                         </NavLink>
                                     </li>
-                                    
+
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/my_donations" className="flex items-center gap-2">
                                             <FaUtensils className="text-xl text-blue-700" />
@@ -192,6 +192,13 @@ const DashboardLayout = () => {
                                             My Requests
                                         </NavLink>
                                     </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/my-pickups" className="flex items-center gap-2">
+                                            <FaTruckPickup className="text-xl text-green-600" />
+                                            My Pickups
+                                        </NavLink>
+                                    </li>
+
 
                                 </>
                             )
