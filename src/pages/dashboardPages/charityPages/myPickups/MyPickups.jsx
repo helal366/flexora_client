@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import queryClient from '../../../../api/queryClient';
+import Loading from '../../../../components/loadingComponents/Loading';
 
 const MyPickups = () => {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ const MyPickups = () => {
     queryKey: ['my-pickups', user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/requests?charity_email=${user?.email}&request_status=Accepted`);
-      return res.data;
+      return res?.data;
     },
     enabled: !!user?.email,
   });
@@ -48,7 +49,7 @@ const MyPickups = () => {
     });
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p><Loading/> </p>;
 
   return (
     <div className="grid gap-4 md:grid-cols-2">

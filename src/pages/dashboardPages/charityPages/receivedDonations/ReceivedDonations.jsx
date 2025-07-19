@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import AddReviewModal from '../../shared/ReviewModal/AddReviewModal'; // Create if not exist
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
+import AddReviewModal from './AddReviewModal';
 
 const ReceivedDonations = () => {
   const { user } = useAuth();

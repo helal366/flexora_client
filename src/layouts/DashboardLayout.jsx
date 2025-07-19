@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -198,7 +198,12 @@ const DashboardLayout = () => {
                                             My Pickups
                                         </NavLink>
                                     </li>
-
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/received-donations" className="flex items-center gap-2">
+                                            <FaBoxOpen className="text-xl text-blue-600" />
+                                            Received Donations
+                                        </NavLink>
+                                    </li>
 
                                 </>
                             )
