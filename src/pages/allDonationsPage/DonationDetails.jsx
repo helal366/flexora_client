@@ -10,16 +10,17 @@ import useUserRole from './../../hooks/useUserRole';
 const DonationDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const { userInfo } = useUserRole();
   const axiosSecure = useAxiosSecure();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const { isUser, isCharity } = useUserRole()
+  const { isUser, isCharity } = useUserRole();
   const date = new Date();
-const formattedDate = date.toLocaleDateString('en-GB', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric'
-});
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
   const { data: donation = {}, isLoading } = useQuery({
     queryKey: ['donation', id],
     queryFn: async () => {
@@ -28,6 +29,19 @@ const formattedDate = date.toLocaleDateString('en-GB', {
     },
     enabled: !!id,
   });
+  const { data: alreadyRequested } = useQuery({
+  queryKey: ['request-check', donation._id, user?.email],
+  queryFn: async () => {
+    const res = await axiosSecure.get('/requests/check', {
+      params: {
+        donation_id: donation?._id,
+        charity_email: user?.email,
+      },
+    });
+    return res?.data?.alreadyRequested;
+  },
+  enabled: !!user?.email && !!donation?._id,
+});
 
   const {
     register: requestRegister,
@@ -43,27 +57,43 @@ const formattedDate = date.toLocaleDateString('en-GB', {
 
   const { mutate: submitRequest } = useMutation({
     mutationFn: async (data) => {
-      const res = await axiosSecure.patch(`/donations/${id}`, {
-        request: {
-          charity_name: user.displayName,
-          charity_email: user.email,
-          request_description: data.request_description,
-          pickup_time: data.pickup_time,
-          pickup_date: formattedDate,
-          request_status: 'Pending',
-        },
+      const requestData = {
+        donation_id: id,
+        donation_title: donation?.donation_title,
+        donation_image: donation?.image,
+        restaurant_name: donation?.restaurant_name,
+        restaurant_email: donation?.restaurant_email,
+        restaurant_representative_name: donation?.restaurant_user_name,
+        restaurant_representative_email: donation?.restaurant_user_email,
+        charity_representative_name: user?.displayName,
+        charity_representative_email: user?.email,
+        charity_name: userInfo?.user_by_email?.organization_name,
+        charity_email: userInfo?.user_by_email?.organization_email,
+        request_description: data?.request_description,
+        preffered_pickup_time: data?.pickup_time,
+        preffered_pickup_date: formattedDate,
+        request_status: 'Pending',
+      };
+      // 1️⃣ Store request in requests collection
+      await axiosSecure.post('/donation-requests', requestData);
+
+      // 2️⃣ Update donation status (OPTIONAL: only if it's not already "Requested")
+      await axiosSecure.patch(`/donations/${id}`, {
         status: 'Verified',
-        donation_status: 'Requested'
+        donation_status: 'Requested',
       });
-      return res.data;
     },
     onSuccess: () => {
       Swal.fire('Requested!', 'Donation request submitted.', 'success');
       setShowRequestModal(false);
       resetRequestForm();
     },
-    onError: () => {
-      Swal.fire('Error', 'Could not submit request', 'error');
+    onError: (error) => {
+      if (error.response?.status === 400 && error.response?.data?.message === 'You have already requested this donation.') {
+        Swal.fire('Oops!', 'You have already sent a request for this donation.', 'warning');
+      } else {
+        Swal.fire('Error', 'Could not submit request', 'error');
+      }
     },
   });
 
@@ -76,7 +106,6 @@ const formattedDate = date.toLocaleDateString('en-GB', {
         description: data?.description,
         rating: parseInt(data.rating),
       };
-      console.log({reviewData})
       const res = await axiosSecure.post('/donation-reviews', reviewData);
       return res.data;
     },
@@ -149,15 +178,17 @@ const formattedDate = date.toLocaleDateString('en-GB', {
           {/* Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             {(isUser || isCharity) && (
-              <button onClick={() => setShowReviewModal(true)} className="btn btn-outline btn-secondary">Add Review</button>
+              <button 
+              onClick={() => setShowReviewModal(true)} 
+              className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 shadow-xl">Add Review</button>
             )}
             {
               isCharity && <button
                 onClick={() => setShowRequestModal(true)}
-                className="btn btn-outline btn-info disabled:bg-teal-100"
-                disabled={donation?.donation_status !== 'Available'}
+                className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 disabled:bg-teal-100 disabled:text-gray-500 shadow-xl"
+                disabled={alreadyRequested}
               >
-                Request Donation
+                {alreadyRequested ? 'Request Sent' : 'Request Donation'}
               </button>
             }
           </div>

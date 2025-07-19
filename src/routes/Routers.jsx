@@ -30,6 +30,7 @@ import RestaurantProfileUpdate from "../pages/dashboardPages/restaurantPages/res
 import AddDonation from "../pages/dashboardPages/restaurantPages/addDonations/AddDonation";
 import ManageDonations from "../pages/dashboardPages/adminPages/manageDonations/ManageDonations";
 import DonationDetails from "../pages/allDonationsPage/DonationDetails";
+import RequestedDonations from "../pages/dashboardPages/restaurantPages/requestedDonations/RequestedDonations";
 
 const router = createBrowserRouter([
     {
@@ -165,6 +166,14 @@ const router = createBrowserRouter([
                 element: (
                     <RestaurantRoute>
                         <AddDonation/>
+                    </RestaurantRoute>
+                )
+            },
+            {
+                path: 'requested-donations',
+                element: (
+                    <RestaurantRoute>
+                        <RequestedDonations/>
                     </RestaurantRoute>
                 )
             },
