@@ -8,17 +8,19 @@ const MyRequests = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
-  // Fetch all requests made by this charity
   const { data: requests = [], isLoading, refetch } = useQuery({
     queryKey: ['charityRequests', user?.email],
     queryFn: async () => {
+         if (!user?.email) return [];
       const res = await axiosSecure.get(`/requests/charity?email=${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
+    onError: () => {
+      Swal.fire('Error!', 'Failed to fetch requests.', 'error');
+    },
   });
 
-  // Cancel request mutation
   const { mutate: cancelRequest } = useMutation({
     mutationFn: async (requestId) => {
       const res = await axiosSecure.delete(`/requests/${requestId}`);
@@ -51,65 +53,50 @@ const MyRequests = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">My Donation Requests</h2>
+      <h2 className="text-2xl font-semibold mb-6">My Donation Requests</h2>
+
       {requests.length === 0 ? (
         <p>No requests found.</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Donation Title</th>
-                <th>Image</th>
-                <th>Restaurant</th>
-                <th>Food Type</th>
-                <th>Quantity</th>
-                <th>Description</th>
-                <th>Pickup</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((req) => (
-                <tr key={req._id}>
-                  <td>{req.donation_title}</td>
-                  <td>
-                    <img src={req.donation_image} alt="donation" className="w-12 h-12 object-cover rounded" />
-                  </td>
-                  <td>{req.restaurant_name}</td>
-                  <td>{req.food_type || 'N/A'}</td>
-                  <td>{req.quantity || 'N/A'}</td>
-                  <td className="max-w-xs truncate">{req.request_description}</td>
-                  <td>
-                    {req.preffered_pickup_time} <br />
-                    {req.preffered_pickup_date}
-                  </td>
-                  <td><span
-                      className={`px-2 py-1 rounded text-sm ${
-                        req.request_status === 'Accepted'
-                          ? 'bg-green-200 text-green-800'
-                          : req.request_status === 'Rejected'
-                          ? 'bg-red-200 text-red-800'
-                          : 'bg-yellow-200 text-yellow-800'
-                      }`}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {requests.map((req) => (
+            <div key={req._id} className="card bg-base-100 shadow-md">
+              <figure className="h-48 overflow-hidden">
+                <img src={req.donation_image} alt={req.donation_title} className="w-full object-cover" />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">{req.donation_title}</h2>
+                <p><strong>Restaurant:</strong> {req.restaurant_name}</p>
+                <p><strong>Food Type:</strong> {req.food_type || 'N/A'}</p>
+                <p><strong>Quantity:</strong> {req.quantity || 'N/A'}</p>
+                <p><strong>Description:</strong> {req.request_description}</p>
+                <p><strong>Pickup:</strong> {req.preferred_pickup_time} on {req.preferred_pickup_date}</p>
+                <div className="mt-2">
+                  <span
+                    className={`inline-block px-2 py-1 text-sm rounded font-medium ${
+                      req.request_status === 'Accepted'
+                        ? 'bg-green-100 text-green-800'
+                        : req.request_status === 'Rejected'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}
+                  >
+                    {req.request_status}
+                  </span>
+                </div>
+                {req.request_status === 'Pending' && (
+                  <div className="card-actions justify-end mt-4">
+                    <button
+                      onClick={() => handleCancel(req._id)}
+                      className="btn btn-error btn-sm"
                     >
-                      {req.request_status}
-                    </span></td>
-                  <td>
-                    {req.request_status === 'Pending' && (
-                      <button
-                        onClick={() => handleCancel(req._id)}
-                        className="btn btn-error btn-sm"
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -117,4 +104,3 @@ const MyRequests = () => {
 };
 
 export default MyRequests;
-

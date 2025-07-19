@@ -14,7 +14,7 @@ const DonationDetails = () => {
   const axiosSecure = useAxiosSecure();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [hasRequested, setHasRequested]=useState(false)
+  const [hasRequested, setHasRequested] = useState(false)
   const { isUser, isCharity } = useUserRole();
   const date = new Date();
   const formattedDate = date.toLocaleDateString('en-GB', {
@@ -22,17 +22,19 @@ const DonationDetails = () => {
     month: 'long',
     year: 'numeric'
   });
-  const { data: donation = {}, isLoading } = useQuery({
-    queryKey: ['donation', id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/donations/${id}?email=${user?.email}`);
-      return res?.data;
-    },
-    enabled: !!id,
-  });
-  console.log({donation})
-  const { data: alreadyRequested } = useQuery({
-  queryKey: ['request-check', donation._id, user?.email],
+  const { data: donation, isPending: donationLoading } = useQuery({
+  queryKey: ['donation', id, user?.email],
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/donations/${id}?email=${user?.email}`);
+    return res.data;
+  },
+  enabled: !!id && !!user?.email, // ensure both are ready
+});
+
+
+// Check if current charity already requested this donation
+const { data: alreadyRequested = false, isLoading: requestCheckLoading } = useQuery({
+  queryKey: ['request-check', donation?._id, user?.email],
   queryFn: async () => {
     const res = await axiosSecure.get('/requests/check', {
       params: {
@@ -42,7 +44,7 @@ const DonationDetails = () => {
     });
     return res?.data?.alreadyRequested;
   },
-  enabled: !!user?.email && !!donation?._id,
+  enabled: !!donation?._id && !!user?.email && isCharity,
 });
 
   const {
@@ -73,8 +75,8 @@ const DonationDetails = () => {
         charity_name: userInfo?.user_by_email?.organization_name,
         charity_email: userInfo?.user_by_email?.organization_email,
         request_description: data?.request_description,
-        preffered_pickup_time: data?.pickup_time,
-        preffered_pickup_date: formattedDate,
+        preferred_pickup_time: data?.pickup_time,
+        preferred_pickup_date: formattedDate,
         request_status: 'Pending',
       };
       // 1️⃣ Store request in requests collection
@@ -123,7 +125,9 @@ const DonationDetails = () => {
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+   if (donationLoading || requestCheckLoading) {
+    return <div className="text-center py-10">Loading donation details...</div>;
+  };
 
   return (
     <section className="p-4 my-10 mx-auto bg-teal-50 border border-gray-500/50 rounded">
@@ -182,20 +186,42 @@ const DonationDetails = () => {
           {/* Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             {(isUser || isCharity) && (
-              <button 
-              onClick={() => setShowReviewModal(true)} 
-              className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 shadow-xl">Add Review</button>
-            )}
-            {
-              isCharity && <button
-                onClick={() => setShowRequestModal(true)}
-                className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 disabled:bg-teal-100 disabled:text-gray-500 disabled:cursor-not-allowed shadow-xl"
-                disabled={alreadyRequested || hasRequested}
+              <button
+                onClick={() => setShowReviewModal(true)}
+                className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 shadow-xl"
               >
-                {(alreadyRequested || hasRequested) ? 'Request Sent' : 'Request Donation'}
+                Add Review
               </button>
-            }
+            )}
+
+            {isCharity && (
+              <>
+                {donation?.is_locked ? (
+                  <button
+                    className="btn btn-disabled bg-gray-300 text-gray-600 shadow-inner"
+                    disabled
+                  >
+                    Not Available
+                  </button>
+                ) : (alreadyRequested || hasRequested) ? (
+                  <button
+                    className="btn btn-disabled bg-gray-300 text-gray-600 shadow-inner"
+                    disabled
+                  >
+                    Request Sent
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowRequestModal(true)}
+                    className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 shadow-xl"
+                  >
+                    Request Donation
+                  </button>
+                )}
+              </>
+            )}
           </div>
+
         </div>
       </section>
 
@@ -278,7 +304,7 @@ const DonationDetails = () => {
                 />
               </div>
 
-              {/* prefferred pickup time */}
+              {/* preferred pickup time */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Preferred Pickup Time</span>

@@ -19,7 +19,10 @@ const RequestedDonations = () => {
 
   const { mutate: updateStatus } = useMutation({
     mutationFn: async ({ requestId, newStatus, donationId }) => {
-      const res = await axiosSecure.patch(`/requests/status/${requestId}`, { status: newStatus });
+      const res = await axiosSecure.patch(`/requests/status/${requestId}`,
+         { status: newStatus,
+           donation_id: donationId, // Pass donation_id for locking
+          });
       if (newStatus === 'Accepted') {
         await axiosSecure.patch(`/requests/reject-others/${donationId}`, { except: requestId });
       }
@@ -70,7 +73,7 @@ const handleReject = (req) => {
               <td>{req.charity_name}</td>
               <td>{req.charity_email}</td>
               <td className="w-[250px] break-words">{req.request_description}</td>
-              <td>{req.preffered_pickup_time} on {req.preffered_pickup_date}</td>
+              <td>{req.preferred_pickup_time} on {req.preferred_pickup_date}</td>
               <td>{req.request_status}</td>
               <td className="flex gap-2">
                 {req.request_status === 'Pending'? (
