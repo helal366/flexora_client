@@ -66,6 +66,8 @@ const { data: alreadyRequested = false, isLoading: requestCheckLoading } = useQu
         donation_title: donation?.donation_title,
         donation_image: donation?.image,
         food_type: donation?.food_type,
+        quantity: donation?.quantity,
+        unit: donation?.unit,
         restaurant_name: donation?.restaurant_name,
         restaurant_email: donation?.restaurant_email,
         restaurant_representative_name: donation?.restaurant_representative_name,

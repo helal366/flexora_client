@@ -11,14 +11,10 @@ const MyRequests = () => {
   const { data: requests = [], isLoading, refetch } = useQuery({
     queryKey: ['charityRequests', user?.email],
     queryFn: async () => {
-         if (!user?.email) return [];
       const res = await axiosSecure.get(`/requests/charity?email=${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
-    onError: () => {
-      Swal.fire('Error!', 'Failed to fetch requests.', 'error');
-    },
   });
 
   const { mutate: cancelRequest } = useMutation({
@@ -54,45 +50,51 @@ const MyRequests = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-6">My Donation Requests</h2>
-
       {requests.length === 0 ? (
         <p>No requests found.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {requests.map((req) => (
-            <div key={req._id} className="card bg-base-100 shadow-md">
-              <figure className="h-48 overflow-hidden">
-                <img src={req.donation_image} alt={req.donation_title} className="w-full object-cover" />
+            <div key={req._id} className="card bg-base-100 shadow-lg rounded-lg">
+              <figure className="h-48">
+                <img
+                  src={req.donation_image}
+                  alt={req.donation_title}
+                  className="w-full h-full object-cover rounded-t-lg"
+                />
               </figure>
-              <div className="card-body">
+              <div className="card-body space-y-2">
                 <h2 className="card-title">{req.donation_title}</h2>
-                <p><strong>Restaurant:</strong> {req.restaurant_name}</p>
-                <p><strong>Food Type:</strong> {req.food_type || 'N/A'}</p>
-                <p><strong>Quantity:</strong> {req.quantity || 'N/A'}</p>
-                <p><strong>Description:</strong> {req.request_description}</p>
-                <p><strong>Pickup:</strong> {req.preferred_pickup_time} on {req.preferred_pickup_date}</p>
-                <div className="mt-2">
+                <p><span className="font-semibold">Restaurant:</span> {req.restaurant_name}</p>
+                <p><span className="font-semibold">Food Type:</span> {req.food_type || 'N/A'}</p>
+                <p><span className="font-semibold">Quantity:</span> {req.quantity} {req?.unit}s</p>
+                <p className="line-clamp-2">
+                  <span className="font-semibold">Description:</span> {req.request_description}
+                </p>
+                <p>
+                  <span className="font-semibold">Preferred Pickup:</span>{' '}
+                  {req.preferred_pickup_time} on {req.preferred_pickup_date}
+                </p>
+                <div>
                   <span
-                    className={`inline-block px-2 py-1 text-sm rounded font-medium ${
+                    className={`px-2 py-1 rounded text-sm font-medium inline-block ${
                       req.request_status === 'Accepted'
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-green-200 text-green-800'
                         : req.request_status === 'Rejected'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-red-200 text-red-800'
+                        : 'bg-yellow-200 text-yellow-800'
                     }`}
                   >
                     {req.request_status}
                   </span>
                 </div>
                 {req.request_status === 'Pending' && (
-                  <div className="card-actions justify-end mt-4">
-                    <button
-                      onClick={() => handleCancel(req._id)}
-                      className="btn btn-error btn-sm"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleCancel(req._id)}
+                    className="btn btn-error btn-sm mt-2"
+                  >
+                    Cancel
+                  </button>
                 )}
               </div>
             </div>

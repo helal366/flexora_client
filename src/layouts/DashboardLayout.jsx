@@ -158,13 +158,20 @@ const DashboardLayout = () => {
                                             Add Donation
                                         </NavLink>
                                     </li>
+                                    
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/my_donations" className="flex items-center gap-2">
+                                            <FaUtensils className="text-xl text-blue-700" />
+                                            My Donations
+                                        </NavLink>
+                                    </li>
+
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/requested-donations" className="flex items-center gap-2">
                                             <FaEnvelopeOpenText className="text-xl text-blue-700" />
                                             Requested Donations
                                         </NavLink>
                                     </li>
-
 
                                 </>
                             )

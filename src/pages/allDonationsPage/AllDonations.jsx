@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Loading from './../../components/loadingComponents/Loading';
 
 const AllDonations = () => {
     const axiosSecure = useAxiosSecure();
@@ -14,7 +15,7 @@ const AllDonations = () => {
         }
     });
 
-    if (isLoading) return <p>Loading donations...</p>;
+    if (isLoading) return <p><Loading/> </p>;
 
     return (
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-6 py-6">
