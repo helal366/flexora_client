@@ -57,7 +57,7 @@ const handleReject = (req) => {
             <th>Charity</th>
             <th>Email</th>
             <th className="w-[250px] break-words" >Description</th>
-            <th>Pickup Time</th>
+            <th>Preferred Pickup Time</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -73,12 +73,13 @@ const handleReject = (req) => {
               <td>{req.preffered_pickup_time} on {req.preffered_pickup_date}</td>
               <td>{req.request_status}</td>
               <td className="flex gap-2">
-                {req.request_status === 'Pending' && (
+                {req.request_status === 'Pending'? (
                   <>
                     <button onClick={() => handleAccept(req)} className="btn btn-success btn-sm">Accept</button>
                     <button onClick={() => handleReject(req)} className="btn btn-error btn-sm">Reject</button>
                   </>
-                )}
+                ): <span className='whitespace-nowrap'>No Actions</span>}
+                
               </td>
             </tr>
           ))}
