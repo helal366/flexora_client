@@ -196,7 +196,7 @@ const router = createBrowserRouter([
                 )
             },
             {
-                paht:'my_requests',
+                path:'my_requests',
                 element: (
                     <CharityRoute>
                         <MyRequests/>

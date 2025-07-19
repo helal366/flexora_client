@@ -50,7 +50,7 @@ const handleReject = (req) => {
     <div className="overflow-x-auto">
       <h2 className="text-2xl font-bold mb-4">Requested Donations</h2>
       <table className="table w-full">
-        <thead>
+        <thead className='bg-gray-300'>
           <tr>
             <th>Title</th>
             <th>Food Type</th>
