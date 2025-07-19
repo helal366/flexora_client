@@ -14,6 +14,7 @@ const DonationDetails = () => {
   const axiosSecure = useAxiosSecure();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [hasRequested, setHasRequested]=useState(false)
   const { isUser, isCharity } = useUserRole();
   const date = new Date();
   const formattedDate = date.toLocaleDateString('en-GB', {
@@ -29,6 +30,7 @@ const DonationDetails = () => {
     },
     enabled: !!id,
   });
+  console.log({donation})
   const { data: alreadyRequested } = useQuery({
   queryKey: ['request-check', donation._id, user?.email],
   queryFn: async () => {
@@ -63,8 +65,8 @@ const DonationDetails = () => {
         donation_image: donation?.image,
         restaurant_name: donation?.restaurant_name,
         restaurant_email: donation?.restaurant_email,
-        restaurant_representative_name: donation?.restaurant_user_name,
-        restaurant_representative_email: donation?.restaurant_user_email,
+        restaurant_representative_name: donation?.restaurant_representative_name,
+        restaurant_representative_email: donation?.restaurant_representative_email,
         charity_representative_name: user?.displayName,
         charity_representative_email: user?.email,
         charity_name: userInfo?.user_by_email?.organization_name,
@@ -86,6 +88,7 @@ const DonationDetails = () => {
     onSuccess: () => {
       Swal.fire('Requested!', 'Donation request submitted.', 'success');
       setShowRequestModal(false);
+      setHasRequested(true)
       resetRequestForm();
     },
     onError: (error) => {
@@ -185,10 +188,10 @@ const DonationDetails = () => {
             {
               isCharity && <button
                 onClick={() => setShowRequestModal(true)}
-                className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 disabled:bg-teal-100 disabled:text-gray-500 shadow-xl"
-                disabled={alreadyRequested}
+                className="btn btn-outline bg-teal-600 hover:bg-teal-900 text-gray-100 disabled:bg-teal-100 disabled:text-gray-500 disabled:cursor-not-allowed shadow-xl"
+                disabled={alreadyRequested || hasRequested}
               >
-                {alreadyRequested ? 'Request Sent' : 'Request Donation'}
+                {(alreadyRequested || hasRequested) ? 'Request Sent' : 'Request Donation'}
               </button>
             }
           </div>

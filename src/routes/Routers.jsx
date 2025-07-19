@@ -31,6 +31,7 @@ import AddDonation from "../pages/dashboardPages/restaurantPages/addDonations/Ad
 import ManageDonations from "../pages/dashboardPages/adminPages/manageDonations/ManageDonations";
 import DonationDetails from "../pages/allDonationsPage/DonationDetails";
 import RequestedDonations from "../pages/dashboardPages/restaurantPages/requestedDonations/RequestedDonations";
+import MyRequests from "../pages/dashboardPages/charityPages/myRequests/MyRequests";
 
 const router = createBrowserRouter([
     {
@@ -191,6 +192,14 @@ const router = createBrowserRouter([
                 element: (
                     <CharityRoute>
                         <CharityProfileUpdate/>
+                    </CharityRoute>
+                )
+            },
+            {
+                paht:'my_requests',
+                element: (
+                    <CharityRoute>
+                        <MyRequests/>
                     </CharityRoute>
                 )
             }

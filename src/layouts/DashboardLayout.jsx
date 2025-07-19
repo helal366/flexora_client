@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -158,6 +158,13 @@ const DashboardLayout = () => {
                                             Add Donation
                                         </NavLink>
                                     </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/requested-donations" className="flex items-center gap-2">
+                                            <FaEnvelopeOpenText className="text-xl text-blue-700" />
+                                            Requested Donations
+                                        </NavLink>
+                                    </li>
+
 
                                 </>
                             )

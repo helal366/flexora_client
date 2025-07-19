@@ -54,8 +54,8 @@ const AddDonation = () => {
                 restaurant_name: restaurantProfile?.organization_name || '',
                 restaurant_email: restaurantProfile?.organization_email || '',
                 location: restaurantProfile?.organization_location || '',
-                restaurant_user_name: user?.displayName,
-                restaurant_user_email: user?.email,
+                restaurant_representative_name: user?.displayName,
+                restaurant_representative_email: user?.email,
                 image: imageUrl,
                 status: 'Pending',
                 posted_at: new Date().toISOString()
