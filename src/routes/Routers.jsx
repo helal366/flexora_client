@@ -36,6 +36,7 @@ import MyDonations from "../pages/dashboardPages/restaurantPages/myDonations/MyD
 import UpdateMyDonation from "../pages/dashboardPages/restaurantPages/myDonations/UpdateMyDonation";
 import MyPickups from "../pages/dashboardPages/charityPages/myPickups/MyPickups";
 import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDonations/ReceivedDonations";
+import MyReviews from "../pages/dashboardPages/MyReviews";
 
 const router = createBrowserRouter([
     {
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <ProfilePage />
+            },
+            {
+                path: 'my-reviews',
+                element: <MyReviews/>
             },
             {
                 path: 'request_charity_role',

@@ -109,12 +109,18 @@ const { data: alreadyRequested = false, isLoading: requestCheckLoading } = useQu
     mutationFn: async (data) => {
       const reviewData = {
         donation_id: id,
+        donation_title: donation?.donation_title,
+        restaurant_name: donation?.restaurant_name,
+        restaurant_email: donation?.restaurant_email,
+        restaurant_representative_name: donation?.restaurant_representative_name,
+        restaurant_representative_email:donation?.restaurant_representative_email,
+        donation_image: donation?.image,
         reviewer_name: data?.reviewer_name,
         reviewer_email: data?.reviewer_email,
         description: data?.description,
         rating: parseInt(data.rating),
       };
-      const res = await axiosSecure.post('/donation-reviews', reviewData);
+      const res = await axiosSecure.post('/reviews', reviewData);
       return res.data;
     },
     onSuccess: () => {

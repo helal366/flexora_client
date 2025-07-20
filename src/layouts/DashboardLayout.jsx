@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -92,7 +92,17 @@ const DashboardLayout = () => {
                                 </li>
                             )
                         }
+                        {
+                            !roleLoading && (isUser || isCharity) && (
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/my-reviews" className="flex items-center gap-2">
+                                        <FaStar className="text-xl text-yellow-500" />
+                                        My Reviews
+                                    </NavLink>
+                                </li>
 
+                            )
+                        }
                         {
                             !roleLoading && isUser &&
                             <>

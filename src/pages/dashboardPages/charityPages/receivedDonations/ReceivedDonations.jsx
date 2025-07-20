@@ -8,39 +8,74 @@ import AddReviewModal from './AddReviewModal';
 const ReceivedDonations = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const [selectedDonation, setSelectedDonation] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: donations = [], isLoading } = useQuery({
+  const { data: requests = [], isLoading } = useQuery({
     queryKey: ['received-donations', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/requests?charity_email=${user?.email}&donation_status=Picked Up`);
+      const res = await axiosSecure.get(
+        `/requests?charity_representative_email=${user?.email}&picking_status=Picked Up`
+      );
       return res.data;
     },
     enabled: !!user?.email,
   });
 
-  if (isLoading) return <p><Loading/> </p>;
+  if (isLoading) return <section><Loading /></section>;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {donations.map(donation => (
-        <div key={donation._id} className="card bg-lime-100 shadow-md p-4 rounded-xl">
-          <img src={donation.donation_image} className="w-full h-48 object-cover rounded mb-3" alt="donation" />
-          <h2 className="text-xl font-semibold">{donation.donation_title}</h2>
-          <p><strong>Restaurant:</strong> {donation.restaurant_name}</p>
-          <p><strong>Food Type:</strong> {donation.food_type}</p>
-          <p><strong>Quantity:</strong> {donation.quantity} {donation.unit}</p>
-          <p><strong>Pickup Date:</strong> {donation.preferred_pickup_date}</p>
+    <div className="grid gap-4 md:grid-cols-2 my-10 ml-4">
+      {requests.map((request) => (
+        <div key={request._id} className="card bg-gray-200 shadow-md p-4 rounded-md">
+          <img
+            src={request.donation_image}
+            className="w-full h-48 object-cover rounded mb-3 shadow-xl shadow-white"
+            alt="donation"
+          />
+          <h2 className="text-xl font-semibold my-4">{request.donation_title}</h2>
+          <p>
+            <span className="text-teal-700 italic font-semibold">Restaurant :</span>{' '}
+            <span className="text-teal-800">{request.restaurant_name}</span>
+          </p>
+          <p>
+            <span className="text-teal-700 italic font-semibold">Food Type :</span>{' '}
+            <span className="text-teal-800">{request.food_type}</span>
+          </p>
+          <p>
+            <span className="text-teal-700 italic font-semibold">Quantity :</span>{' '}
+            <span className="text-teal-800">
+              {request.quantity} {request.unit}
+            </span>
+          </p>
+          <p>
+            <span className="text-teal-700 italic font-semibold">Pickup Date :</span>{' '}
+            <span className="text-teal-800">{request.preferred_pickup_date}</span>
+          </p>
+
           <button
-            onClick={() => setSelectedDonation(donation)}
-            className="btn bg-blue-500 text-white mt-3 hover:bg-blue-600"
+            className="btn mt-5 hover:bg-teal-300"
+            onClick={() => {
+              setSelectedRequest(request);
+              setIsModalOpen(true);
+            }}
           >
-            Review
+            Add Review
           </button>
         </div>
       ))}
-      {selectedDonation && (
-        <AddReviewModal donation={selectedDonation} closeModal={() => setSelectedDonation(null)} />
+
+      {selectedRequest && (
+        <AddReviewModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedRequest(null);
+          }}
+          request={selectedRequest}
+          userName={user.displayName}
+          userEmail={user.email}
+        />
       )}
     </div>
   );

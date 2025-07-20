@@ -68,23 +68,35 @@ const MyDonations = () => {
           <h3 className="font-semibold text-xl text-teal-900 italic mb-4">
             {donation.donation_title}
           </h3>
-          <p><strong className='text-teal-700 italic'>Food Type :</strong> {donation.food_type}</p>
-          <p><strong className='text-teal-700 italic'>Quantity :</strong> {donation.quantity} {donation.unit}</p>
-          <p><strong className='text-teal-700 italic'>Restaurant :</strong> {donation.restaurant_name}</p>
-          <p>
-            <strong className='text-teal-700 italic'>Status:</strong>{' '}
-            <span
-              className={`font-semibold ${
-                donation.status === 'Verified'
+          <div className='text-[15px] mb-3'>
+            <p><strong className='text-teal-700 italic'>Food Type :</strong> <span className='text-teal-800'>{donation.food_type}</span> </p>
+            <p>
+              <strong className="text-teal-700 italic">Quantity :</strong>{' '}
+              <span className="text-teal-800">
+                {donation.quantity} {donation.unit}
+              </span>
+            </p>
+
+            <p>
+              <strong className="text-teal-700 italic">Restaurant :</strong>{' '}
+              <span className="text-teal-800">{donation.restaurant_name}</span>
+            </p>
+
+            <p>
+              <strong className="text-teal-700 italic">Status :</strong>{' '}
+              <span
+                className={`font-semibold ${donation.status === 'Verified'
                   ? 'text-green-600'
                   : donation.status === 'Rejected'
-                  ? 'text-red-600'
-                  : 'text-yellow-700'
-              }`}
-            >
-              {donation.status}
-            </span>
-          </p>
+                    ? 'text-red-600'
+                    : 'text-yellow-700'
+                  }`}
+              >
+                {donation.status}
+              </span>
+            </p>
+          </div>
+
 
           <div className="mt-auto flex gap-3 pt-4">
             {/* Show Update only if not rejected */}

@@ -7,71 +7,106 @@ import queryClient from '../../../../api/queryClient';
 import Loading from '../../../../components/loadingComponents/Loading';
 
 const MyPickups = () => {
-  const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
 
-  const { data: requests = [], isLoading } = useQuery({
-    queryKey: ['my-pickups', user?.email],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/requests?charity_email=${user?.email}&request_status=Accepted`);
-      return res?.data;
-    },
-    enabled: !!user?.email,
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (donation_id) => {
-      return axiosSecure.patch(`/donations/${donation_id}`, {
-        donation_status: 'Picked Up',
-        updated_at: new Date(),
-      });
-    },
-    onSuccess: () => {
-      Swal.fire('Success!', 'Pickup confirmed.', 'success');
-      queryClient.invalidateQueries(['my-pickups', user?.email]);
-      queryClient.invalidateQueries(['received-donations', user?.email]);
-    },
-    onError: () => {
-      Swal.fire('Error!', 'Failed to confirm pickup.', 'error');
-    }
-  });
-
-  const handleConfirmPickup = (donation_id) => {
-    Swal.fire({
-      title: 'Confirm Pickup?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, confirm',
-    }).then(result => {
-      if (result.isConfirmed) {
-        mutation.mutate(donation_id);
-      }
+    // ✅ Fetch accepted requests
+    const { data: requests = [], isLoading } = useQuery({
+        queryKey: ['my-pickups', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/requests?charity_representative_email=${user?.email}&request_status=Accepted`);
+            return res?.data;
+        },
+        enabled: !!user?.email,
     });
-  };
 
-  if (isLoading) return <p><Loading/> </p>;
+    // ✅ Confirm pickup mutation (uses requestId now)
+    const mutation = useMutation({
+        mutationFn: async (requestId) => {
+            return axiosSecure.patch(`/requests/confirm-pickup/${requestId}`);
+        },
+        onSuccess: () => {
+            Swal.fire('Success!', 'Pickup confirmed.', 'success');
+            queryClient.invalidateQueries(['my-pickups', user?.email]);
+            queryClient.invalidateQueries(['received-donations', user?.email]);
+        },
+        onError: () => {
+            Swal.fire('Error!', 'Failed to confirm pickup.', 'error');
+        }
+    });
 
-  return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {requests.map(request => (
-        <div key={request._id} className="card bg-teal-100 shadow-md p-4 rounded-xl">
-          <img src={request.donation_image} className="w-full h-48 object-cover rounded mb-3" alt="donation" />
-          <h2 className="text-xl font-semibold">{request.donation_title}</h2>
-          <p><strong>Restaurant:</strong> {request.restaurant_name}, {request.location}</p>
-          <p><strong>Food Type:</strong> {request.food_type}</p>
-          <p><strong>Quantity:</strong> {request.quantity} {request.unit}</p>
-          <p><strong>Pickup Time:</strong> {request.preferred_pickup_time}</p>
-          <p><strong>Status:</strong> Assigned</p>
-          <button
-            onClick={() => handleConfirmPickup(request.donation_id)}
-            className="btn bg-green-500 text-white mt-3 hover:bg-green-600"
-          >
-            Confirm Pickup
-          </button>
+    const handleConfirmPickup = (requestId) => {
+        Swal.fire({
+            title: 'Confirm Pickup?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, confirm',
+        }).then(result => {
+            if (result.isConfirmed) {
+                mutation.mutate(requestId);
+            }
+        });
+    };
+
+    if (isLoading) return <section><Loading /></section>;
+
+
+    return (
+        <div className="grid gap-4 md:grid-cols-2 my-10 pl-5">
+            {requests.map(request => (
+                <div key={request._id} className="card bg-gray-200 shadow-md shadow-white p-4 rounded-md border border-gray-500/50">
+                    <img src={request.donation_image} className="w-full h-48 object-cover rounded mb-3" alt="donation" />
+                    <h2 className="text-xl font-semibold mb-5 italic text-teal-800">{request.donation_title}</h2>
+                    <div className="text-[15px] mb-3">
+                        <p>
+                            <span className="text-teal-700 italic font-semibold">Restaurant :</span>{' '}
+                            <span className="text-teal-800">{request.restaurant_name}, {request.location}</span>
+                        </p>
+
+                        <p>
+                            <span className="text-teal-700 italic font-semibold">Food Type :</span>{' '}
+                            <span className="text-teal-800">{request.food_type}</span>
+                        </p>
+
+                        <p>
+                            <span className="text-teal-700 italic font-semibold">Quantity :</span>{' '}
+                            <span className="text-teal-800">{request.quantity} {request.unit}</span>
+                        </p>
+
+                        <p>
+                            <span className="text-teal-700 italic font-semibold">Pickup Time :</span>{' '}
+                            <span className="text-teal-800">{request.preferred_pickup_time} on {request.preferred_pickup_date}</span>
+                        </p>
+
+                        <p className=' my-3'>
+                            <span className="text-teal-700 italic font-semibold">Status :</span>{' '}
+                            <span className={`font-semibold ${request.picking_status === "Picked Up" ? 'text-green-800 bg-amber-300 py-1 px-3 rounded' : 'text-yellow-800 py-1 px-3 rounded bg-green-300'}`}>
+                                {request.picking_status === "Picked Up" ? "Picked Up" : "Assigned"}
+                            </span>
+                        </p>
+                    </div>
+
+                    {/* ✅ Disable button if already picked up */}
+                    {request.picking_status === 'Picked Up' ? (
+                        <button
+                            className="btn bg-gray-500 text-gray-600/60 mt-5 cursor-not-allowed shadow-2xl shadow-white"
+                            disabled
+                        >
+                            Pick Up Confirmed
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => handleConfirmPickup(request._id)}
+                            className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 mt-5"
+                        >
+                            Confirm Pickup
+                        </button>
+                    )}
+
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default MyPickups;
