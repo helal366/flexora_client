@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -82,31 +82,16 @@ const DashboardLayout = () => {
                                 Home
                             </NavLink>
                         </li>
+
                         {
-                            !isAdmin && (
+                            !roleLoading && isUser &&
+                            <>
                                 <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
-                                    <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                    <NavLink to="/dashboard/profile_user" className="flex items-center gap-2">
                                         <FaUser className="text-xl text-blue-600" />
                                         My Profile
                                     </NavLink>
                                 </li>
-                            )
-                        }
-                        {
-                            !roleLoading && (isUser || isCharity) && (
-                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
-                                    <NavLink to="/dashboard/my-reviews" className="flex items-center gap-2">
-                                        <FaStar className="text-xl text-yellow-500" />
-                                        My Reviews
-                                    </NavLink>
-                                </li>
-
-                            )
-                        }
-                        {
-                            !roleLoading && isUser &&
-                            <>
-
                                 <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                     <NavLink to="/dashboard/request_charity_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-orange-500" />
@@ -117,6 +102,18 @@ const DashboardLayout = () => {
                                     <NavLink to="/dashboard/request_restaurant_role" className="flex items-center gap-2">
                                         <FaRegAddressCard className="text-xl text-green-600" />
                                         Request Restaurant Role
+                                    </NavLink>
+                                </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/transection_history_user" className="flex items-center gap-2">
+                                        <FaRegMoneyBillAlt className="text-xl text-green-600" />
+                                        Transaction History
+                                    </NavLink>
+                                </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/my_reviews_user" className="flex items-center gap-2">
+                                        <FaStar className="text-xl text-yellow-500" />
+                                        My Reviews
                                     </NavLink>
                                 </li>
 
@@ -149,6 +146,12 @@ const DashboardLayout = () => {
                                         Manage Donations
                                     </NavLink>
                                 </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/feature_donations" className="flex items-center gap-2">
+                                        <FaStar className="text-xl text-yellow-600" />
+                                        Feature Donations
+                                    </NavLink>
+                                </li>
 
                             </>
                         }
@@ -156,6 +159,12 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isRestaurant && (
                                 <>
+                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                        <NavLink to="/dashboard/profile_restaurant" className="flex items-center gap-2">
+                                            <FaUser className="text-xl text-blue-600" />
+                                            My Profile
+                                        </NavLink>
+                                    </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/restaurant_profile" className="flex items-center gap-2">
                                             <FaUtensils className="text-xl text-green-700" />
@@ -190,10 +199,22 @@ const DashboardLayout = () => {
                         {
                             !roleLoading && isCharity && (
                                 <>
+                                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                        <NavLink to="/dashboard/profile_charity" className="flex items-center gap-2">
+                                            <FaUser className="text-xl text-blue-600" />
+                                            My Profile
+                                        </NavLink>
+                                    </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
                                         <NavLink to="/dashboard/charity_profile" className="flex items-center gap-2">
                                             <FaHandHoldingHeart className="text-xl text-pink-600" />
                                             Charity Profile
+                                        </NavLink>
+                                    </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/transection_history_charity" className="flex items-center gap-2">
+                                            <FaRegMoneyBillAlt className="text-xl text-green-600" />
+                                            Transaction History
                                         </NavLink>
                                     </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
@@ -212,6 +233,12 @@ const DashboardLayout = () => {
                                         <NavLink to="/dashboard/received-donations" className="flex items-center gap-2">
                                             <FaBoxOpen className="text-xl text-blue-600" />
                                             Received Donations
+                                        </NavLink>
+                                    </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/my_reviews_charity" className="flex items-center gap-2">
+                                            <FaStar className="text-xl text-yellow-500" />
+                                            My Reviews
                                         </NavLink>
                                     </li>
 

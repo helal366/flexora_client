@@ -2,6 +2,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Loading from '../../../components/loadingComponents/Loading';
+import NoTransection from './NoTransection';
 
 const TransectionHistory = () => {
   const { user } = useAuth();
@@ -11,12 +13,17 @@ const TransectionHistory = () => {
     queryKey: ['charity-transactions', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/transactions?email=${user.email}`);
-      return res.data;
+      const res = await axiosSecure.get(`/transactions?email=${user?.email}`);
+      return res?.data;
     }
   });
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isLoading) {
+    return <Loading/>;
+  }
+  if(transactions.length===0){
+    return <NoTransection/>
+  }
 
   return (
     <div className="overflow-x-auto mt-6">
@@ -27,7 +34,7 @@ const TransectionHistory = () => {
             <th>#</th>
             <th>Organization Logo</th>
             <th>Organization Name</th>
-            <th>Organization Representative Name</th>
+            <th className='whitespace-break-spaces'>Organization Representative Name</th>
             <th>Transaction ID</th>
             <th>Amount (USD)</th>
             <th>Request Date</th>

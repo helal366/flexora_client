@@ -37,6 +37,8 @@ import UpdateMyDonation from "../pages/dashboardPages/restaurantPages/myDonation
 import MyPickups from "../pages/dashboardPages/charityPages/myPickups/MyPickups";
 import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDonations/ReceivedDonations";
 import MyReviews from "../pages/dashboardPages/MyReviews";
+import TransectionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
+import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
 
 const router = createBrowserRouter([
     {
@@ -68,6 +70,16 @@ const router = createBrowserRouter([
                     <Suspense fallback={<Loading />}>
                         <PrivateRoute>
                             <DonationDetails />
+                        </PrivateRoute>
+                    </Suspense>
+                )
+            },
+            {
+                path: '/featured_donations',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute>
+                            <FeatureDonations />
                         </PrivateRoute>
                     </Suspense>
                 )
@@ -105,13 +117,15 @@ const router = createBrowserRouter([
         ),
         errorElement: <ErrorPage />,
         children: [
+            
+            // user route
             {
-                path: 'profile',
-                element: <ProfilePage />
-            },
-            {
-                path: 'my-reviews',
-                element: <MyReviews/>
+                path: 'profile_user',
+                element: (
+                    <UserRoute>
+                       <ProfilePage />
+                    </UserRoute>
+                )
             },
             {
                 path: 'request_charity_role',
@@ -124,10 +138,26 @@ const router = createBrowserRouter([
                 )
             },
             {
+                path: 'transection_history_user',
+                element: (
+                    <UserRoute>
+                        <TransectionHistory />
+                    </UserRoute>
+                )
+            },
+            {
                 path: 'request_restaurant_role',
                 element: (
                     <UserRoute>
                         <RequestRestaurantRole />
+                    </UserRoute>
+                )
+            },
+            {
+                path: 'my_reviews_user',
+                element: (
+                    <UserRoute>
+                        <MyReviews />
                     </UserRoute>
                 )
             },
@@ -152,30 +182,46 @@ const router = createBrowserRouter([
                 path: 'manage_donations',
                 element: (
                     <AdminRoute>
-                        <ManageDonations/>
+                        <ManageDonations />
+                    </AdminRoute>
+                )
+            },
+            {
+                path: 'feature_donations',
+                element: (
+                    <AdminRoute>
+                        <FeatureDonations />
                     </AdminRoute>
                 )
             },
             // restaurant routes
             {
+                path: 'profile_restaurant',
+                element: (
+                    <RestaurantRoute>
+                       <ProfilePage />
+                    </RestaurantRoute>
+                )
+            },
+            {
                 path: 'restaurant_profile',
                 element: (
                     <RestaurantRoute>
-                        <RestaurantProfile/>
+                        <RestaurantProfile />
                     </RestaurantRoute>
                 )
             },
             {
                 path: 'restaurant_profile_update',
                 element: <RestaurantRoute>
-                    <RestaurantProfileUpdate/>
+                    <RestaurantProfileUpdate />
                 </RestaurantRoute>
             },
             {
                 path: 'add-donation',
                 element: (
                     <RestaurantRoute>
-                        <AddDonation/>
+                        <AddDonation />
                     </RestaurantRoute>
                 )
             },
@@ -183,7 +229,7 @@ const router = createBrowserRouter([
                 path: 'requested-donations',
                 element: (
                     <RestaurantRoute>
-                        <RequestedDonations/>
+                        <RequestedDonations />
                     </RestaurantRoute>
                 )
             },
@@ -191,7 +237,7 @@ const router = createBrowserRouter([
                 path: 'my_donations',
                 element: (
                     <RestaurantRoute>
-                        <MyDonations/>
+                        <MyDonations />
                     </RestaurantRoute>
                 )
             },
@@ -199,16 +245,32 @@ const router = createBrowserRouter([
                 path: 'update_my_donation/:id',
                 element: (
                     <RestaurantRoute>
-                        <UpdateMyDonation/>
+                        <UpdateMyDonation />
                     </RestaurantRoute>
                 )
             },
             // charity routes
             {
+                path: 'profile_charity',
+                element: (
+                    <CharityRoute>
+                       <ProfilePage />
+                    </CharityRoute>
+                )
+            },
+            {
                 path: 'charity_profile',
                 element: (
                     <CharityRoute>
-                        <CharityProfile/>
+                        <CharityProfile />
+                    </CharityRoute>
+                )
+            },
+            {
+                path: 'transection_history_charity',
+                element: (
+                    <CharityRoute>
+                        <TransectionHistory />
                     </CharityRoute>
                 )
             },
@@ -216,15 +278,15 @@ const router = createBrowserRouter([
                 path: 'charity_profile_update',
                 element: (
                     <CharityRoute>
-                        <CharityProfileUpdate/>
+                        <CharityProfileUpdate />
                     </CharityRoute>
                 )
             },
             {
-                path:'my_requests',
+                path: 'my_requests',
                 element: (
                     <CharityRoute>
-                        <MyRequests/>
+                        <MyRequests />
                     </CharityRoute>
                 )
             },
@@ -232,7 +294,7 @@ const router = createBrowserRouter([
                 path: 'my-pickups',
                 element: (
                     <CharityRoute>
-                        <MyPickups/>
+                        <MyPickups />
                     </CharityRoute>
                 )
             },
@@ -240,10 +302,18 @@ const router = createBrowserRouter([
                 path: 'received-donations',
                 element: (
                     <CharityRoute>
-                        <ReceivedDonations/>
+                        <ReceivedDonations />
                     </CharityRoute>
                 )
-            }
+            },
+            {
+                path: 'my-reviews',
+                element: (
+                    <CharityRoute>
+                        <MyReviews />
+                    </CharityRoute>
+                )
+            },
         ]
     },
     {
