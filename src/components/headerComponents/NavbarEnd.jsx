@@ -42,10 +42,10 @@ const NavbarEnd = () => {
         <div className="navbar-end">
             {user ? (
                 <>
-                    <span className="text-xs mr-5">{user?.displayName}</span>
+                    <span className="text-xs mr-5 hidden md:block">{user?.displayName}</span>
                     <button
                         onClick={handleLogout}
-                        className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300"
+                        className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300 hidden md:block"
                         style={{ boxShadow: shadowStyle.base }}
                         onMouseEnter={(e) => handleHover(e, true)}
                         onMouseLeave={(e) => handleHover(e, false)}
@@ -55,8 +55,8 @@ const NavbarEnd = () => {
 
                     <div className="dropdown dropdown-end mr-0">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-10 rounded-full border border-purple-600 p-[1px]">  {/* 🔧 Outer border */}
-                                <div className="w-full h-full rounded-full border border-white p-[1px]">  {/* 🔧 Inner gap */}
+                            <div className="w-10 rounded-full border border-purple-600 p-[1px]">  {/*  Outer border */}
+                                <div className="w-full h-full rounded-full border border-white p-[1px]">  {/* Inner gap */}
                                     <img
                                         className="rounded-full w-full h-full object-cover border border-purple-600 drop-shadow-custom"
                                         alt="Profile picture"
@@ -79,6 +79,15 @@ const NavbarEnd = () => {
                                     <span className="mr-1">Email:</span> {user?.email}
                                 </p>
                             </li>
+                            <button
+                                onClick={handleLogout}
+                                className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300"
+                                style={{ boxShadow: shadowStyle.base }}
+                                onMouseEnter={(e) => handleHover(e, true)}
+                                onMouseLeave={(e) => handleHover(e, false)}
+                            >
+                                Logout
+                            </button>
                         </ul>
                     </div>
                 </>

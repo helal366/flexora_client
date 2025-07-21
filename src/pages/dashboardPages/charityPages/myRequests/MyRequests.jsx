@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
+import Loading from '../../../../components/loadingComponents/Loading';
 
 const MyRequests = () => {
   const axiosSecure = useAxiosSecure();
@@ -17,10 +18,12 @@ const MyRequests = () => {
     enabled: !!user?.email,
   });
 
+  console.log({requests})
+
   const { mutate: cancelRequest } = useMutation({
     mutationFn: async (requestId) => {
       const res = await axiosSecure.delete(`/requests/${requestId}`);
-      return res.data;
+      return res?.data;
     },
     onSuccess: () => {
       Swal.fire('Cancelled!', 'Your request has been cancelled.', 'success');
@@ -45,7 +48,9 @@ const MyRequests = () => {
     });
   };
 
-  if (isLoading) return <div className="text-center py-8">Loading...</div>;
+  if (isLoading){
+    return <Loading/>
+  } ;
 
   return (
     <div className="p-6">
@@ -85,7 +90,7 @@ const MyRequests = () => {
                         : 'bg-yellow-200 text-yellow-800'
                     }`}
                   >
-                    {req.request_status}
+                    {req?.request_status}
                   </span>
                 </div>
                 {req.request_status === 'Pending' && (

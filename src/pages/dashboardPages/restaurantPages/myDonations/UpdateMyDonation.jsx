@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
+import queryClient from '../../../../api/queryClient';
 
 const UpdateMyDonation = () => {
     const { id } = useParams();
@@ -55,9 +56,20 @@ const UpdateMyDonation = () => {
                 updated_at: new Date(),
             };
 
-            await axiosSecure.patch(`/donations/${id}`, updatedData);
-            Swal.fire('Success!', 'Donation updated successfully.', 'success');
-            navigate('/dashboard/my_donations');
+            const res=await axiosSecure.patch(`/donations/${id}?email=${user?.email}`, updatedData);
+            if (res.data.modifiedCount > 0) {
+                // ✅ Invalidate the cached donation
+                queryClient.invalidateQueries(['donation', id]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Donation updated!',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+                navigate('/dashboard/my-donations');
+            }
+            
         } catch (error) {
             console.error(error);
             Swal.fire('Error!', 'Failed to update donation.', 'error');

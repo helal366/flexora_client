@@ -39,6 +39,8 @@ import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDona
 import MyReviews from "../pages/dashboardPages/MyReviews";
 import TransectionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
 import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
+import FeaturedDonations from "../pages/homePage/FeaturedDonations";
+import DonationDetailsHome from "../pages/homePage/DonationDetailsHome";
 
 const router = createBrowserRouter([
     {
@@ -69,7 +71,7 @@ const router = createBrowserRouter([
                 element: (
                     <Suspense fallback={<Loading />}>
                         <PrivateRoute>
-                            <DonationDetails />
+                            <DonationDetails/>
                         </PrivateRoute>
                     </Suspense>
                 )
@@ -79,7 +81,17 @@ const router = createBrowserRouter([
                 element: (
                     <Suspense fallback={<Loading />}>
                         <PrivateRoute>
-                            <FeatureDonations />
+                            <FeaturedDonations />
+                        </PrivateRoute>
+                    </Suspense>
+                )
+            },
+            {
+                path: '/donation_details_home/:id',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute>
+                            <DonationDetailsHome />
                         </PrivateRoute>
                     </Suspense>
                 )
@@ -162,6 +174,14 @@ const router = createBrowserRouter([
                 )
             },
             // admin routes
+            {
+                path: 'profile_admin',
+                element: (
+                    <AdminRoute>
+                       <ProfilePage />
+                    </AdminRoute>
+                )
+            },
             {
                 path: 'manage_users',
                 element: (

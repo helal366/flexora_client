@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import queryClient from '../../../../api/queryClient';
 import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import Loading from '../../../../components/loadingComponents/Loading';
 
 const MyDonations = () => {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ const MyDonations = () => {
   const { data: donations = [], isLoading, isError } = useQuery({
     queryKey: ['my-donations', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations?restaurant_email=${user?.email}`);
+      const res = await axiosSecure.get(`/donations?email=${user?.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -49,9 +50,14 @@ const MyDonations = () => {
     });
   };
 
-  if (isLoading) return <p>Loading your donations...</p>;
+  if (isLoading) return <Loading/>;
   if (isError) return <p>Error loading donations.</p>;
-  if (donations.length === 0) return <p>No donations found.</p>;
+  if (donations.length === 0)
+  return (
+    <p className="text-center text-gray-600 py-10">
+      You have not made any donations yet.
+    </p>
+  );
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">

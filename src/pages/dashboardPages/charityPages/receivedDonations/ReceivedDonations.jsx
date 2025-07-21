@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
-import AddReviewModal from './AddReviewModal';
+import AddReviewModal from '../../../../components/AddReviewModal';
 
 const ReceivedDonations = () => {
   const { user } = useAuth();

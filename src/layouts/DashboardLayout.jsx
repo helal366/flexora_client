@@ -123,7 +123,7 @@ const DashboardLayout = () => {
                             !roleLoading && isAdmin &&
                             <>
                                 <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
-                                    <NavLink to="/dashboard/profile" className="flex items-center gap-2">
+                                    <NavLink to="/dashboard/profile_admin" className="flex items-center gap-2">
                                         <FaUser className="text-xl text-blue-600" />
                                         Admin Profile
                                     </NavLink>

@@ -64,9 +64,9 @@ const FeatureDonations = () => {
                   <button
                     onClick={() => featureMutation.mutate(donation._id)}
                     className="btn btn-sm bg-orange-500 hover:bg-orange-600 text-white"
-                     disabled={featuredIds.includes(donation._id)}
+                     disabled={featuredIds.includes(donation._id) || donation?.is_featured}
                   >
-                     {featuredIds.includes(donation._id) ? 'Featured' : 'Feature'}
+                     {(featuredIds.includes(donation._id) || donation?.is_featured) ? 'Featured' : 'Feature'}
                   </button>
                 </td>
               </tr>

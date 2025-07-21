@@ -1,8 +1,9 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { Link } from 'react-router';
 import NoFeaturedDonations from './NoFeaturedDonations';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Loading from '../../components/loadingComponents/Loading';
 
 const FeaturedDonations = () => {
   const axiosSecure = useAxiosSecure();
@@ -11,12 +12,12 @@ const FeaturedDonations = () => {
     queryKey: ['featuredDonations'],
     queryFn: async () => {
       const res = await axiosSecure.get('/donations/featured');
-      return res.data;
+      return res?.data;
     }
   });
 
   if (isLoading) {
-    return <div className="text-center py-10 text-lg font-semibold">Loading featured donations...</div>;
+    return <Loading/>;
   }
 
   if (donations.length === 0) {
@@ -28,8 +29,8 @@ const FeaturedDonations = () => {
   }
 
   return (
-    <section className="my-10 px-4 md:px-10">
-      <h2 className="text-3xl font-bold mb-6 text-center text-teal-700">🌟 Featured Donations</h2>
+    <section className="my-10 px-4 md:px-10 pb-10 bg-teal-50 rounded border border-gray-500/50 shadow-lg">
+      <h2 className="text-3xl font-bold mb-6 text-center text-teal-700"> Featured Donations</h2>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {donations.slice(0, 4).map((donation) => (
           <div key={donation._id} className="bg-white shadow-md rounded-2xl overflow-hidden border border-teal-100">
@@ -39,21 +40,21 @@ const FeaturedDonations = () => {
               className="h-48 w-full object-cover"
             />
             <div className="p-4 space-y-2">
-              <h3 className="text-xl font-semibold text-gray-800">{donation.donation_title}</h3>
+              <h3 className="text-xl font-semibold text-teal-800">{donation.donation_title}</h3>
               <p className="text-sm text-gray-600">
-                <strong>Type:</strong> {donation.food_type}
+                <span className='font-semibold text-teal-800 italic'>Type :</span> {donation.food_type}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Restaurant:</strong> {donation.restaurant_name}
+                <span className='font-semibold text-teal-800 italic'>Restaurant :</span> {donation.restaurant_name}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Location:</strong> {donation.location}
+                <span className='font-semibold text-teal-800 italic'>Location :</span> {donation.location}
               </p>
-              <p className="text-sm font-medium text-green-700">
-                Status: {donation.donation_status || 'Available'}
+              <p className="text-sm font-semibold text-green-700">
+                Status : {donation.donation_status || 'Available'}
               </p>
               <Link
-                to={`/donations/${donation._id}`}
+                to={`/donation_details_home/${donation._id}`}
                 className="inline-block bg-teal-500 text-white px-4 py-2 rounded-md mt-2 hover:bg-teal-600 text-sm"
               >
                 Details

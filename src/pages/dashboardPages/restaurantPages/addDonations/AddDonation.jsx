@@ -251,7 +251,7 @@ const AddDonation = () => {
                     className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 disabled:bg-teal-200 disabled:text-gray-500/50 w-full mb-16"
                     disabled={isPending}
                 >
-                    Add Donation
+                   {isPending? 'Adding Donation...': 'Add Donation'} 
                 </button>
             </form>
         </div>

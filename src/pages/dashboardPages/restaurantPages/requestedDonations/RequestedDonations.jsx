@@ -50,16 +50,16 @@ const handleReject = (req) => {
   if (isPending) return <div>Loading...</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <section className="overflow-x-auto ml-5 my-10">
       <h2 className="text-2xl font-bold mb-4">Requested Donations</h2>
       <table className="table w-full">
         <thead className='bg-gray-300'>
           <tr>
-            <th>Title</th>
+            <th className='min-w-[200px]'>Title</th>
             <th>Food Type</th>
             <th>Charity</th>
             <th>Email</th>
-            <th className="w-[250px] break-words" >Description</th>
+            <th className="min-w-[250px] break-words" >Description</th>
             <th>Preferred Pickup Time</th>
             <th>Status</th>
             <th>Actions</th>
@@ -68,11 +68,11 @@ const handleReject = (req) => {
         <tbody>
           {requests.map((req) => (
             <tr key={req._id}>
-              <td>{req.donation_title}</td>
+              <td className='min-w-[200px]'>{req.donation_title}</td>
               <td>{req.food_type || 'N/A'}</td>
               <td>{req.charity_name}</td>
               <td>{req.charity_email}</td>
-              <td className="w-[250px] break-words">{req.request_description}</td>
+              <td className="min-w-[250px] break-words">{req.request_description}</td>
               <td>{req.preferred_pickup_time} on {req.preferred_pickup_date}</td>
               <td>{req.request_status}</td>
               <td className="flex gap-2">
@@ -88,7 +88,7 @@ const handleReject = (req) => {
           ))}
         </tbody>
       </table>
-    </div>
+    </section>
   );
 };
 

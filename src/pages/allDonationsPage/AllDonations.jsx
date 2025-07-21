@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import Loading from './../../components/loadingComponents/Loading';
+import Loading from '../../components/loadingComponents/Loading';
 
 const AllDonations = () => {
     const axiosSecure = useAxiosSecure();
@@ -10,12 +10,14 @@ const AllDonations = () => {
     const { data: donations = [], isLoading } = useQuery({
         queryKey: ['all-donations'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/donations');
-            return res.data.filter(d => d.status === 'Verified' );
+            const res = await axiosSecure.get(`/donations?status=Verified`);
+            return res?.data; 
         }
     });
 
-    if (isLoading) return <p><Loading/> </p>;
+    if (isLoading) {
+        return <Loading />
+    };
 
     return (
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-6 py-6">

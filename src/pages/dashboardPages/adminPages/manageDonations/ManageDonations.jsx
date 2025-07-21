@@ -90,6 +90,7 @@ const ManageDonations = () => {
                         <th className="border border-gray-300 p-2">Food Type</th>
                         <th className="border border-gray-300 p-2">Restaurant Name</th>
                         <th className="border border-gray-300 p-2">Restaurant Email</th>
+                        <th className="border border-gray-300 p-2 whitespace-break-spaces">Restaurant Representative Name</th>
                         <th className="border border-gray-300 p-2">Donation Posted</th>
                         <th className="border border-gray-300 p-2">Posting Time</th>
                         <th className="border border-gray-300 p-2">Quantity</th>
@@ -100,7 +101,7 @@ const ManageDonations = () => {
                 <tbody>
                     {donations.length === 0 && (
                         <tr>
-                            <td colSpan="7" className="text-center p-4">No donations found.</td>
+                            <td colSpan="10" className="text-center p-4">No donations found.</td>
                         </tr>
                     )}
                     {donations.map(donation => (
@@ -109,6 +110,7 @@ const ManageDonations = () => {
                             <td className="border border-gray-300 p-2">{donation.food_type}</td>
                             <td className="border border-gray-300 p-2">{donation.restaurant_name}</td>
                             <td className="border border-gray-300 p-2">{donation.restaurant_email}</td>
+                            <td className="border border-gray-300 p-2 ">{donation.restaurant_representative_name}</td>
                             <td className="border border-gray-300 p-2"> {donation.posted_at?.split("T")[0]}</td>
                             <td className="border border-gray-300 p-2"> {donation.posted_at?.split("T")[1].slice(0, 8)}</td>
                             <td className="border border-gray-300 p-2">{donation.quantity} {donation.unit}</td>
