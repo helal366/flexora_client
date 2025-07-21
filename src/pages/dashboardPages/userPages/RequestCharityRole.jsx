@@ -49,7 +49,7 @@ const RequestCharityRole = () => {
     const onSubmit = async (formData) => {
 
         const file = formData?.organization_logo?.[0];
-        let uploadedUrl=''
+        let uploadedUrl = ''
         if (!file) {
             Swal.fire({
                 icon: 'error',
@@ -136,6 +136,10 @@ const RequestCharityRole = () => {
                     currency: 'USD',
                     user_email: userEmail,
                     user_name: userName,
+                    organization_name: formData?.organization_name,
+                    organization_email: formData?.organization_email,
+                    organization_contact: formattedContact,
+                    organization_logo: uploadedUrl,
                     purpose: 'Charity role request',
                     status: 'Pending'
 
@@ -165,7 +169,7 @@ const RequestCharityRole = () => {
                 role: 'charity_role_request',
                 charity_request_time: new Date()
             });
-            if (res?.data?.userUpdate?.modifiedCount > 0){
+            if (res?.data?.userUpdate?.modifiedCount > 0) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Charity role request submitted successfully.',
@@ -192,7 +196,7 @@ const RequestCharityRole = () => {
             console.log(err)
         }
     }
-    console.log({uploadLogo})
+    console.log({ uploadLogo })
     return (
         <section className='max-w-4xl mx-auto my-8 bg-white p-6 rounded shadow-lg shadow-gray-600'>
             <h2 className='font-semibold text-2xl text-center mb-4'>
@@ -306,7 +310,7 @@ const RequestCharityRole = () => {
                     </div>
                     {/* payment  */}
                     <button type='submit'
-                        disabled={!stripe || isSubmitting ||isPending}
+                        disabled={!stripe || isSubmitting || isPending}
                         className='btn bg-teal-700 cursor-pointer w-full text-gray-100 mt-4'
                     >
                         {isSubmitting ? 'Submitting...' : 'Pay $5'}
