@@ -36,5 +36,3 @@ a.active {
 .fourButton{
   @apply btn bg-teal-700 hover:bg-teal-900 text-gray-100
 }
-
-/* bg-secondary text-neutral-500 font-semibold */
