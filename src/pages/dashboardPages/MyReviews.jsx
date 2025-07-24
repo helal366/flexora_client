@@ -13,8 +13,8 @@ const MyReviews = () => {
     queryKey: ['my-reviews', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/reviews?reviewer_email=${user?.email}`);
-      return res.data;
+      const res = await axiosSecure.get(`/reviews?email=${user?.email}`);
+      return res?.data;
     }
   });
   // console.log({reviews})
@@ -42,28 +42,28 @@ const MyReviews = () => {
     );
   }
   return (
-    <div className="my-10 grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+    <section className="my-10 grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
       {reviews.map((review) => (
-        <div key={review?._id} className="card bg-gray-100 shadow-md p-5 rounded-lg">
+        <section key={review?._id} className="card bg-gray-100 shadow-md p-5 rounded-lg border border-gray-500/50">
           <div>
 
             <img className='w-full h-40 rounded border border-gray-500/50' src={review?.donation_image} alt={review?.donation_title} />
           </div>
-          <h2 className="text-xl font-semibold text-teal-700 mb-2">{review?.donation_title}</h2>
+          <h2 className="text-xl font-semibold text-teal-800 mb-2">{review?.donation_title}</h2>
           <p className="mb-1">
-            <span className="font-medium text-teal-600 italic">Restaurant :</span>{' '}
+            <span className="font-medium text-teal-800 italic">Restaurant :</span>{' '}
             {review?.restaurant_name}
           </p>
           <p className="mb-1">
-            <span className="font-medium text-teal-600 italic">Restaurant Representative Name :</span>{' '}
+            <span className="font-medium text-teal-800 italic">Restaurant Representative Name :</span>{' '}
             {review?.restaurant_representative_name}
           </p>
           <p className="mb-1">
-            <span className="font-medium text-teal-600 italic">Reviewed At :</span>{' '}
+            <span className="font-medium text-teal-800 italic">Reviewed At :</span>{' '}
             {new Date(review?.created_at).toLocaleString()}
           </p>
           <p className="mb-2">
-            <span className="font-medium text-teal-600 italic">Description :</span>{' '}
+            <span className="font-medium text-teal-800 italic">Description :</span>{' '}
             {review?.description}
           </p>
           <div className="flex justify-end">
@@ -88,9 +88,9 @@ const MyReviews = () => {
               Delete
             </button>
           </div>
-        </div>
+        </section>
       ))}
-    </div>
+    </section>
   );
 };
 

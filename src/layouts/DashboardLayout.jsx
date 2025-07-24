@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaBoxOpen, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaBoxOpen, FaChartPie, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -191,6 +191,13 @@ const DashboardLayout = () => {
                                             Requested Donations
                                         </NavLink>
                                     </li>
+                                    <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                        <NavLink to="/dashboard/restaurant_donation_stats" className="flex items-center gap-2">
+                                            <FaChartPie className="text-xl text-blue-700" />
+                                            Donation Statistics
+                                        </NavLink>
+                                    </li>
+
 
                                 </>
                             )
@@ -236,7 +243,7 @@ const DashboardLayout = () => {
                                         </NavLink>
                                     </li>
                                     <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
-                                        <NavLink to="/dashboard/my_reviews_charity" className="flex items-center gap-2">
+                                        <NavLink to="/dashboard/my_reviews" className="flex items-center gap-2">
                                             <FaStar className="text-xl text-yellow-500" />
                                             My Reviews
                                         </NavLink>

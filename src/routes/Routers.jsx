@@ -29,7 +29,6 @@ import RestaurantProfile from "../pages/dashboardPages/restaurantPages/restauran
 import RestaurantProfileUpdate from "../pages/dashboardPages/restaurantPages/restaurantProfile/RestaurantProfileUpdate";
 import AddDonation from "../pages/dashboardPages/restaurantPages/addDonations/AddDonation";
 import ManageDonations from "../pages/dashboardPages/adminPages/manageDonations/ManageDonations";
-import DonationDetails from "../pages/allDonationsPage/DonationDetails";
 import RequestedDonations from "../pages/dashboardPages/restaurantPages/requestedDonations/RequestedDonations";
 import MyRequests from "../pages/dashboardPages/charityPages/myRequests/MyRequests";
 import MyDonations from "../pages/dashboardPages/restaurantPages/myDonations/MyDonations";
@@ -39,8 +38,9 @@ import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDona
 import MyReviews from "../pages/dashboardPages/MyReviews";
 import TransectionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
 import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
-import FeaturedDonations from "../pages/homePage/FeaturedDonations";
-import DonationDetailsHome from "../pages/homePage/DonationDetailsHome";
+// import FeaturedDonations from "../pages/homePage/FeaturedDonations";
+import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/stats/RestaurantDonationStats";
+import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
 
 const router = createBrowserRouter([
     {
@@ -76,26 +76,17 @@ const router = createBrowserRouter([
                     </Suspense>
                 )
             },
-            {
-                path: '/featured_donations',
-                element: (
-                    <Suspense fallback={<Loading />}>
-                        <PrivateRoute>
-                            <FeaturedDonations />
-                        </PrivateRoute>
-                    </Suspense>
-                )
-            },
-            {
-                path: '/donation_details_home/:id',
-                element: (
-                    <Suspense fallback={<Loading />}>
-                        <PrivateRoute>
-                            <DonationDetailsHome />
-                        </PrivateRoute>
-                    </Suspense>
-                )
-            },
+            // {
+            //     path: '/featured_donations',
+            //     element: (
+            //         <Suspense fallback={<Loading />}>
+            //             <PrivateRoute>
+            //                 <FeaturedDonations />
+            //             </PrivateRoute>
+            //         </Suspense>
+            //     )
+            // },
+            
             {
                 path: '/about-us',
                 element: (
@@ -269,6 +260,14 @@ const router = createBrowserRouter([
                     </RestaurantRoute>
                 )
             },
+            {
+                path: 'restaurant_donation_stats',
+                element: (
+                    <RestaurantRoute>
+                        <RestaurantDonationStats/>
+                    </RestaurantRoute>
+                )
+            },
             // charity routes
             {
                 path: 'profile_charity',
@@ -327,7 +326,7 @@ const router = createBrowserRouter([
                 )
             },
             {
-                path: 'my-reviews',
+                path: 'my_reviews',
                 element: (
                     <CharityRoute>
                         <MyReviews />

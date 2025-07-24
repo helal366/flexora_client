@@ -3,16 +3,18 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '../../../../api/queryClient';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
+import useAuth from './../../../../hooks/useAuth';
 
 const ManageDonations = () => {
-    const axiosSecure = useAxiosSecure()
+    const axiosSecure = useAxiosSecure();
+    const {user}=useAuth()
 
     const fetchDonations = async () => {
         const res = await axiosSecure.get('/donations');
         return res.data;
     };
     const updateDonationStatus = async ({ id, status }) => {
-        const res = await axiosSecure.patch(`/donations/${id}`, { status, donation_status: "Available" });
+        const res = await axiosSecure.patch(`/donations/${id}?email=${user?.email}`, { status, donation_status: "Available" });
         return res?.data;
     };
 
@@ -21,7 +23,7 @@ const ManageDonations = () => {
         queryFn: fetchDonations,
     });
 
-    console.log(donations)
+    // console.log(donations)
 
     const mutation = useMutation({
         mutationFn: updateDonationStatus,

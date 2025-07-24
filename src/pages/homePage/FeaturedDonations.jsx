@@ -4,14 +4,16 @@ import { Link } from 'react-router';
 import NoFeaturedDonations from './NoFeaturedDonations';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import useAuth from '../../hooks/useAuth';
 
 const FeaturedDonations = () => {
   const axiosSecure = useAxiosSecure();
+  const {user}=useAuth()
 
   const { data: donations = [], isLoading } = useQuery({
     queryKey: ['featuredDonations'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/donations/featured');
+      const res = await axiosSecure.get(`/donations/featured?email=${user?.email}`);
       return res?.data;
     }
   });
@@ -29,7 +31,7 @@ const FeaturedDonations = () => {
   }
 
   return (
-    <section className="my-10 px-4 md:px-10 pb-10 bg-teal-50 rounded border border-gray-500/50 shadow-lg">
+    <section className="my-10 px-4 md:px-10 py-10 bg-teal-50 rounded border border-gray-500/50 shadow-lg">
       <h2 className="text-3xl font-bold mb-6 text-center text-teal-700"> Featured Donations</h2>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {donations.slice(0, 4).map((donation) => (
@@ -54,8 +56,8 @@ const FeaturedDonations = () => {
                 Status : {donation.donation_status || 'Available'}
               </p>
               <Link
-                to={`/donation_details_home/${donation._id}`}
-                className="inline-block bg-teal-500 text-white px-4 py-2 rounded-md mt-2 hover:bg-teal-600 text-sm"
+                to={`/donations/${donation._id}`}
+                className="inline-block bg-teal-600 text-white px-4 py-2 rounded-md mt-2 hover:bg-teal-800 text-sm"
               >
                 Details
               </Link>

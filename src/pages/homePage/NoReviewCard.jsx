@@ -2,7 +2,7 @@ import React from 'react';
 
 const NoReviewCard = () => {
   return (
-    <div className="mt-6">
+    <div className="my-6">
       <div className="card bg-base-100 shadow-md border">
         <div className="card-body items-center text-center">
           <svg

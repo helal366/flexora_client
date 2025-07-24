@@ -19,13 +19,13 @@ const pickupTimeWindows = {
 const AddDonation = () => {
     const { user } = useAuth();
     // const axiosSecure = useAxiosSecure();
-    const { mutateAsync: uploadImage } = useCloudinaryImageUpload(); // optional
+    const { mutateAsync: uploadImage } = useCloudinaryImageUpload();
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();
     const { mutate: addDonation, isPending } = useAddDonation();
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
-    const selectedMeal = watch('meal_time'); // to derive time window
+    const selectedMeal = watch('meal_time'); 
 
     const onSubmit = async (data) => {
         const result = await Swal.fire({

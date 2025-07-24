@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
-import AddReviewModal from '../../../../components/AddReviewModal';
+import AddReviewModalReceivedDonations from './AddReviewModalReceivedDonations';
 
 const ReceivedDonations = () => {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ const ReceivedDonations = () => {
     enabled: !!user?.email,
   });
 
-  if (isLoading) return <section><Loading /></section>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 my-10 ml-4">
@@ -49,6 +49,12 @@ const ReceivedDonations = () => {
             </span>
           </p>
           <p>
+            <span className="text-teal-700 italic font-semibold">Donation Status :</span>{' '}
+            <span className="text-teal-800">
+              {request.donation_status} 
+            </span>
+          </p>
+          <p>
             <span className="text-teal-700 italic font-semibold">Pickup Date :</span>{' '}
             <span className="text-teal-800">{request.preferred_pickup_date}</span>
           </p>
@@ -66,7 +72,7 @@ const ReceivedDonations = () => {
       ))}
 
       {selectedRequest && (
-        <AddReviewModal
+        <AddReviewModalReceivedDonations
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);

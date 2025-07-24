@@ -13,11 +13,11 @@ const RequestedDonations = () => {
     queryKey: ['restaurant-requests'],
     queryFn: async () => {
       const res = await axiosSecure.get('/requests/restaurant'); // Adjust route
-      return res.data;
+      return res?.data;
     },
   });
 
-  const { mutate: updateStatus } = useMutation({
+  const { mutate: updateStatus, isLoading: isUpdating } = useMutation({
     mutationFn: async ({ requestId, newStatus, donationId }) => {
       const res = await axiosSecure.patch(`/requests/status/${requestId}`,
          { status: newStatus,
@@ -78,7 +78,13 @@ const handleReject = (req) => {
               <td className="flex gap-2">
                 {req.request_status === 'Pending'? (
                   <>
-                    <button onClick={() => handleAccept(req)} className="btn btn-success btn-sm">Accept</button>
+                    <button 
+                        onClick={() => handleAccept(req)} 
+                        className="btn btn-success btn-sm"
+                        disabled={isUpdating}
+                        >
+                          Accept
+                    </button>
                     <button onClick={() => handleReject(req)} className="btn btn-error btn-sm">Reject</button>
                   </>
                 ): <span className='whitespace-nowrap'>No Actions</span>}

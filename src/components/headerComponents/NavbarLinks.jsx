@@ -9,7 +9,7 @@ const commonShadow = {
 const linkStyles = {
   home: commonShadow,
   all_donations: commonShadow,
-  featured_donations: commonShadow,
+  // featured_donations: commonShadow,
   dashboard: commonShadow,
   about: commonShadow,
 };
@@ -58,7 +58,7 @@ const NavbarLinks = () => {
           </button>
         </NavLink>
       </li>
-      <li className='mr-2'>
+      {/* <li className='mr-2'>
         <NavLink to='/featured_donations'>
           <button
             className="cursor-pointer rounded px-3 py-1 transition-transform duration-200"
@@ -77,7 +77,7 @@ const NavbarLinks = () => {
             Featured Donations
           </button>
         </NavLink>
-      </li>
+      </li> */}
       <li className='mr-2'>
         <NavLink to='/dashboard'>
           <button

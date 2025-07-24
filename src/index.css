@@ -24,10 +24,14 @@ a.active {
   @apply  rounded p-1 bg-gray-200 text-teal-800;
   box-shadow: 0 0 2px 1px rgba(20, 184, 166, 0.6);
 }
-.myButton{
-  @apply rounded-lg py-2 px-5 text-gray-200 bg-teal-700 data-hover:bg-teal-800 data-active:bg-teal-950 cursor-pointer
+.one{
+  @apply border border-gray-500/50 rounded shadow-xl 
 }
-
-
+.two{
+  @apply text-teal-800 font-semibold italic
+}
+.threeDisabled{
+  @apply btn btn-outline disabled:bg-gray-200 disabled:text-gray-600/50 cursor-not-allowed
+}
 
 /* bg-secondary text-neutral-500 font-semibold */

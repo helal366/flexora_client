@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Slider from './Slider';
+import FeaturedDonations from './FeaturedDonations';
 
 const HomePage = () => {
     useEffect(()=>{
@@ -9,6 +10,9 @@ const HomePage = () => {
         <section className='py-10'>
             <section className='mb-10'>
                 <Slider/>
+            </section>
+            <section className='mb-10'>
+                <FeaturedDonations/>
             </section>
         </section>
     );

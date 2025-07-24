@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 const RequestDonationModal = ({
   donation,
@@ -8,13 +9,37 @@ const RequestDonationModal = ({
   submitRequest,
   setShowRequestModal,
 }) => {
+  
+  // Wrap the parent's handleRequestSubmit to add duplicate request check
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    // Check if user already requested this donation
+    if (
+      donation.request &&
+      donation.request.charity_representative_email === user?.email
+    ) {
+      Swal.fire('Oops!', 'You have already sent a request for this donation.', 'warning');
+      return;
+    }
+
+    // Use parent's handler for actual submission
+    handleRequestSubmit(submitRequest)(event);
+  };
+
   return (
     <dialog className="modal modal-open">
       <section className="modal-box">
         <h3 className="font-bold text-lg mb-2">Request Donation</h3>
-        <form onSubmit={handleRequestSubmit(submitRequest)} className="space-y-3">
+        <form onSubmit={onSubmit} className="space-y-3">
           {/* Donation Image */}
           <div className="form-control">
+            <input
+              type="hidden"
+              {...requestRegister('donation_id')}
+              value={donation?._id}
+            />
+
             <label className="label">
               <span className="label-text">Donation Image</span>
             </label>
@@ -55,6 +80,7 @@ const RequestDonationModal = ({
               <span className="label-text">Charity Name</span>
             </label>
             <input
+              name="charity_name"
               readOnly
               {...requestRegister('charity_name')}
               defaultValue={user?.displayName}
@@ -68,6 +94,7 @@ const RequestDonationModal = ({
               <span className="label-text">Charity Email</span>
             </label>
             <input
+              name="charity_email"
               readOnly
               {...requestRegister('charity_email')}
               defaultValue={user?.email}
@@ -84,6 +111,18 @@ const RequestDonationModal = ({
               {...requestRegister('request_description', { required: true })}
               placeholder="Request details..."
               className="textarea textarea-bordered w-full"
+            />
+          </div>
+
+          {/* Preferred Pickup Date */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Preferred Pickup Date</span>
+            </label>
+            <input
+              type="date"
+              {...requestRegister('pickup_date', { required: true })}
+              className="input input-bordered w-full"
             />
           </div>
 

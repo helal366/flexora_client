@@ -86,7 +86,7 @@ const MyPickups = () => {
                         </p>
                     </div>
 
-                    {/* ✅ Disable button if already picked up */}
+                    {/*  Disable button if already picked up */}
                     {request.picking_status === 'Picked Up' ? (
                         <button
                             className="btn bg-gray-500 text-gray-600/60 mt-5 cursor-not-allowed shadow-2xl shadow-white"
