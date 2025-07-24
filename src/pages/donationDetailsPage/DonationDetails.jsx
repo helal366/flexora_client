@@ -28,7 +28,9 @@ const DonationDetails = () => {
     // review modal
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const handleReviewOpen = () => setIsReviewOpen(true);
-    const handleReviewClose = () => setIsReviewOpen(false)
+    const handleReviewClose = () => setIsReviewOpen(false);
+    // favorite
+    const [alreadyFavorited, setAlreadyFavorited]=useState(false)
 
     const { data: donation, isLoading: donationGetLoading } = useQuery({
         queryKey: ['donation-details', id],
@@ -51,13 +53,21 @@ const DonationDetails = () => {
     const { data: isExist, isLoading: existLoading } = useQuery({
         queryKey: ['isExist', donationId, userEmail],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/requests/exist?email=${userEmail}&donationId=${donationId}`,);
+            const res = await axiosSecure.get(`/requests/exist?email=${userEmail}&donationId=${donationId}`);
             return res?.data
         },
         enabled: !!donationId && !!userEmail
-    })
-    // console.log({isExist})
+    });
 
+    const {data: isFavorited, isLoading: favoritedGetLoading}=useQuery({
+        queryKey: ['isFavorited', donationId, userEmail],
+        queryFn: async()=>{
+            const res=await axiosSecure.get(`/favorites/is_favorited?email=${userEmail}&donationId=${donationId}`);
+            return res?.data?.favorited;
+        },
+        enabled: !!donationId && !!userEmail,
+    });
+    console.log({isFavorited})
     const { data: reviewsDonation = [], isLoading: reviewsLoading, refetch: refetchReviews } = useQuery({
         queryKey: ['reviews-by-donationId', donationId],
         queryFn: async () => {
@@ -74,6 +84,7 @@ const DonationDetails = () => {
         },
         onSuccess: async () => {
             setIsDisabled(true)
+            setAlreadyFavorited(true)
             await axiosSecure.patch(`/donations/add_favorite/${donationId}?email=${userEmail}`);
             queryClient.invalidateQueries({ queryKey: ['donation-details', id] });
             queryClient.invalidateQueries({ queryKey: ['isExist', donationId, userEmail] });
@@ -107,7 +118,7 @@ const DonationDetails = () => {
         addToFavorites({ favoriteData })
     };
 
-    if (donationGetLoading || favoritePending || existLoading) {
+    if (donationGetLoading || favoritePending || existLoading || favoritedGetLoading) {
         return <Loading />
     }
 
@@ -132,9 +143,10 @@ const DonationDetails = () => {
                             hoverBg='hover:bg-yellow-700'
                             textColor='text-gray-100'
                             onClick={handleFavorites}
-                            disabled={favoritePending}
+                            isFavorited={isFavorited}
+                            disabled={favoritePending || isFavorited || alreadyFavorited}
                         >
-                            {favoritePending ? 'Adding...' : 'Add to Favorites'}
+                            {favoritePending ? 'Adding...' : isFavorited?'Favorited': 'Add to Favorites'}
                         </ButtonOne>
 
 

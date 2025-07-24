@@ -22,7 +22,7 @@ const CardCharityRequest = ({ request }) => {
         return <Loading/>
     }
     return (
-        <section key={request?._d} className='card bg-gray-200 shadow-xl'>
+        <section  className='card bg-gray-200 shadow-xl'>
             <figure>
                 <img
                     className='max-h-40 w-full'

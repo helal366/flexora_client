@@ -3,7 +3,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
 import { AiFillHome } from 'react-icons/ai'; // Home icon
-import { FaBoxOpen, FaChartPie, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
+import { FaBoxOpen, FaChartPie, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
 import queryClient from '../api/queryClient';
@@ -116,6 +116,13 @@ const DashboardLayout = () => {
                                         My Reviews
                                     </NavLink>
                                 </li>
+                                <li className="shadow-md mb-3 shadow-orange-200 bg-teal-200">
+                                    <NavLink to="/dashboard/my_favorites" className="flex items-center gap-2">
+                                        <FaHeart className="text-xl text-orange-500" />
+                                        My Favorites
+                                    </NavLink>
+                                </li>
+
 
                             </>
                         }

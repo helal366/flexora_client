@@ -38,9 +38,9 @@ import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDona
 import MyReviews from "../pages/dashboardPages/MyReviews";
 import TransectionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
 import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
-// import FeaturedDonations from "../pages/homePage/FeaturedDonations";
 import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/stats/RestaurantDonationStats";
 import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
+import MyFavorites from "../pages/common/MyFavorites";
 
 const router = createBrowserRouter([
     {
@@ -76,17 +76,6 @@ const router = createBrowserRouter([
                     </Suspense>
                 )
             },
-            // {
-            //     path: '/featured_donations',
-            //     element: (
-            //         <Suspense fallback={<Loading />}>
-            //             <PrivateRoute>
-            //                 <FeaturedDonations />
-            //             </PrivateRoute>
-            //         </Suspense>
-            //     )
-            // },
-            
             {
                 path: '/about-us',
                 element: (
@@ -161,6 +150,14 @@ const router = createBrowserRouter([
                 element: (
                     <UserRoute>
                         <MyReviews />
+                    </UserRoute>
+                )
+            },
+            {
+                path: 'my_favorites',
+                element: (
+                    <UserRoute>
+                        <MyFavorites/>
                     </UserRoute>
                 )
             },

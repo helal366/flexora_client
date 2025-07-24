@@ -20,7 +20,7 @@ const useUserRole = () => {
             enabled: !!user?.email && !authLoading,
         }
     );
-    console.log('roleLoading:', roleLoading, 'userInfo:', userInfo);
+    // console.log('roleLoading:', roleLoading, 'userInfo:', userInfo);
     const role=userInfo?.user_by_email?.role || 'user';
     const isUser=role==='user';
     const isCharity=role==='charity';

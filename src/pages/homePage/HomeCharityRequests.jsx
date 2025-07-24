@@ -11,7 +11,7 @@ const HomeCharityRequests = () => {
     const { data: requests, isLoading } = useQuery({
         queryKey: ['requests'],
         queryFn: async () => {
-            const res = await axiosSecure(`/requests/home_page?email=${user?.email}`);
+            const res = await axiosSecure.get(`/requests/home_page?email=${user?.email}`);
             return res?.data;
         }
     });
@@ -26,7 +26,10 @@ const HomeCharityRequests = () => {
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {
                     requests.map((request) => (
-                       <CardCharityRequest request={request} />
+                       <CardCharityRequest 
+                       key={request?._id}
+                       request={request} 
+                       />
                     ))
                 }
             </div>
