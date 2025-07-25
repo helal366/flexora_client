@@ -1,66 +1,30 @@
 import React from 'react';
+import { MdEmail, MdPhone, MdLocationOn } from 'react-icons/md';
 
 const ContactPage = () => {
-    return (
-        <section className='padding bg-teal-50 my-10 rounded shadow-lg border border-gray-500/50'>
-            <div className="max-w-4xl mx-auto px-4 py-10">
-                <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">Contact Us</h1>
-
-                {/* Contact Info Section */}
-                <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Official Contact Information</h2>
-                    <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-                        <li><strong>Address:</strong> 123 Flexora Street, Dhaka 1207, Bangladesh</li>
-                        <li><strong>Phone:</strong> +880 2-12345678</li>
-                        <li><strong>Mobile:</strong> +880 1711-000000</li>
-                        <li><strong>Email (Support):</strong> support@flexora.org</li>
-                        <li><strong>Email (General):</strong> info@flexora.org</li>
-                        <li><strong>Email (Admin):</strong> admin@flexora.org</li>
-                    </ul>
-
-                </div>
-
-                {/* Contact Form */}
-                <form className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">Send us a message</h2>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Name</label>
-                        <input
-                            type="text"
-                            placeholder="Your full name"
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Email</label>
-                        <input
-                            type="email"
-                            placeholder="you@example.com"
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Message</label>
-                        <textarea
-                            rows="5"
-                            placeholder="Type your message here..."
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="bg-teal-600 text-white px-6 py-2 rounded hover:bg-teal-700 transition shadow-md"
-                    >
-                        Send Message
-                    </button>
-                </form>
-            </div>
-        </section>
-    );
+  return (
+    <section className="max-w-4xl mx-auto px-6 py-10 mb-10 bg-gray-300 rounded-lg shadow-md border border-gray-400">
+      <h2 className="text-2xl font-bold text-teal-600 mb-6">Contact</h2>
+      <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+        Have questions or suggestions? We'd love to hear from you. Reach out to us through the following channels:
+      </p>
+      <ul className="space-y-4 text-gray-800 dark:text-gray-200">
+        <li className="flex items-center gap-4">
+          <MdEmail className="text-teal-500 text-2xl" />
+          <span>contact@flexora.org</span>
+        </li>
+        <li className="flex items-center gap-4">
+          <MdPhone className="text-teal-500 text-2xl" />
+          <span>+880-1234-567890</span>
+        </li>
+        <li className="flex items-center gap-4">
+          <MdLocationOn className="text-teal-500 text-2xl" />
+          <span>Dhaka, Bangladesh</span>
+        </li>
+      </ul>
+    </section>
+  );
 };
 
 export default ContactPage;
+

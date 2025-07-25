@@ -42,10 +42,10 @@ const NavbarEnd = () => {
         <div className="navbar-end">
             {user ? (
                 <>
-                    <span className="text-xs mr-5 hidden md:block">{user?.displayName}</span>
+                    <span className="text-xs mr-5 hidden md:block text-gray-800">{user?.displayName}</span>
                     <button
                         onClick={handleLogout}
-                        className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300 hidden md:block"
+                        className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300 hidden md:block text-gray-800"
                         style={{ boxShadow: shadowStyle.base }}
                         onMouseEnter={(e) => handleHover(e, true)}
                         onMouseLeave={(e) => handleHover(e, false)}
@@ -81,7 +81,7 @@ const NavbarEnd = () => {
                             </li>
                             <button
                                 onClick={handleLogout}
-                                className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300"
+                                className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 mr-5 bg-teal-200 border border-teal-300 text-gray-800"
                                 style={{ boxShadow: shadowStyle.base }}
                                 onMouseEnter={(e) => handleHover(e, true)}
                                 onMouseLeave={(e) => handleHover(e, false)}
