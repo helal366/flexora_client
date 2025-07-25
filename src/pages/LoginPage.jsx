@@ -8,7 +8,7 @@ import useAxiosSecure from './../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import GoogleLogin from '../components/loginRegisterComponents/GoogleLogin';
 const LoginPage = () => {
-    const { userLogin, authLoading } = useAuth();
+    const { userLogin } = useAuth();
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm({ criteriaMode: 'all' });
     const axiosSecure = useAxiosSecure();
@@ -33,8 +33,7 @@ const LoginPage = () => {
         setLoginError(''); // reset previous errors
         try {
             // user login
-            const result = await userLogin(data?.email, data?.password);
-            console.log(result?.user);
+             await userLogin(data?.email, data?.password);
             // success message
             Swal.fire({
                 icon: 'success',
@@ -45,7 +44,7 @@ const LoginPage = () => {
             // wait for the last login time update before navigating
             await userLoginMutation.mutateAsync(data?.email);
             // then navigate
-            navigate(desire);
+            if(desire) navigate(desire);
         } catch (error) {
              // Handle specific auth errors
         if (error?.code === 'auth/invalid-credential') {
@@ -100,7 +99,7 @@ const LoginPage = () => {
                                 )}
                                 <button className="btn btn-neutral mt-4 hover:bg-teal-800">
                                     {
-                                        isLogging || userLoginMutation.isPending || authLoading?(
+                                        isLogging || userLoginMutation.isPending ?(
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Logging in...
                                         </>
@@ -112,7 +111,7 @@ const LoginPage = () => {
                                 }
                             </fieldset>
                         </form>
-                        <GoogleLogin desire={desire}/>
+                        <GoogleLogin desire={desire} isLogging={isLogging}/>
                         <p>Don't have an account? Please <Link to='/auth/register' className='text-blue-600 underline'>Register </Link> </p>
                     </div>
                 </div>

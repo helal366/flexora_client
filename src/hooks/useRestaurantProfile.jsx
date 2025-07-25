@@ -5,7 +5,7 @@ import useAxiosSecure from './useAxiosSecure';
 
 const useRestaurantProfile = () => {
   const axiosSecure = useAxiosSecure();
-  const { user, authLoading } = useAuth();
+  const { user } = useAuth();
 
   const {
     data: restaurantProfile,
@@ -14,7 +14,7 @@ const useRestaurantProfile = () => {
     error,
   } = useQuery({
     queryKey: ['restaurantProfile', user?.email],
-    enabled: !!user?.email && !authLoading,
+    enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/user?email=${user.email}`);
       return res.data?.user_by_email; // expects user object

@@ -330,6 +330,14 @@ const router = createBrowserRouter([
                     </CharityRoute>
                 )
             },
+            {
+                path: 'my_favorites_charity',
+                element: (
+                    <CharityRoute>
+                        <MyFavorites/>
+                    </CharityRoute>
+                )
+            },
         ]
     },
     {

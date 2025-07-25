@@ -4,7 +4,7 @@ import useAxiosSecure from './useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 
 const useUserRole = () => {
-    const {user, authLoading}=useAuth();
+    const {user}=useAuth();
     const axiosSecure=useAxiosSecure();
 
     const {data: userInfo, isPending:roleLoading, isError, error}=useQuery(
@@ -17,7 +17,7 @@ const useUserRole = () => {
             },
             refetchOnWindowFocus: true,
             retry: 2,
-            enabled: !!user?.email && !authLoading,
+            enabled: !!user?.email
         }
     );
     // console.log('roleLoading:', roleLoading, 'userInfo:', userInfo);

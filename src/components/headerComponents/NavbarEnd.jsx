@@ -16,8 +16,8 @@ const NavbarEnd = () => {
         e.currentTarget.style.transform = hover ? 'scale(1.05)' : 'scale(1)';
     };
 
-    const handleLogout = () => {
-        userLogout()
+    const handleLogout = async() => {
+      await  userLogout()
             .then(() => {
                 Swal.fire({
                     icon: 'success',

@@ -11,39 +11,44 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const userRegister = (email, password) => {
         setAuthLoading(true)
-        try {
-            return createUserWithEmailAndPassword(auth, email, password)
-        } finally {
-            setAuthLoading(false)
-        }
+        return createUserWithEmailAndPassword(auth, email, password)
+        
+        
     }
     const userLogin = (email, password) => {
         setAuthLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
+       
     }
     const googleLogin = () => {
         setAuthLoading(true)
         return signInWithPopup(auth, googleProvider)
+       
     }
-    const userProfileUpdate = (updataInfo) => {
+    const userProfileUpdate = (updateInfo) => {
         setAuthLoading(true)
-        return updateProfile(auth.currentUser, updataInfo)
+        return updateProfile(auth.currentUser, updateInfo)
+        
     }
     const userLogout = () => {
         setAuthLoading(true);
         queryClient.clear();
         return signOut(auth)
+        
     }
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
+            console.log("onAuthStateChanged fired with:", currentUser);
             setUser(currentUser);
-            setAuthLoading(false)
+            setAuthLoading(false);
+            console.log("Auth State Ready:", currentUser);
         });
         return () => {
             unSubscribe()
         }
     }, [])
-    // console.log('authLoading:', authLoading, 'user:', user);
+    console.log({authLoading});
+    console.log({user});
     const authInfo = {
         user,
         setUser,
@@ -56,9 +61,9 @@ const AuthProvider = ({ children }) => {
         userLogout,
     }
     return (
-        <AuthContext value={authInfo}>
+        <AuthContext.Provider value={authInfo}>
             {children}
-        </AuthContext>
+        </AuthContext.Provider>
     );
 };
 

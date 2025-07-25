@@ -6,18 +6,21 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useState } from "react";
 
 
-const GoogleLogin = ({ desire }) => {
+const GoogleLogin = ({ desire, registerLoading, isLogging }) => {
     const navigate = useNavigate()
-    const { googleLogin, authLoading } = useAuth();
-    const axiosSecure = useAxiosSecure()
+    const { googleLogin } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const [googleLoading, setGoogleLoading] = useState(false)
 
 
     const addUserToMongodbMutation = useMutation({
         mutationFn: (userInfo) => axiosSecure.post(`/users/`, userInfo),
-        onSuccess: (res) => {
-            console.log('User info saved to DB:', res.data);
+        onSuccess: () => {
+            // console.log('User info saved to DB:', res.data);
+            // setGoogleLoading(false)
             Swal.fire({
                 icon: "success",
                 title: "Logged in!",
@@ -25,7 +28,7 @@ const GoogleLogin = ({ desire }) => {
                 timer: 2000,
                 showConfirmButton: false,
             });
-            navigate(desire);
+            if (desire) navigate(desire);
         },
         onError: (err) => {
             Swal.fire({
@@ -55,11 +58,6 @@ const GoogleLogin = ({ desire }) => {
                 uid: regUser?.uid
             }
             addUserToMongodbMutation.mutate(userInfo)
-            Swal.fire({
-                icon: "success",
-                title: "Google Signin Successful",
-                timer: 2000
-            });
         },
         onError: (err) => {
             Swal.fire({
@@ -70,17 +68,22 @@ const GoogleLogin = ({ desire }) => {
         }
     })
     const handleGoogleSignin = () => {
-        googleLoginMutation.mutate()
-    }
+        setGoogleLoading(true)
+        googleLoginMutation.mutate(undefined, {
+            onSettled: () => setGoogleLoading(false),
+        })
+    };
+    const isLoading = googleLoading || googleLoginMutation.isLoading || addUserToMongodbMutation.isLoading || registerLoading || isLogging;
+
     return (
         <div>
             <div className="divider divider-success">Or</div>
             <button
-                disabled={googleLoginMutation.isPending || authLoading}
+                disabled={isLoading}
                 onClick={handleGoogleSignin}
                 className="btn bg-gray-800 text-gray-100 hover:bg-teal-700 disabled:text-gray-700 border-[#e5e5e5] w-full ">
                 <FcGoogle size={20} />&nbsp;
-                {googleLoginMutation.isPending || authLoading ? (
+                {isLoading ? (
                     <>
                         <span className="loading loading-spinner loading-xs mr-1"></span> Signing in...
                     </>

@@ -5,6 +5,7 @@ import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import queryClient from '../../../../api/queryClient';
 import Loading from '../../../../components/loadingComponents/Loading';
+import NoAvailableDonations from '../receivedDonations/NoAvailableDonations';
 
 const MyPickups = () => {
     const { user } = useAuth();
@@ -47,6 +48,8 @@ const MyPickups = () => {
             }
         });
     };
+
+    if(requests.length===0) return <NoAvailableDonations/>
 
     if (isLoading) return <section><Loading /></section>;
 

@@ -13,7 +13,7 @@ import GoogleLogin from '../components/loginRegisterComponents/GoogleLogin';
 const RegisterPage = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
-    const { userRegister, userProfileUpdate, authLoading } = useAuth();
+    const { userRegister, userProfileUpdate,  } = useAuth();
     const location = useLocation();
     const [registerLoading, setRegisterLoading]=useState(false)
     const desire = location?.desire ? location?.desire : '/';
@@ -35,7 +35,10 @@ const RegisterPage = () => {
                 text: 'You have registered successfully.',
                 timer: 1500
             });
-            navigate(desire);
+            setRegisterLoading(false);
+            if(desire){
+              return navigate(desire)
+            };
             reset(); // inside onSuccess if you import from react-hook-form
 
         },
@@ -70,8 +73,6 @@ const RegisterPage = () => {
         try {
             const result = await axios.post(`${import.meta.env.VITE_cloudinary_url}`, formData);
             const uploadedProfileImageURL = result?.data?.secure_url;
-            console.log({ uploadedProfileImageURL});
-            console.log(data?.name);
             if (!uploadedProfileImageURL) throw new Error('Failed to create image url!');
 
             // user registration   
@@ -80,7 +81,6 @@ const RegisterPage = () => {
             const uid_firebase=userCredential?.user?.uid
 
             // updateInfo
-            console.log('from registration page, data: ',data)
             const updateInfo = {
                 displayName: data?.name,
                 photoURL: uploadedProfileImageURL,
@@ -102,7 +102,6 @@ const RegisterPage = () => {
                 last_login: new Date().toISOString(),
                 uid: uid_firebase
             }
-            console.log({ userInfo })
             // store user info in the database
             mutation.mutate(userInfo)
         } catch (err) {
@@ -114,7 +113,7 @@ const RegisterPage = () => {
             });
             return;
         }finally{
-            setRegisterLoading(false)
+            setRegisterLoading(false);
         }
     }
     return (
@@ -172,9 +171,9 @@ const RegisterPage = () => {
                                     <p className="text-red-600 text-xs">{errors?.password?.message}</p>
                                 )}
                                 <button type='submit' 
-                                disabled={mutation.isPending || authLoading || registerLoading} 
-                                className={`btn mt-4 ${mutation.isPending || authLoading || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'bg-gray-800 text-gray-100 hover:bg-teal-700'}`}>
-                                    {mutation.isPending || authLoading || registerLoading? (
+                                disabled={mutation.isPending  || registerLoading} 
+                                className={`btn mt-4 ${mutation.isPending || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'bg-gray-800 text-gray-100 hover:bg-teal-700'}`}>
+                                    {mutation.isPending || registerLoading? (
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
                                         </>
@@ -182,7 +181,7 @@ const RegisterPage = () => {
                                 </button>
                             </fieldset>
                         </form>
-                        <GoogleLogin desire={desire} />
+                        <GoogleLogin desire={desire} registerLoading={registerLoading}/>
                         <p>Already have an account? Please <Link to='/auth/login' className='text-blue-600 underline'>Login </Link> </p>
                     </div>
                 </div>

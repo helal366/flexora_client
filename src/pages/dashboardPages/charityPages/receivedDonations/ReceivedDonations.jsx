@@ -4,6 +4,7 @@ import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
 import AddReviewModalReceivedDonations from './AddReviewModalReceivedDonations';
+import NoReceivedDonations from './NoReceivedDonations';
 
 const ReceivedDonations = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ const ReceivedDonations = () => {
     },
     enabled: !!user?.email,
   });
-
+  if(requests?.length===0) return <NoReceivedDonations/>
   if (isLoading) return <Loading />;
 
   return (

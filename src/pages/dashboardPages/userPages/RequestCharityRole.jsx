@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -15,7 +15,6 @@ const RequestCharityRole = () => {
     const { user } = useAuth();
     const userEmail = user?.email;
     const userName = user?.displayName;
-    const [uploadLogo, setUploadLogo] = useState('')
     const { register, formState: { errors, isSubmitting }, handleSubmit, reset } = useForm();
     const stripe = useStripe();
     const elements = useElements();
@@ -62,7 +61,6 @@ const RequestCharityRole = () => {
         // cloudinary image upload by hook
         try {
             uploadedUrl = await uploadImage(file)
-            setUploadLogo(uploadedUrl)
         } catch (err) {
             Swal.fire({
                 icon: 'error', title: 'Upload failed!', text: err?.message, showConfirmButton: true, timer: 2500
@@ -196,7 +194,6 @@ const RequestCharityRole = () => {
             console.log(err)
         }
     }
-    console.log({ uploadLogo })
     return (
         <section className='max-w-4xl mx-auto my-8 bg-white p-6 rounded shadow-lg shadow-gray-600'>
             <h2 className='font-semibold text-2xl text-center mb-4'>
