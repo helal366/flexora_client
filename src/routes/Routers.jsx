@@ -41,6 +41,7 @@ import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonation
 import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/stats/RestaurantDonationStats";
 import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
 import MyFavorites from "../pages/common/MyFavorites";
+import DashBoardHome from "../pages/dashboardPages/dashboardHome/DashBoardHome";
 
 const router = createBrowserRouter([
     {
@@ -71,7 +72,7 @@ const router = createBrowserRouter([
                 element: (
                     <Suspense fallback={<Loading />}>
                         <PrivateRoute>
-                            <DonationDetails/>
+                            <DonationDetails />
                         </PrivateRoute>
                     </Suspense>
                 )
@@ -109,13 +110,23 @@ const router = createBrowserRouter([
         ),
         errorElement: <ErrorPage />,
         children: [
-            
+            {
+                index: true,
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute>
+                            <DashBoardHome />
+                        </PrivateRoute>
+                    </Suspense>
+                )
+            },
+
             // user route
             {
                 path: 'profile_user',
                 element: (
                     <UserRoute>
-                       <ProfilePage />
+                        <ProfilePage />
                     </UserRoute>
                 )
             },
@@ -157,7 +168,7 @@ const router = createBrowserRouter([
                 path: 'my_favorites',
                 element: (
                     <UserRoute>
-                        <MyFavorites/>
+                        <MyFavorites />
                     </UserRoute>
                 )
             },
@@ -166,7 +177,7 @@ const router = createBrowserRouter([
                 path: 'profile_admin',
                 element: (
                     <AdminRoute>
-                       <ProfilePage />
+                        <ProfilePage />
                     </AdminRoute>
                 )
             },
@@ -207,7 +218,7 @@ const router = createBrowserRouter([
                 path: 'profile_restaurant',
                 element: (
                     <RestaurantRoute>
-                       <ProfilePage />
+                        <ProfilePage />
                     </RestaurantRoute>
                 )
             },
@@ -261,7 +272,7 @@ const router = createBrowserRouter([
                 path: 'restaurant_donation_stats',
                 element: (
                     <RestaurantRoute>
-                        <RestaurantDonationStats/>
+                        <RestaurantDonationStats />
                     </RestaurantRoute>
                 )
             },
@@ -270,7 +281,7 @@ const router = createBrowserRouter([
                 path: 'profile_charity',
                 element: (
                     <CharityRoute>
-                       <ProfilePage />
+                        <ProfilePage />
                     </CharityRoute>
                 )
             },
@@ -334,7 +345,7 @@ const router = createBrowserRouter([
                 path: 'my_favorites_charity',
                 element: (
                     <CharityRoute>
-                        <MyFavorites/>
+                        <MyFavorites />
                     </CharityRoute>
                 )
             },
