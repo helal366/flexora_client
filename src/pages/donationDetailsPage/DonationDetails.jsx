@@ -83,8 +83,7 @@ const DonationDetails = () => {
             return res?.data
         },
         onSuccess: async () => {
-            setIsDisabled(true)
-            setAlreadyFavorited(true)
+            setAlreadyFavorited(true);
             await axiosSecure.patch(`/donations/add_favorite/${donationId}?email=${userEmail}`);
             queryClient.invalidateQueries({ queryKey: ['donation-details', id] });
             queryClient.invalidateQueries({ queryKey: ['isExist', donationId, userEmail] });
