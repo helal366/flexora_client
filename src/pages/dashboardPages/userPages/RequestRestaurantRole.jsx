@@ -68,7 +68,7 @@ const RequestRestaurantRole = () => {
             Swal.fire({
                 icon: 'error', title: 'Upload failed!', text: err?.message, showConfirmButton: true, timer: 2500
             });
-            setRestaurantLoading(false); // early return still needs cleanup
+            setRestaurantLoading(false); 
             return;
         }
 
@@ -100,7 +100,7 @@ const RequestRestaurantRole = () => {
                     title: 'Restaurant role request submitted successfully.',
                     timer: 1500
                 }),
-                    reset();
+                 await   reset();
                 navigate('/')
             } else {
                 Swal.fire({
@@ -113,11 +113,11 @@ const RequestRestaurantRole = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Something went wrong!',
-                text: `${err}`,
+                text: err?.message,
                 showConfirmButton: true
             });
         } finally {
-            setRestaurantLoading(false); // ✅ always reset loading
+            setRestaurantLoading(false); //
         }
     }
     return (

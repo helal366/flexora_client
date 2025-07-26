@@ -20,7 +20,7 @@ const LoginPage = () => {
     window.scrollTo(0, 0);
   }, []);
     const userLoginMutation = useMutation({
-        mutationFn: (email) => axiosSecure.patch(`/users/last-login`, { email, last_login: new Date().toISOString() }),
+        mutationFn: () => axiosSecure.patch(`/users/last-login`),
         onSuccess: () => {
             console.log('Last login updated.')
         },
@@ -42,7 +42,7 @@ const LoginPage = () => {
                 timer: 1500
             });
             // wait for the last login time update before navigating
-            await userLoginMutation.mutateAsync(data?.email);
+            await userLoginMutation.mutateAsync();
             // then navigate
             if(desire) navigate(desire);
         } catch (error) {

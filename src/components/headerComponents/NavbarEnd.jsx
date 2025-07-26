@@ -7,8 +7,8 @@ const NavbarEnd = () => {
     const { userLogout, user } = useAuth();
 
     const shadowStyle = {
-        base: '0 2px 6px rgba(14, 165, 233, 0.4)', // soft sky-500
-        hover: '0 4px 12px rgba(14, 165, 233, 0.8)', // stronger on hover
+        base: '0 2px 6px rgba(14, 165, 233, 0.4)', 
+        hover: '0 4px 12px rgba(14, 165, 233, 0.8)', 
     };
 
     const handleHover = (e, hover = true) => {

@@ -4,16 +4,16 @@ import { Link } from 'react-router';
 import NoFeaturedDonations from './NoFeaturedDonations';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
-import useAuth from '../../hooks/useAuth';
+// import useAuth from '../../hooks/useAuth';
 
 const FeaturedDonations = () => {
   const axiosSecure = useAxiosSecure();
-  const {user}=useAuth()
+  // const {user}=useAuth()
 
   const { data: donations = [], isLoading } = useQuery({
     queryKey: ['featuredDonations'],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations/featured?email=${user?.email}`);
+      const res = await axiosSecure.get(`/donations/featured`);
       return res?.data;
     }
   });

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
-// import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload'; 
 import useRestaurantProfile from '../../../../hooks/useRestaurantProfile';
 import Loading from '../../../../components/loadingComponents/Loading';
@@ -18,7 +17,6 @@ const pickupTimeWindows = {
 
 const AddDonation = () => {
     const { user } = useAuth();
-    // const axiosSecure = useAxiosSecure();
     const { mutateAsync: uploadImage } = useCloudinaryImageUpload();
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();

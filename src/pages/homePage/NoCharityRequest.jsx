@@ -9,7 +9,7 @@ const NoCharityRequest = () => {
         No Charity Requests Found
       </h2>
       <p className="text-gray-600">
-        You haven’t submitted any charity role requests yet.
+        You haven’t submitted any charity requests for donations yet.
       </p>
     </div>
   );

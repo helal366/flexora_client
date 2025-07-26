@@ -5,9 +5,7 @@ import useUserRole from '../../hooks/useUserRole';
 const ProfilePage = () => {
     const { user } = useAuth();
   const {role, userInfo}=useUserRole();
-  // console.log('user info from my profile', userInfo)
   const contact=userInfo?.user_by_email?.contact_number;
-  // console.log(contact)
   const joinedDate = user?.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString()
     : 'N/A';

@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStat
 import app from './../firebase/firebase.config';
 import AuthContext from './AuthContext';
 import queryClient from '../api/queryClient';
+// import { set } from 'react-hook-form';
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider()
@@ -46,7 +47,11 @@ const AuthProvider = ({ children }) => {
         return () => {
             unSubscribe()
         }
-    }, [])
+    }, []);
+    useEffect(()=>{
+        setAuthLoading(false)
+    },[setAuthLoading, user])
+
     console.log({authLoading});
     console.log({user});
     const authInfo = {

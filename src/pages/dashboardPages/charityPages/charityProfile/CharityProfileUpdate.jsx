@@ -19,23 +19,7 @@ const CharityProfileUpdate = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm({
-    defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
-      role: user?.role || '',
-      contact_number: user?.contact_number || '',
-      organization_tagline: user?.organization_tagline || '',
-      mission: user?.mission || '',
-      organization_contact: user?.organization_contact || '',
-      organization_email: user?.organization_email || '',
-      organization_name: user?.organization_name || '',
-      transection_id: user?.transection_id || '',
-      status: user?.status || 'Pending',
-      organization_address: user?.organization_address || '',
-    },
-    mode: 'onChange'
-  });
+  } = useForm();
 
   // Reset form when data becomes available
   useEffect(() => {

@@ -47,16 +47,16 @@ const TransectionHistory = () => {
               <th>{index + 1}</th>
               <td>
                 <img
-                  src={txn.organization_logo}
+                  src={txn?.organization_logo}
                   alt="logo"
                   className="w-12 h-12 rounded-full object-cover"
                 />
               </td>
-              <td>{txn.organization_name}</td>
-              <td>{txn.user_name}</td>
-              <td>{txn.transection_id}</td>
-              <td>${txn.amount}</td>
-              <td>{new Date(txn.request_time).toLocaleString()}</td>
+              <td>{txn?.organization_name}</td>
+              <td>{txn?.user_name}</td>
+              <td>{txn?.transection_id}</td>
+              <td>${txn?.amount}</td>
+              <td>{new Date(txn?.request_time).toLocaleString()}</td>
               <td>
                 <span
                   className={`badge ${
@@ -67,7 +67,7 @@ const TransectionHistory = () => {
                       : 'badge-error'
                   }`}
                 >
-                  {txn.status}
+                  {txn?.status}
                 </span>
               </td>
             </tr>

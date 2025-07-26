@@ -1,5 +1,5 @@
 import React from 'react';
-import useAuth from '../../hooks/useAuth';
+// import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
@@ -7,16 +7,16 @@ import CardCharityRequest from './CardCharityRequest';
 import NoCharityRequest from './NoCharityRequest';
 
 const HomeCharityRequests = () => {
-    const { user } = useAuth();
-    const userEmail=user?.email;
+    // const { user } = useAuth();
+    // const userEmail=user?.email;
     const axiosSecure = useAxiosSecure();
     const { data: requests=[], isLoading } = useQuery({
         queryKey: ['requests'],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/requests/home_page?email=${userEmail}`);
+            const res = await axiosSecure.get(`/requests/home_page`);
             return res?.data;
-        },
-        enabled: !!userEmail
+        }
+        
     });
     // console.log({ requests })
 
