@@ -45,7 +45,7 @@ const ManageUsers = () => {
     })
     const deleteUserMutation = useMutation({
         mutationFn: async ({ id }) => {
-            return axiosSecure.delete(`/users/${id}`)
+            return axiosSecure.delete(`/users/${id}?email=${adminEmail}`)
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries(['users'])
@@ -121,7 +121,7 @@ const ManageUsers = () => {
             if (result?.isConfirmed) {
                 deleteUserMutation.mutate({ id, email });
             }
-        })
+        });
     }
     if (isPending) {
         return <Loading />
