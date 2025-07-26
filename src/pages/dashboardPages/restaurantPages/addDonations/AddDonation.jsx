@@ -20,12 +20,14 @@ const AddDonation = () => {
     const { mutateAsync: uploadImage } = useCloudinaryImageUpload();
     const [imagePreview, setImagePreview] = useState(null);
     const { restaurantProfile } = useRestaurantProfile();
+    const [addLoading, setAddLoading]=useState(false)
     const { mutate: addDonation, isPending } = useAddDonation();
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const selectedMeal = watch('meal_time'); 
 
     const onSubmit = async (data) => {
+        setAddLoading(true)
         const result = await Swal.fire({
             title: 'Confirm Donation',
             text: 'Do you want to submit this donation?',
@@ -68,6 +70,7 @@ const AddDonation = () => {
                 });
                 reset();
                 setImagePreview(null);
+                setAddLoading(false)
             },
             onError: (err) => {
                 console.error(err);
@@ -247,9 +250,9 @@ const AddDonation = () => {
                 <button
                     type="submit"
                     className="btn bg-teal-700 hover:bg-teal-900 text-gray-300 disabled:bg-teal-200 disabled:text-gray-500/50 w-full mb-16"
-                    disabled={isPending}
+                    disabled={isPending || addLoading}
                 >
-                   {isPending? 'Adding Donation...': 'Add Donation'} 
+                   {isPending || addLoading? 'Adding Donation...': 'Add Donation'} 
                 </button>
             </form>
         </div>

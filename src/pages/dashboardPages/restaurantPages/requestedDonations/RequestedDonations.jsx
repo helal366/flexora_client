@@ -83,7 +83,7 @@ const handleReject = (req) => {
                         className="btn btn-success btn-sm"
                         disabled={isUpdating}
                         >
-                          Accept
+                        {isUpdating?'Accepting..' : 'Accept'}  
                     </button>
                     <button onClick={() => handleReject(req)} className="btn btn-error btn-sm">Reject</button>
                   </>
