@@ -3,10 +3,11 @@ A Local Food Waste Reduction Platform
 
 # Project Live Link: https://flexora-188f4.web.app/
 
-# Profect Purpose:
+# 🎯 Profect Purpose:
+**flexora** is a full-stack web application designed to streamline and manage food donation and distribution between restaurants and charitable organizations. It provides an organized platform where restaurants can list surplus food donations, and charities can request, manage, and review donations efficiently. Flexora aims to reduce food waste and ensure timely distribution to those in need, with features like real-time role-based dashboards, secure authentication, payment integration for charity verification, and review systems to build trust and accountability between users.
 
 ## 📌 Project Overview:
-**Flexora** is a community-driven food donation platform designed to connect **restaurants**, **charities**, and **users** in the effort to reduce local food waste. Restaurants can donate surplus food, charities can request and pick up donations, and users can browse and favorite food items. Admins manage the ecosystem with full control over users, donations, and requests.
+**flexora** is a community-driven food donation platform designed to connect **restaurants**, **charities**, and **users** in the effort to reduce local food waste. Restaurants can donate surplus food, charities can request and pick up donations, and users can browse and favorite food items. Admins manage the ecosystem with full control over users, donations, and requests.
 
 ## 🚀 Key Features
 
@@ -85,16 +86,16 @@ A Local Food Waste Reduction Platform
 ### Core:
 - **express** – Web framework for building the API
 
-mongodb – Native MongoDB driver for Node.js
+- **mongodb** – Native MongoDB driver for Node.js
 
-dotenv – For managing environment variables
+- **dotenv** – For managing environment variables
 
-cors – To enable Cross-Origin Resource Sharing
+- **cors** – To enable Cross-Origin Resource Sharing
 
-Authentication & Security:
-firebase-admin – For verifying Firebase tokens and managing user roles
+### Authentication & Security:
+- **firebase-admin** – For verifying Firebase tokens and managing user roles
 
-Payments:
+- **Payments:**
 stripe – Stripe SDK for handling payments, subscriptions, and webhooks
 
 
