@@ -114,9 +114,7 @@ const router = createBrowserRouter([
                 index: true,
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <PrivateRoute>
                             <DashBoardHome />
-                        </PrivateRoute>
                     </Suspense>
                 )
             },
@@ -124,9 +122,7 @@ const router = createBrowserRouter([
                 path: 'profile_user_common',
                 element: (
                     <Suspense fallback={<Loading/>}>
-                        <PrivateRoute>
                             <ProfilePage/>
-                        </PrivateRoute>
                     </Suspense>
                 )
             },

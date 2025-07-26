@@ -3,7 +3,6 @@ import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStat
 import app from './../firebase/firebase.config';
 import AuthContext from './AuthContext';
 import queryClient from '../api/queryClient';
-// import { set } from 'react-hook-form';
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider()
@@ -12,9 +11,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const userRegister = (email, password) => {
         setAuthLoading(true)
-        return createUserWithEmailAndPassword(auth, email, password)
-        
-        
+        return createUserWithEmailAndPassword(auth, email, password)   
     }
     const userLogin = (email, password) => {
         setAuthLoading(true)
