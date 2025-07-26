@@ -35,22 +35,20 @@ const AuthProvider = ({ children }) => {
         
     }
     useEffect(() => {
+        setAuthLoading(true)
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
-            console.log("onAuthStateChanged fired with:", currentUser);
-            setUser(currentUser);
+           if(currentUser){
+             setUser(currentUser);
             setAuthLoading(false);
-            console.log("Auth State Ready:", currentUser);
+           }else{
+            setUser(null);
+            setAuthLoading(false)
+           }
         });
         return () => {
             unSubscribe()
         }
-    }, []);
-    useEffect(()=>{
-        setAuthLoading(false)
-    },[setAuthLoading, user])
-
-    console.log({authLoading});
-    console.log({user});
+    }, [user?.email]);
     const authInfo = {
         user,
         setUser,
