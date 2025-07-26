@@ -46,6 +46,14 @@ const RequestCharityRole = () => {
         }
     })
     const onSubmit = async (formData) => {
+        let formattedContact = formData?.organization_contact ? formData.organization_contact.trim() : '';
+        formattedContact = formattedContact.replace(/\D/g, ''); // remove any non-digit
+        if (formattedContact.length === 11 && formattedContact.startsWith('0')) {
+            formattedContact = '+880' + formattedContact.slice(1)
+        } else {
+            // Handle invalid or unexpected formats
+            throw new Error('Invalid contact number format. Please enter a valid 11 digit bangladeshi number.');
+        }
 
         const file = formData?.organization_logo?.[0];
         let uploadedUrl = ''
@@ -126,6 +134,7 @@ const RequestCharityRole = () => {
                     }
                 }
             });
+
             if (paymentIntent.status === 'succeeded') {
                 // save transection
                 await saveTransection.mutateAsync({
@@ -143,14 +152,7 @@ const RequestCharityRole = () => {
 
                 })
             }
-            let formattedContact = formData?.organization_contact ? formData.organization_contact.trim() : '';
-            formattedContact = formattedContact.replace(/\D/g, ''); // remove any non-digit
-            if (formattedContact.length === 11 && formattedContact.startsWith('0')) {
-                formattedContact = '+880' + formattedContact.slice(1)
-            } else {
-                // Handle invalid or unexpected formats
-                throw new Error('Invalid contact number format. Please enter a valid 11 digit bangladeshi number.');
-            }
+
             // PATCH user in DB with organization_name, mission, role
             const res = await patchCharityRequest.mutateAsync({
                 organization_name: formData?.organization_name,

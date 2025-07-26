@@ -8,7 +8,7 @@ import useAxiosSecure from './../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import GoogleLogin from '../components/loginRegisterComponents/GoogleLogin';
 const LoginPage = () => {
-    const { userLogin } = useAuth();
+    const { userLogin, authLoading } = useAuth();
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm({ criteriaMode: 'all' });
     const axiosSecure = useAxiosSecure();
@@ -68,6 +68,7 @@ const LoginPage = () => {
             setIsLogging(false)
         }
     }
+    const loading=authLoading || isLogging || userLoginMutation.isPending;
     return (
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col lg:flex-row-reverse">
@@ -99,7 +100,7 @@ const LoginPage = () => {
                                 )}
                                 <button className="btn btn-neutral mt-4 hover:bg-teal-800">
                                     {
-                                        isLogging || userLoginMutation.isPending ?(
+                                        loading ?(
                                         <>
                                             <span className="loading loading-spinner loading-xs mr-1"></span> Logging in...
                                         </>
