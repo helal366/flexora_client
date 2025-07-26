@@ -221,7 +221,7 @@ const AllDonations = () => {
               {donation.quantity} {donation.unit}
             </p>
             <p className="text-sm text-gray-600">
-              <span className="text-[15px] text-teal-800 italic font-medium">Pickup Time:</span>{' '}
+              <span className="text-[15px] text-teal-800 italic font-medium">Proposed Pickup Time:</span>{' '}
               {donation.pickup_time_window || 'Not specified'}
             </p>
             <Link
