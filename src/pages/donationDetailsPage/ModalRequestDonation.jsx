@@ -83,6 +83,7 @@ const ModalRequestDonation = ({ isOpen, handleClose, donation, setIsDisabled }) 
             request_description: data?.request_description,
             charity_name: data?.charity_name,
             charity_email: data?.charity_email,
+            charity_logo: userInfo?.user_by_email?.organization_logo,
             charity_representative_name: user?.displayName,
             charity_representative_email: user?.email,
             request_status: 'Pending',
