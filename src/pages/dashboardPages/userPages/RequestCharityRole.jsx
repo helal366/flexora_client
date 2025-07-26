@@ -132,7 +132,7 @@ const RequestCharityRole = () => {
                     transection_id: paymentIntent.id,
                     amount: 5,
                     currency: 'USD',
-                    user_email: userEmail,
+                    email: userEmail,
                     user_name: userName,
                     organization_name: formData?.organization_name,
                     organization_email: formData?.organization_email,
