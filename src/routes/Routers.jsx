@@ -120,6 +120,16 @@ const router = createBrowserRouter([
                     </Suspense>
                 )
             },
+            {
+                path: 'profile_user_common',
+                element: (
+                    <Suspense fallback={<Loading/>}>
+                        <PrivateRoute>
+                            <ProfilePage/>
+                        </PrivateRoute>
+                    </Suspense>
+                )
+            },
 
             // user route
             {

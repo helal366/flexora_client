@@ -19,9 +19,7 @@ const DashboardLayout = () => {
         }
     }, [user?.email]);
     const loading = authLoading || navigationLoading || roleLoading;
-    if (loading) {
-        return <Loading />
-    }
+    
     return (
         <section className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -55,8 +53,8 @@ const DashboardLayout = () => {
                                 <ul className="menu menu-horizontal">
                                     {/* Navbar menu content here */}
 
-                                    <li><a>{role}</a></li>
-                                    <li><a>{user?.email}</a></li>
+                                    <li><span>{role}</span></li>
+                                    <li><span>{user?.email}</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -81,6 +79,18 @@ const DashboardLayout = () => {
                             Home
                         </NavLink>
                     </li>
+
+                    {
+                        !roleLoading && (role==='restaurant_role_request' || role==='charity_role_request') && (
+
+                            <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                                <NavLink to="/dashboard/profile_user_common" className="flex items-center gap-2">
+                                    <FaUser className="text-xl text-blue-600" />
+                                    My Profile
+                                </NavLink>
+                            </li>
+                        )
+                    }
 
                     {
                         !roleLoading && isUser &&
