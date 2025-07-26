@@ -99,6 +99,7 @@ const ManageRoleRequest = () => {
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Organization Name</th>
                             <th className='min-w-[250px]'>Mission</th>
                             <th>Transection ID</th>
@@ -113,11 +114,12 @@ const ManageRoleRequest = () => {
                                         <td>{index + 1}</td>
                                         <td>{request?.name}</td>
                                         <td>{request?.email}</td>
+                                        <td>{request?.role}</td>
                                         <td>{request?.organization_name }</td>
                                         <td className='whitespace-normal break-words min-w-[250px]'>{request?.mission}</td>
                                         <td>{request?.transection_id}</td>
                                         <td>{request?.status}</td>
-                                        <td className='flex gap-3 justify-center'>
+                                        <td className='flex gap-3 justify-center items-center'>
                                             <button onClick={() => handleAction(request, 'Approved')}
                                                 className='btn whitespace-nowrap text-gray-100 bg-green-700 hover:bg-green-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
                                                 disabled={request?.status !== 'Pending'}

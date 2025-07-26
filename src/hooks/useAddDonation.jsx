@@ -10,14 +10,7 @@ const useAddDonation = () => {
       const res = await axiosSecure.post('/donations', donationData);
       return res?.data;
     },
-    onSuccess: () => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Donation added!',
-        text: 'Your donation has been posted successfully.',
-        timer: 2000,
-      });
-    },
+   
     onError: (error) => {
       Swal.fire({
         icon: 'error',
