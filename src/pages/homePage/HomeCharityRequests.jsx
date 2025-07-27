@@ -18,7 +18,6 @@ const HomeCharityRequests = () => {
         }
         
     });
-    // console.log({ requests })
 
     if (isLoading) {
         return <Loading />

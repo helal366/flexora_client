@@ -7,7 +7,6 @@ import useAuth from '../hooks/useAuth';
 
 const HomeLayout = () => {
     const {authLoading}=useAuth();
-    console.log({authLoading})
     const navigation = useNavigation();
     const loading = navigation.state === 'loading' || authLoading;
 

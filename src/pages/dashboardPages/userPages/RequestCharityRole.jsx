@@ -108,7 +108,6 @@ const RequestCharityRole = () => {
                     text: `${error}`,
                     showConfirmButton: true
                 })
-                console.log('error from create payment method', error)
             } else {
                 Swal.fire({
                     icon: 'success',
@@ -183,7 +182,6 @@ const RequestCharityRole = () => {
                     title: 'Payment or update failed!',
                     showConfirmButton: true,
                 })
-                console.log('Payment or update failed!  from modified count not grater than zero')
                 navigate('/')
             }
         } catch (err) {
@@ -193,7 +191,6 @@ const RequestCharityRole = () => {
                 text: `${err?.message}`,
                 showConfirmButton: true
             });
-            console.log(err)
         }
     }
     return (

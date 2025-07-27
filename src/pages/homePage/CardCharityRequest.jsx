@@ -17,7 +17,6 @@ const CardCharityRequest = ({ request }) => {
         },
         enabled: !!charity_email && !!userEmail
     });
-    // console.log({charity})
     if(isLoading){
         return <Loading/>
     }

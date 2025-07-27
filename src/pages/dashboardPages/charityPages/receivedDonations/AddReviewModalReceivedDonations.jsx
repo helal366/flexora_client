@@ -59,11 +59,10 @@ const AddReviewModalReceivedDonations = ({
       setDescription('');
       onClose();
     } catch (error) {
-      console.error('Failed to submit review:', error);
       Swal.fire({
         icon: 'error',
         title: 'Failed!',
-        text: 'Failed to submit review. Please try again.',
+        text: error?.message || 'Failed to submit review. Please try again.',
       });
     } finally {
       setSubmitting(false);

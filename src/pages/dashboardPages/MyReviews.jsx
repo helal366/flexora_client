@@ -17,7 +17,6 @@ const MyReviews = () => {
       return res?.data;
     }
   });
-  // console.log({reviews})
   const deleteMutation = useMutation({
     mutationFn: async (reviewId) => {
       const res = await axiosSecure.delete(`/reviews/${reviewId}?email=${user?.email}`);

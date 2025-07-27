@@ -12,7 +12,6 @@ const CardMyFavorites = ({ favorite }) => {
     const donationId = favorite?.donationId;
     const favoriteId = favorite?._id;
     const userEmail = user?.email;
-    console.log({ donationId });
 
     const removeMutation = useMutation({
         mutationFn: async (favoriteId) => {

@@ -12,7 +12,6 @@ const useUserRole = () => {
             queryKey: ['userInfo', user?.email],
             queryFn: async()=>{
                 const res=await axiosSecure.get(`/user?email=${user?.email}`);
-                // console.log('response', res)
                 return res?.data;
             },
             refetchOnWindowFocus: true,
@@ -20,7 +19,6 @@ const useUserRole = () => {
             enabled: !!user?.email
         }
     );
-    // console.log('roleLoading:', roleLoading, 'userInfo:', userInfo);
     const role=userInfo?.user_by_email?.role || 'user';
     const isUser=role==='user';
     const isCharity=role==='charity';

@@ -19,8 +19,6 @@ const GoogleLogin = ({ desire, registerLoading, isLogging }) => {
     const addUserToMongodbMutation = useMutation({
         mutationFn: (userInfo) => axiosSecure.post(`/users/`, userInfo),
         onSuccess: () => {
-            // console.log('User info saved to DB:', res.data);
-            // setGoogleLoading(false)
             Swal.fire({
                 icon: "success",
                 title: "Logged in!",

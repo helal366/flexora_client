@@ -56,10 +56,9 @@ const ManageRoleRequest = () => {
         onError: (error) => {
             Swal.fire({
                 icon: 'error',
-                text: 'Something went wrong! from onError',
+                text: error?.message || 'Something went wrong! from onError',
                 showConfirmButton: true
             });
-            console.log(error)
         }
     })
     const handleAction = (candidate, status) => {

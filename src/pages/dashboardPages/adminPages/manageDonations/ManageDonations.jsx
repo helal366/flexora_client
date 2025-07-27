@@ -23,8 +23,6 @@ const ManageDonations = () => {
         queryFn: fetchDonations,
     });
 
-    // console.log(donations)
-
     const mutation = useMutation({
         mutationFn: updateDonationStatus,
         onSuccess: () => {

@@ -22,10 +22,13 @@ const LoginPage = () => {
     const userLoginMutation = useMutation({
         mutationFn: () => axiosSecure.patch(`/users/last-login`),
         onSuccess: () => {
-            console.log('Last login updated.')
         },
         onError: (err) => {
-            console.log('Failed to update last login', err?.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: err?.message
+            })
         }
     })
     const onSubmit = async (data) => {

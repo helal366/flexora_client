@@ -16,7 +16,6 @@ const ModalReviewDonation = ({ donation, handleReviewClose, isReviewOpen, userIn
             reviewer_email: userInfo?.user_by_email?.email || '',
         }
     });
-    // console.log('user email from userInfo', userInfo?.user_by_email?.email)
     useEffect(() => {
         if (isReviewOpen && donation) {
             reset({
@@ -58,7 +57,6 @@ const ModalReviewDonation = ({ donation, handleReviewClose, isReviewOpen, userIn
     })
 
     const reviewSubmit = (data) => {
-        console.log({data})
         const reviewData = {
             donation_id: donation?._id,
             donation_title: donation?.donation_title,

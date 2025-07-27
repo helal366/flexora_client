@@ -67,7 +67,6 @@ const DonationDetails = () => {
         },
         enabled: !!donationId && !!userEmail,
     });
-    console.log({isFavorited})
     const { data: reviewsDonation = [], isLoading: reviewsLoading, refetch: refetchReviews } = useQuery({
         queryKey: ['reviews-by-donationId', donationId],
         queryFn: async () => {

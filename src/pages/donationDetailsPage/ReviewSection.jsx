@@ -4,7 +4,6 @@ import NoReviewCard from '../homePage/NoReviewCard';
 
 const ReviewSection = ({  reviewsDonation, reviewsLoading }) => {
     
-    // console.log({ reviewsDonation });
     if (reviewsDonation.length === 0) {
         return <NoReviewCard />
     }

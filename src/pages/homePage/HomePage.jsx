@@ -2,11 +2,8 @@ import React, { useEffect } from 'react';
 import Slider from './Slider';
 import FeaturedDonations from './FeaturedDonations';
 import HomeCharityRequests from './HomeCharityRequests';
-import useAuth from '../../hooks/useAuth';
 
 const HomePage = () => {
-    const {authLoading}=useAuth();
-    console.log({authLoading})
     useEffect(()=>{
         window.scrollTo(0,0)
     },[])

@@ -18,7 +18,6 @@ const MyFavorites = () => {
         },
         enabled: !!userEmail
     });
-    console.log({favorites})
     if(isLoading){
         return <Loading/>
     };

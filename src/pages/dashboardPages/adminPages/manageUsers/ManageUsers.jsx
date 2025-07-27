@@ -19,7 +19,6 @@ const ManageUsers = () => {
             return res?.data
         }
     });
-    // console.log(users)
     const changeRoleMutation = useMutation({
         mutationFn: async ({ candidateEmail, updateInfo }) => {
             const res = await axiosSecure.patch(`/user/direct_role_change/${adminEmail}/${candidateEmail}`, updateInfo)
@@ -57,11 +56,10 @@ const ManageUsers = () => {
             })
         },
         onError: (error) => {
-            console.log('delete user error', error)
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to delete user.',
+                text:error?.message || 'Failed to delete user.',
                 showConfirmButton: true
             });
         }

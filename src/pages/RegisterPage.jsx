@@ -27,8 +27,7 @@ const RegisterPage = () => {
     }, [])
     const mutation = useMutation({
         mutationFn: (userInfo) => axiosSecure.post('/users', userInfo),
-        onSuccess: (res) => {
-            console.log('user data to database', res?.data);
+        onSuccess: () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',

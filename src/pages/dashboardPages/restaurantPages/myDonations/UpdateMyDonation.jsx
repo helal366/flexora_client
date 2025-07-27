@@ -71,8 +71,7 @@ const UpdateMyDonation = () => {
             }
             
         } catch (error) {
-            console.error(error);
-            Swal.fire('Error!', 'Failed to update donation.', 'error');
+            Swal.fire({title: 'Error!', text:error?.message|| 'Failed to update donation.',icon: 'error',});
         }
     };
 
@@ -86,8 +85,7 @@ const UpdateMyDonation = () => {
             setValue('image', imageUrl);
             setPreviewImage(imageUrl);
         } catch (error) {
-            console.error('Image upload failed', error);
-            Swal.fire('Error!', 'Image upload failed.', 'error');
+            Swal.fire({title: 'Error!', text: error?.message || 'Image upload failed.', icon: 'error'});
         }
     };
 

@@ -73,7 +73,6 @@ const AddDonation = () => {
                 setAddLoading(false)
             },
             onError: (err) => {
-                console.error(err);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -82,11 +81,10 @@ const AddDonation = () => {
             },
         });
         } catch (err) {
-            console.error(err);
             Swal.fire({
                 icon: 'error',
                 title: 'Failed!',
-                text: 'Could not submit the donation. Try again.',
+                text:err?.message || 'Could not submit the donation. Try again.',
             });
         }
     };

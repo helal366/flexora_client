@@ -38,12 +38,10 @@ const RequestedDonations = () => {
   });
 
   const handleAccept = (req) => {
-    console.log(req)
     updateStatus({ requestId: req._id, newStatus: 'Accepted', donationId: req.donation_id });
 };
 
 const handleReject = (req) => {
-      console.log(req)
     updateStatus({ requestId: req._id, newStatus: 'Rejected', donationId: req.donation_id });
   };
 

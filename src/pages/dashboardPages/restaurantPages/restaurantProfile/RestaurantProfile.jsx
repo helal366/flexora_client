@@ -15,7 +15,6 @@ const RestaurantProfile = () => {
     const organizationAddress = userInfo?.user_by_email?.organization_address || 'Not found';
     const missionStatement = userInfo?.user_by_email?.mission || 'Not found';
 
-    console.log({ userInfo })
     const handleUpdate=()=>{
         navigate('/dashboard/restaurant_profile_update')
     }

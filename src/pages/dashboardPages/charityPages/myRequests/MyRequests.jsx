@@ -18,8 +18,6 @@ const MyRequests = () => {
     enabled: !!user?.email,
   });
 
-  console.log({requests})
-
   const { mutate: cancelRequest } = useMutation({
     mutationFn: async (requestId) => {
       const res = await axiosSecure.delete(`/requests/${requestId}`);
