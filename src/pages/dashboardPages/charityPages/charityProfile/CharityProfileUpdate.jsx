@@ -64,13 +64,26 @@ const CharityProfileUpdate = () => {
       }
 
       const res = await axiosSecure.patch(`/users/update-charity-profile/${user?.email}`, updatedData);
-      if (res?.data?.modifiedCount > 0) {
+      if(res?.data?.userUpdate?.modifiedCount > 0 && res?.data?.requestsUpdate?.modifiedCount > 0){
+        Swal.fire({
+          icon: 'success',
+          text: 'Profile and Charity requests updated successfully!',
+          timer: 1500,
+        });
+      }else if (res?.data?.userUpdate?.modifiedCount > 0) {
         Swal.fire({
           icon: 'success',
           text: 'Profile updated successfully!',
           timer: 1500,
         });
-      } else {
+      } else if(res?.data?.requestsUpdate?.modifiedCount > 0){
+        Swal.fire({
+          icon: 'success',
+          text: 'Charity requests updated successfully!',
+          timer: 1500,
+        });
+      }
+      else {
         Swal.fire({
           icon: 'info',
           text: 'No changes were made to your profile.',

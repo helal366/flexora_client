@@ -32,6 +32,7 @@ const CardCharityRequest = ({ request }) => {
                 <h2 className="card-title"> {request?.charity_name} </h2>
                 <p> <span className='two'>Mission :</span> {charity?.mission}</p>
                 <p> <span className='two'>Food Donation Title :</span> {request?.donation_title}</p>
+                <p> <span className='two'>Charity Representative :</span> {request?.charity_representative_name}</p>
             </div>
         </section>
     );
