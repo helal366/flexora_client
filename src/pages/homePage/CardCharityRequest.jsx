@@ -1,25 +1,25 @@
 import React from 'react';
-import useAuth from '../../hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
+// import useAuth from '../../hooks/useAuth';
+// import { useQuery } from '@tanstack/react-query';
+// import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 
 const CardCharityRequest = ({ request }) => {
-    const {user}=useAuth();
-    const axiosSecure=useAxiosSecure()
-    const charity_email=request?.charity_email;
-    const userEmail=user?.email;
-    const {data: charity, isLoading}=useQuery({
-        queryKey: ['charity', charity_email],
-        queryFn: async()=>{
-            const res=await axiosSecure.get(`user/charity_requests/${charity_email}?email=${userEmail}`);
-            return res?.data;
-        },
-        enabled: !!charity_email && !!userEmail
-    });
-    if(isLoading){
-        return <Loading/>
-    }
+    // const {user}=useAuth();
+    // const axiosSecure=useAxiosSecure()
+    // const charity_email=request?.charity_email;
+    // const userEmail=user?.email;
+    // const {data: charity, isLoading}=useQuery({
+    //     queryKey: ['charity', charity_email],
+    //     queryFn: async()=>{
+    //         const res=await axiosSecure.get(`user/charity_requests/${charity_email}?email=${userEmail}`);
+    //         return res?.data;
+    //     },
+    //     enabled: !!charity_email && !!userEmail
+    // });
+    // if(isLoading){
+    //     return <Loading/>
+    // }
     return (
         <section  className='card bg-gray-200 shadow-xl'>
             <figure>
@@ -30,7 +30,6 @@ const CardCharityRequest = ({ request }) => {
             </figure>
             <div className='card-body'>
                 <h2 className="card-title"> {request?.charity_name} </h2>
-                <p> <span className='two'>Mission :</span> {charity?.mission}</p>
                 <p> <span className='two'>Food Donation Title :</span> {request?.donation_title}</p>
                 <p> <span className='two'>Charity Representative :</span> {request?.charity_representative_name}</p>
             </div>
