@@ -82,7 +82,7 @@ const AllDonations = () => {
         {filteredAndSortedDonations.map(donation => (
           <div
             key={donation._id}
-            className="border border-gray-500/50 rounded shadow-lg p-4 bg-[#fffaf0]"
+            className="border border-gray-500/50 rounded shadow-lg p-4 bg-teal-50"
           >
             <img
               src={donation.image}
