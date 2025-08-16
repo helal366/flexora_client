@@ -17,7 +17,7 @@ const linkStyles = {
 
 
 const NavbarLinks = () => {
-  const {user}=useAuth()
+  const { user } = useAuth()
   return (
     <>
       <li className='mr-2'>
@@ -60,6 +60,8 @@ const NavbarLinks = () => {
           </button>
         </NavLink>
       </li>
+
+
       {/* <li className='mr-2'>
         <NavLink to='/featured_donations'>
           <button
@@ -81,28 +83,53 @@ const NavbarLinks = () => {
         </NavLink>
       </li> */}
       {
-        user? <li className='mr-2'>
-        <NavLink to='/dashboard'>
-          <button
-            className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 "
-            style={{
-              boxShadow: linkStyles.dashboard.shadow
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.boxShadow = linkStyles.dashboard.hoverShadow;
-              e.currentTarget.style.transform = 'scale(1.06)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.boxShadow = linkStyles.dashboard.shadow;
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            Dashboard
-          </button>
-        </NavLink>
-      </li> : ''
+        user && (
+          <>
+            <li className='mr-2'>
+              <NavLink to='/dashboard'>
+                <button
+                  className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 "
+                  style={{
+                    boxShadow: linkStyles.dashboard.shadow
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.boxShadow = linkStyles.dashboard.hoverShadow;
+                    e.currentTarget.style.transform = 'scale(1.06)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.boxShadow = linkStyles.dashboard.shadow;
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  Dashboard
+                </button>
+              </NavLink>
+            </li>
+            <li className='mr-2'>
+              <NavLink to='/charities'>
+                <button
+                  className="cursor-pointer rounded px-3 py-1 transition-transform duration-200"
+                  style={{
+                    boxShadow: commonShadow.shadow
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.boxShadow = commonShadow.hoverShadow;
+                    e.currentTarget.style.transform = 'scale(1.06)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.boxShadow = commonShadow.shadow;
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  Charities
+                </button>
+              </NavLink>
+            </li>
+
+          </>
+        )
       }
-      
+
 
       <li>
         <NavLink to='/about-us'>

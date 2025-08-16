@@ -42,6 +42,7 @@ import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/sta
 import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
 import MyFavorites from "../pages/common/MyFavorites";
 import DashBoardHome from "../pages/dashboardPages/dashboardHome/DashBoardHome";
+import Charities from "../pages/charities/Charities";
 
 const router = createBrowserRouter([
     {
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
                 path: '/all-donations',
                 element: (
                     <Suspense fallback={<Loading />}>
-                            <AllDonations />
+                        <AllDonations />
                     </Suspense>
                 )
             },
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
                 path: '/about-us',
                 element: (
                     <Suspense fallback={<Loading />}>
-                            <AboutPage />
+                        <AboutPage />
                     </Suspense>
                 )
 
@@ -96,9 +97,18 @@ const router = createBrowserRouter([
             {
                 path: '/forbidden',
                 element: <ForbiddenPage />
-            }
+            },
+            {
+                path: '/charities',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <PrivateRoute><Charities/></PrivateRoute>
+                    </Suspense>
+                )
+            },
         ]
     },
+
     {
         path: '/dashboard',
         element: (
@@ -112,15 +122,15 @@ const router = createBrowserRouter([
                 index: true,
                 element: (
                     <Suspense fallback={<Loading />}>
-                            <DashBoardHome />
+                        <DashBoardHome />
                     </Suspense>
                 )
             },
             {
                 path: 'profile_user_common',
                 element: (
-                    <Suspense fallback={<Loading/>}>
-                            <ProfilePage/>
+                    <Suspense fallback={<Loading />}>
+                        <ProfilePage />
                     </Suspense>
                 )
             },
