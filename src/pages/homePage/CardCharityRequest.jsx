@@ -21,7 +21,7 @@ const CardCharityRequest = ({ request }) => {
     //     return <Loading/>
     // }
     return (
-        <section  className='card bg-gray-200 shadow-xl'>
+        <section className='card bg-gray-200 shadow-xl'>
             <figure>
                 <img
                     className='max-h-40 w-full'
@@ -29,7 +29,13 @@ const CardCharityRequest = ({ request }) => {
                     alt={request?.charity_name} />
             </figure>
             <div className='card-body'>
-                <h2 className="card-title"> {request?.charity_name} </h2>
+                <h2 className="card-title mb-6"> {request?.charity_name} </h2>
+                
+                    <img
+                        src={request?.donation_image}
+                        alt={request?.donation_title || "Donated food"}
+                        className="w-14 h-14 object-cover border-2 border-gray-400 rounded-md"
+                    />
                 <p> <span className='two'>Food Donation Title :</span> {request?.donation_title}</p>
                 <p> <span className='two'>Charity Representative :</span> {request?.charity_representative_name}</p>
             </div>
