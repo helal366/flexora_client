@@ -13,7 +13,7 @@ const HomeLayout = () => {
     return (
         <section >
             <Navbar />
-            <section >
+            <section className='padding'>
                 {
                     loading ? <Loading /> : <Outlet />
                 }

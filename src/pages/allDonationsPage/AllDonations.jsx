@@ -58,7 +58,7 @@ const AllDonations = () => {
   return (
     <section className="py-6">
       {/* Search + Sort Controls */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 px-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <input
           type="text"
           placeholder="Search by location..."
@@ -78,7 +78,7 @@ const AllDonations = () => {
       </div>
 
       {/* Grid of Donations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {filteredAndSortedDonations.map(donation => (
           <div
             key={donation._id}
