@@ -100,14 +100,7 @@ const AllDonations = () => {
               <span className="text-[15px] text-teal-800 italic font-medium">Location:</span>{' '}
               {donation.location}
             </p>
-            <p className="text-sm text-gray-600">
-              <span className="text-[15px] text-teal-800 italic font-medium">Quantity:</span>{' '}
-              {donation.quantity} {donation.unit}
-            </p>
-            <p className="text-sm text-gray-600">
-              <span className="text-[15px] text-teal-800 italic font-medium">Proposed Pickup Time:</span>{' '}
-              {donation.pickup_time_window || 'Not specified'}
-            </p>
+           
             <Link
               to={`/donations/${donation._id}`}
               className="btn btn-sm mt-3 bg-teal-700 hover:bg-teal-900 text-white"
