@@ -3,7 +3,7 @@ import ContactPage from './ContactPage';
 
 const AboutPage = () => {
   return (
-    <main className="padding bg-teal-50 dark:bg-gray-900 my-10 rounded shadow-lg border border-gray-500/50">
+    <main className="padding py-10  ">
       <section className="max-w-4xl mx-auto px-6 py-10 my-10 bg-gray-300 rounded-lg shadow-md border border-gray-400">
         <h1 className="text-3xl font-bold mb-6 text-teal-600">About <span className=" italic text-teal-800">flexora</span> </h1>
         <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">
