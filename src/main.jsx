@@ -15,7 +15,7 @@ import 'aos/dist/aos.css';
 AOS.init()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-     <div className='padding max-w-[2520px]'>
+     <div className='max-w-[2520px]'>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterProvider router={router}></RouterProvider>
