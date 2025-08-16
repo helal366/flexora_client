@@ -4,6 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import slideOne from '../../assets/bannerOne.png'
 import slideTwo from '../../assets/bannerTwo.png'
 import slideThree from '../../assets/bannerThree.png'
+import slideFour from '../../assets/bannerFour.png'
 
 const Slider = () => {
     return (
@@ -18,6 +19,10 @@ const Slider = () => {
             </div>
             <div className='border border-gray-400/50 rounded'>
                 <img className='roounded' src={slideThree} alt="slide three" />
+                <p></p>
+            </div>
+            <div className='border border-gray-400/50 rounded'>
+                <img className='roounded' src={slideFour} alt="slide four" />
                 <p></p>
             </div>
         </Carousel>
