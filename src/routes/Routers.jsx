@@ -61,9 +61,7 @@ const router = createBrowserRouter([
                 path: '/all-donations',
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <PrivateRoute>
                             <AllDonations />
-                        </PrivateRoute>
                     </Suspense>
                 )
             },
