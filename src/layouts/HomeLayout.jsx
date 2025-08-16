@@ -13,7 +13,7 @@ const HomeLayout = () => {
     return (
         <section >
             <Navbar />
-            <section className='padding'>
+            <section className='padding bg-[#fffaf040]'>
                 {
                     loading ? <Loading /> : <Outlet />
                 }
