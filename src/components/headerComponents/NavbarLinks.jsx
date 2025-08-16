@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router';
+import useAuth from '../../hooks/useAuth';
 
 const commonShadow = {
   shadow: '0 2px 6px rgba(14, 165, 233, 0.4)',       // sky-500 soft glow
@@ -16,6 +17,7 @@ const linkStyles = {
 
 
 const NavbarLinks = () => {
+  const {user}=useAuth()
   return (
     <>
       <li className='mr-2'>
@@ -78,7 +80,8 @@ const NavbarLinks = () => {
           </button>
         </NavLink>
       </li> */}
-      <li className='mr-2'>
+      {
+        user? <li className='mr-2'>
         <NavLink to='/dashboard'>
           <button
             className="cursor-pointer rounded px-3 py-1 transition-transform duration-200 "
@@ -97,7 +100,9 @@ const NavbarLinks = () => {
             Dashboard
           </button>
         </NavLink>
-      </li>
+      </li> : ''
+      }
+      
 
       <li>
         <NavLink to='/about-us'>
