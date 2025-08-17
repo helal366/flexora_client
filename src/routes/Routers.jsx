@@ -43,6 +43,7 @@ import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
 import MyFavorites from "../pages/common/MyFavorites";
 import DashBoardHome from "../pages/dashboardPages/dashboardHome/DashBoardHome";
 import Charities from "../pages/charities/Charities";
+import Overview from "../pages/dashboardPages/Overview";
 
 const router = createBrowserRouter([
     {
@@ -128,11 +129,11 @@ const router = createBrowserRouter([
             },
             {
                 path: 'profile_user_common',
-                element: (
-                    <Suspense fallback={<Loading />}>
-                        <ProfilePage />
-                    </Suspense>
-                )
+                element: <ProfilePage />
+            },
+            {
+                path: 'overview',
+                element: <Overview />
             },
 
             // user route
