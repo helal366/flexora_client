@@ -30,7 +30,7 @@ const Charities = () => {
     return (
         <section className='py-10'>
             <h2 className='text-2xl my-5 font-semibold text-center'>All Charities list here: {charities.length}</h2>
-            <section className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8'>
+            <section className='grid sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-8'>
 
                 {charities.map((c) => <div key={c?._id} className="card bg-base-100 shadow-xl">
                     <figure>

@@ -30,7 +30,7 @@ const DonationDetails = () => {
     const handleReviewOpen = () => setIsReviewOpen(true);
     const handleReviewClose = () => setIsReviewOpen(false);
     // favorite
-    const [alreadyFavorited, setAlreadyFavorited]=useState(false)
+    const [alreadyFavorited, setAlreadyFavorited] = useState(false)
 
     const { data: donation, isLoading: donationGetLoading } = useQuery({
         queryKey: ['donation-details', id],
@@ -59,10 +59,10 @@ const DonationDetails = () => {
         enabled: !!donationId && !!userEmail
     });
 
-    const {data: isFavorited, isLoading: favoritedGetLoading}=useQuery({
+    const { data: isFavorited, isLoading: favoritedGetLoading } = useQuery({
         queryKey: ['isFavorited', donationId, userEmail],
-        queryFn: async()=>{
-            const res=await axiosSecure.get(`/favorites/is_favorited?email=${userEmail}&donationId=${donationId}`);
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/favorites/is_favorited?email=${userEmail}&donationId=${donationId}`);
             return res?.data?.favorited;
         },
         enabled: !!donationId && !!userEmail,
@@ -121,81 +121,83 @@ const DonationDetails = () => {
     }
 
     return (
-        <section className='one my-10 px-5 pt-5 bg-teal-50/50 max-w-4xl mx-auto'>
-            <h1 className='font-bold text-3xl text-teal-900 italic mb-5'>Donation Details</h1>
-            <img className='w-full min-h-32 max-h-[400px] one mb-5'
-                src={donation?.image} alt={donation?.donation_title} />
-            <h2 className='text-2xl font-semibold italic text-teal-800 my-4'>{donation?.donation_title} </h2>
+        <section className='py-10'>
+            <section className='one  px-5 pt-5 bg-teal-50/50 max-w-4xl mx-auto'>
+                <h1 className='font-bold text-3xl text-teal-900 italic mb-5'>Donation Details</h1>
+                <img className='w-full min-h-32 max-h-[400px] one mb-5'
+                    src={donation?.image} alt={donation?.donation_title} />
+                <h2 className='text-2xl font-semibold italic text-teal-800 my-4'>{donation?.donation_title} </h2>
 
-            <DonationUI
-                donation={donation}
-                formattedDate={formattedDate}
-                totalFood={totalFood}
-                status={status} />
+                <DonationUI
+                    donation={donation}
+                    formattedDate={formattedDate}
+                    totalFood={totalFood}
+                    status={status} />
 
-            <section className='my-10 flex gap-10 flex-wrap '>
-                {(isUser || isCharity) && (
-                    <>
-                        <ButtonOne
-                            bg='bg-yellow-600'
-                            hoverBg='hover:bg-yellow-700'
-                            textColor='text-gray-100'
-                            onClick={handleFavorites}
-                            isFavorited={isFavorited}
-                            disabled={favoritePending || isFavorited || alreadyFavorited}
-                        >
-                            {favoritePending ? 'Adding...' : isFavorited?'Favorited': 'Add to Favorites'}
-                        </ButtonOne>
-
-
-                        <button
-                            className='bg-[#0F828C] hover:bg-[#065084] text-gray-50 btn'
-                            onClick={handleReviewOpen}
-                        >
-                            Add Review
-                        </button>
-                    </>
-                )}
-
-                {
-                    isCharity && (
+                <section className='my-10 flex gap-10 flex-wrap '>
+                    {(isUser || isCharity) && (
                         <>
-                            {
-                                (isExist?.exists || isDisabled) ? (
-                                    <button disabled className='threeDisabled'>
-                                        Donation Requested
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleOpen}
-                                        className='btn bg-teal-700 hover:bg-teal-900 text-gray-100'>
-                                        Request Donation
-                                    </button>)
-                            }
+                            <ButtonOne
+                                bg='bg-yellow-600'
+                                hoverBg='hover:bg-yellow-700'
+                                textColor='text-gray-100'
+                                onClick={handleFavorites}
+                                isFavorited={isFavorited}
+                                disabled={favoritePending || isFavorited || alreadyFavorited}
+                            >
+                                {favoritePending ? 'Adding...' : isFavorited ? 'Favorited' : 'Add to Favorites'}
+                            </ButtonOne>
+
+
+                            <button
+                                className='bg-[#0F828C] hover:bg-[#065084] text-gray-50 btn'
+                                onClick={handleReviewOpen}
+                            >
+                                Add Review
+                            </button>
                         </>
-                    )
-                }
+                    )}
+
+                    {
+                        isCharity && (
+                            <>
+                                {
+                                    (isExist?.exists || isDisabled) ? (
+                                        <button disabled className='threeDisabled'>
+                                            Donation Requested
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleOpen}
+                                            className='btn bg-teal-700 hover:bg-teal-900 text-gray-100'>
+                                            Request Donation
+                                        </button>)
+                                }
+                            </>
+                        )
+                    }
+                </section>
+
+                <ReviewSection
+                    reviewsDonation={reviewsDonation}
+                    reviewsLoading={reviewsLoading}
+                />
+
+                <ModalRequestDonation
+                    isOpen={isOpen}
+                    handleClose={handleClose}
+                    donation={donation}
+                    setIsDisabled={setIsDisabled}
+                />
+
+                <ModalReviewDonation
+                    isReviewOpen={isReviewOpen}
+                    handleReviewClose={handleReviewClose}
+                    donation={donation}
+                    userInfo={userInfo}
+                    refetchReviews={refetchReviews}
+                />
             </section>
-
-            <ReviewSection
-                reviewsDonation={reviewsDonation}
-                reviewsLoading={reviewsLoading}
-            />
-
-            <ModalRequestDonation
-                isOpen={isOpen}
-                handleClose={handleClose}
-                donation={donation}
-                setIsDisabled={setIsDisabled}
-            />
-
-            <ModalReviewDonation
-                isReviewOpen={isReviewOpen}
-                handleReviewClose={handleReviewClose}
-                donation={donation}
-                userInfo={userInfo}
-                refetchReviews={refetchReviews}
-            />
         </section>
     );
 };
