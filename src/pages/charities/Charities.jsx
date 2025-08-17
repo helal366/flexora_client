@@ -27,6 +27,7 @@ const Charities = () => {
             </div>
         );
     }
+    console.log({charities})
     return (
         <section className='py-10'>
             <h2 className='text-2xl my-5 font-semibold text-center'>All Charities list here: {charities.length}</h2>
@@ -41,6 +42,7 @@ const Charities = () => {
                     <div className="card-body">
                         <h2 className="card-title">{c?.organization_name}</h2>
                         <p>{c?.mission}</p>
+                        <p><span className='text-md font-semibold'>Charity representative: </span>{c?.name}</p>
                         {/* <div className="card-actions justify-end">
                             <button className="btn btn-primary">Buy Now</button>
                         </div> */}
