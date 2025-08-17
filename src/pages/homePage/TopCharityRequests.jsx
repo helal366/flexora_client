@@ -1,17 +1,14 @@
 import React from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import useAuth from '../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
 
 const TopCharityRequests = () => {
     const axiosSecure = useAxiosSecure();
-    const { user } = useAuth();
-    const userEmail = user?.email;
     const { data, isLoading } = useQuery({
         queryKey: ['charity', 'requests'],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/top-charity-requests?email=${userEmail}`);
+            const res = await axiosSecure.get(`/top-charity-requests`);
             return res?.data
         }
     })
