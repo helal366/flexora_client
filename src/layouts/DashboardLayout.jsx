@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Link, NavLink, Outlet } from 'react-router';
-import { AiFillHome } from 'react-icons/ai'; // Home icon
+import { AiFillHome, AiOutlineBarChart } from 'react-icons/ai'; // Home icon
 import { FaBoxOpen, FaChartPie, FaClipboardList, FaEnvelopeOpenText, FaGift, FaHandHoldingHeart, FaHeart, FaPlusCircle, FaRegAddressCard, FaRegMoneyBillAlt, FaStar, FaTruckPickup, FaUser, FaUsersCog, FaUserShield, FaUtensils } from 'react-icons/fa';
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from 'react-router';
@@ -19,8 +19,8 @@ const DashboardLayout = () => {
         }
     }, [user?.email]);
     const loading = authLoading || navigationLoading || roleLoading;
-    
-    
+
+
     return (
         <section className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -28,7 +28,7 @@ const DashboardLayout = () => {
                 {/* Page content here */}
                 <div className="drawer">
 
-                    <input  type="checkbox" className="drawer-toggle" />
+                    <input type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content flex flex-col">
                         {/* Navbar */}
                         <div className="navbar bg-teal-50 shadow-lg border border-gray-500/50 w-full">
@@ -82,7 +82,7 @@ const DashboardLayout = () => {
                     </li>
 
                     {
-                        !roleLoading && (role==='restaurant_role_request' || role==='charity_role_request') && (
+                        !roleLoading && (role === 'restaurant_role_request' || role === 'charity_role_request') && (
 
                             <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
                                 <NavLink to="/dashboard/profile_user_common" className="flex items-center gap-2">
@@ -276,6 +276,12 @@ const DashboardLayout = () => {
                         )
 
                     }
+                    <li className='shadow-md mb-3 shadow-orange-200 bg-teal-200'>
+                        <NavLink to="/dashboard/overview" className="flex items-center gap-2">
+                            <AiOutlineBarChart className="text-xl text-orange-500" />
+                            Overview
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
         </section>

@@ -4,14 +4,16 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { FaBox, FaCheckCircle, FaHandHoldingHeart } from 'react-icons/fa';
+import useAuth from '../../hooks/useAuth';
 
 const Overview = () => {
   const axiosSecure = useAxiosSecure();
-
+  const {user}=useAuth();
+  const userEmail=user?.email
   const { data, isLoading } = useQuery({
     queryKey: ['overviewData'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/overview');
+      const res = await axiosSecure.get(`/overview?email=${userEmail}`);
       return res.data; // { approvedDonations, charityRequests, pickedUpDonations }
     },
   });
