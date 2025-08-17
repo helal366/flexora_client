@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Slider from './Slider';
 import FeaturedDonations from './FeaturedDonations';
 import HomeCharityRequests from './HomeCharityRequests';
+import TopCharityRequests from './TopCharityRequests';
 
 const HomePage = () => {
     useEffect(()=>{
@@ -17,6 +18,9 @@ const HomePage = () => {
             </section>
             <section className='mb-10'>
                 <HomeCharityRequests/>
+            </section>
+            <section className='mb-10'>
+                <TopCharityRequests/>
             </section>
         </section>
     );
