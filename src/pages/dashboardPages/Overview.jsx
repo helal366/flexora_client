@@ -1,16 +1,16 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
-import Loading from '../../components/loadingComponents/Loading';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { FaBox, FaCheckCircle, FaHandHoldingHeart } from 'react-icons/fa';
 import useAuth from '../../hooks/useAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Loading from '../../components/loadingComponents/Loading';
 
 const Overview = () => {
   const axiosSecure = useAxiosSecure();
   const {user}=useAuth();
   const userEmail=user?.email
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['overviewData'],
     queryFn: async () => {
       const res = await axiosSecure.get(`/overview?email=${userEmail}`);
@@ -18,7 +18,16 @@ const Overview = () => {
     },
   });
 
-  if (isLoading) return <Loading />;
+  if (isLoading){
+    return <Loading />;
+  }
+  if (isError)
+    return (
+      <div className="p-6 bg-red-100 text-red-700 rounded shadow">
+        <h2 className="text-xl font-bold mb-2">Failed to load overview</h2>
+        <p>{error.response?.data?.message || error.message || 'Unknown error'}</p>
+      </div>
+    );
 
   const { approvedDonations, charityRequests, pickedUpDonations } = data;
 
@@ -67,7 +76,7 @@ const Overview = () => {
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={80}
+              outerRadius={100}
               fill="#8884d8"
               label
             >
