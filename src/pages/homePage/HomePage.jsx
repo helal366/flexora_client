@@ -6,6 +6,7 @@ import TopCharityRequests from './TopCharityRequests';
 import TopDonatedRestaurant from './TopDonatedRestaurant';
 import PickedUpDonations from './PickedUpDonations';
 import RecentVerifiedDonations from './RecentVerifiedDonations';
+import DifferentUsers from './DifferentUsers';
 
 const HomePage = () => {
     useEffect(()=>{
@@ -33,6 +34,9 @@ const HomePage = () => {
             </section>
             <section className='mb-10'>
                 <RecentVerifiedDonations/>
+            </section>
+            <section className='mb-10'>
+                <DifferentUsers/>
             </section>
         </section>
     );

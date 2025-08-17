@@ -17,6 +17,8 @@ const RecentVerifiedDonations = () => {
 
   if (isLoading) return <Loading />;
 
+  console.log({donations})
+
   if (donations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center my-10">
@@ -38,7 +40,7 @@ const RecentVerifiedDonations = () => {
             <figure>
               <img
                 className="w-full h-[150px] border border-white shadow-2xl object-cover"
-                src={donation.donation_image}
+                src={donation.image}
                 alt={donation.donation_title}
               />
             </figure>

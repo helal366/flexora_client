@@ -16,7 +16,6 @@ const PickedUpDonations = () => {
     if (isLoading) {
         return <Loading />
     }
-    console.log({ pickedups })
     return (
         <section className="my-10 px-4 md:px-10 py-10 bg-teal-50 rounded border border-gray-500/50 shadow-lg">
             <h2 className="text-3xl font-bold mb-10 text-center text-teal-700"> All the Picked Up donations are here</h2>
