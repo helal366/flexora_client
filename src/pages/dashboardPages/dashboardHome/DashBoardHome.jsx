@@ -40,7 +40,7 @@ const DashBoardHome = () => {
       {current.icon}
       <h1 className="text-3xl font-bold mt-4 text-gray-800">Welcome to your Dashboard!</h1>
       <p className="text-lg text-gray-700 mt-2">
-        You are logged in as: <span className="font-semibold">{current.label}</span>
+        You are logged in as: <br/> <span className="text-3xl font-semibold">{current.label}</span>
       </p>
       <p className="mt-1 text-gray-600">Navigate using the sidebar to manage your activities.</p>
 
