@@ -3,6 +3,7 @@ import Slider from './Slider';
 import FeaturedDonations from './FeaturedDonations';
 import HomeCharityRequests from './HomeCharityRequests';
 import TopCharityRequests from './TopCharityRequests';
+import TopDonatedRestaurant from './TopDonatedRestaurant';
 
 const HomePage = () => {
     useEffect(()=>{
@@ -21,6 +22,9 @@ const HomePage = () => {
             </section>
             <section className='mb-10'>
                 <TopCharityRequests/>
+            </section>
+            <section className='mb-10'>
+                <TopDonatedRestaurant/>
             </section>
         </section>
     );
