@@ -37,8 +37,11 @@ const TopDonatedRestaurant = () => {
                                 alt={req?.donation_title} />
                         </figure>
                         <div className="card-body">
-                            <h2 className="card-title">{req?.donation_title}</h2>
-                            <p><span className='text-md font-semibold'>Food Type:</span> {req?.food_type}</p>
+                            <h2 className="card-title two">{req?.donation_title}</h2>
+                            <p>
+                                <span className='text-md font-semibold two'>Food Type: </span> 
+                                <span className='text-black'>{req?.food_type}</span>
+                            </p>
                             
                         </div>
                     </div>)
