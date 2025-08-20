@@ -18,7 +18,7 @@ const PickedUpDonations = () => {
     }
     return (
         <section className="my-10 px-4 md:px-10 py-10 bg-teal-50 rounded border border-gray-500/50 shadow-lg">
-            <h2 className="text-3xl font-bold mb-10 text-center text-teal-700"> All the Picked Up donations are here</h2>
+            <h2 className="text-3xl font-bold mb-10 text-center text-teal-700"> All the Picked Up Donations are here</h2>
                 {
                     pickedups.length === 0 ? (
                        
@@ -33,13 +33,19 @@ const PickedUpDonations = () => {
                                                 alt={req?.donation_title} />
                                         </figure>
                                         <div className="card-body">
-                                            <h2 className="card-title">{req?.donation_title}</h2>
-                                            <p><span className='text-md font-semibold'>Donated Restaurant:</span> {req?.restaurant_name}</p>
+                                            <h2 className="card-title two">{req?.donation_title}</h2>
                                             <p>
-                                                <span className='text-md font-semibold'>Donation Status:</span> 
-                                                <span className='bg-amber-100 p-2 rounded-lg ml-4 font-bold'>{req?.donation_status}</span>
+                                                <span className='text-md font-semibold two'>Donated Restaurant: </span> 
+                                                <span className='text-black'>{req?.restaurant_name}</span>
                                             </p>
-                                            <p><span className='text-md font-semibold'>Charity Picked Up:</span> {req?.picked_up_by?.charity_name}</p>
+                                            <p>
+                                                <span className='text-md font-semibold two'>Donation Status: </span> 
+                                                <span className='bg-amber-100 p-2 rounded-lg ml-4 font-bold text-black'>{req?.donation_status}</span>
+                                            </p>
+                                            <p>
+                                                <span className='text-md font-semibold two'>Charity Picked Up: </span> 
+                                                 <span className='text-black'>{req?.restaurant_name}</span>
+                                            </p>
 
                                         </div>
                                     </div>)
