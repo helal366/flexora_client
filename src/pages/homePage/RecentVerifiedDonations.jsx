@@ -45,12 +45,14 @@ const RecentVerifiedDonations = () => {
               />
             </figure>
             <div className="card-body">
-              <h2 className="card-title">{donation.donation_title}</h2>
+              <h2 className="card-title two">{donation.donation_title}</h2>
               <p>
-                <span className="font-semibold">Restaurant:</span> {donation.restaurant_name}
+                <span className="font-semibold two">Restaurant: </span> 
+                <span className='text-black'>{donation.restaurant_name}</span>
               </p>
               <p>
-                <span className="font-semibold">Food Type:</span> {donation.food_type}
+                <span className="font-semibold two">Food Type: </span> 
+                <span className='text-black'>{donation.food_type}</span>
               </p>
             </div>
           </div>
