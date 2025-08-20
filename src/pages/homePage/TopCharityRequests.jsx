@@ -38,8 +38,11 @@ const TopCharityRequests = () => {
                                 alt={req?.donation_title} />
                         </figure>
                         <div className="card-body">
-                            <h2 className="card-title">{req?.donation_title}</h2>
-                            <p><span className='text-md font-semibold'>Donated Restaurant:</span> {req?.restaurant_name}</p>
+                            <h2 className="card-title two">{req?.donation_title}</h2>
+                            <p>
+                                <span className='text-md font-semibold two'>Donated Restaurant: </span> 
+                                <span className='text-black'>{req?.restaurant_name}</span>
+                            </p>
                             
                         </div>
                     </div>)

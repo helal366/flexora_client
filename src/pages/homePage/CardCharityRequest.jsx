@@ -1,25 +1,8 @@
 import React from 'react';
-// import useAuth from '../../hooks/useAuth';
-// import { useQuery } from '@tanstack/react-query';
-// import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 
 const CardCharityRequest = ({ request }) => {
-    // const {user}=useAuth();
-    // const axiosSecure=useAxiosSecure()
-    // const charity_email=request?.charity_email;
-    // const userEmail=user?.email;
-    // const {data: charity, isLoading}=useQuery({
-    //     queryKey: ['charity', charity_email],
-    //     queryFn: async()=>{
-    //         const res=await axiosSecure.get(`user/charity_requests/${charity_email}?email=${userEmail}`);
-    //         return res?.data;
-    //     },
-    //     enabled: !!charity_email && !!userEmail
-    // });
-    // if(isLoading){
-    //     return <Loading/>
-    // }
+
     return (
         <section className='card bg-gray-200 shadow-xl'>
             <figure>
