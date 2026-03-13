@@ -66,17 +66,27 @@ const MyRequests = () => {
                   className="w-full h-full object-cover rounded-t-lg"
                 />
               </figure>
-              <div className="card-body space-y-2">
-                <h2 className="card-title">{req.donation_title}</h2>
-                <p><span className="font-semibold">Restaurant:</span> {req.restaurant_name}</p>
-                <p><span className="font-semibold">Food Type:</span> {req.food_type || 'N/A'}</p>
-                <p><span className="font-semibold">Quantity:</span> {req.quantity} {req?.unit}s</p>
-                <p className="line-clamp-2">
-                  <span className="font-semibold">Description:</span> {req.request_description}
+              <div className="card-body">
+                <h2 className="card-title two">{req.donation_title}</h2>
+                <p>
+                  <span className="font-semibold two">Restaurant: </span> 
+                  <span className='text-black'>{req.restaurant_name}</span> 
                 </p>
                 <p>
-                  <span className="font-semibold">Preferred Pickup:</span>{' '}
-                  {req.preferred_pickup_time} on {req.preferred_pickup_date}
+                  <span className="font-semibold two">Food Type: </span> 
+                  <span className='text-black'>{req.food_type || 'N/A'}</span>
+                </p>
+                <p>
+                  <span className="font-semibold two">Quantity: </span> 
+                  <span className='text-black'>{req.quantity} {req?.unit}s</span>
+                </p>
+                <p className="line-clamp-2">
+                  <span className="font-semibold two">Description: </span> 
+                  <span className='text-black'>{req.request_description}</span>
+                </p>
+                <p>
+                  <span className="font-semibold two">Preferred Pickup: </span>{' '}
+                  <span className='text-black'>{req.preferred_pickup_time} on {req.preferred_pickup_date}</span>
                 </p>
                 <div>
                   <span

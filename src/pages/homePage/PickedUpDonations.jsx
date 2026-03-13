@@ -38,9 +38,9 @@ const PickedUpDonations = () => {
                                                 <span className='text-md font-semibold two'>Donated Restaurant: </span> 
                                                 <span className='text-black'>{req?.restaurant_name}</span>
                                             </p>
-                                            <p>
+                                            <p className='text-xs'>
                                                 <span className='text-md font-semibold two'>Donation Status: </span> 
-                                                <span className='bg-amber-100 p-2 rounded-lg ml-4 font-bold text-black'>{req?.donation_status}</span>
+                                                <span className='badge badge-xs p-1 rounded font-bold text-black'>{req?.donation_status}</span>
                                             </p>
                                             <p>
                                                 <span className='text-md font-semibold two'>Charity Picked Up: </span> 
