@@ -1,4 +1,5 @@
-![Uploading flexora_mockup.png…]()
+<img width="516" height="290" alt="flexora_mockup" src="https://github.com/user-attachments/assets/87aee7ae-f54e-4ff3-980e-582948032a1c" />
+
 
 # Project Name: flexora
 A Local Food Waste Reduction Platform
