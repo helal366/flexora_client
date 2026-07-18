@@ -40,6 +40,14 @@ A Local Food Waste Reduction Platform
 - **Recharts** for statistics
 - **Lottie** for animations
 
+### Backend:
+- **Node.js**
+- **Express.js**  
+- **MongoDB**   
+- **Firebase Admin SDK**  
+- **Tailwind CSS** 
+- Other dependencies: `cors`, `dotenv` etc.
+
 ### Dev Tools:
 - **Vite 6**
 - **ESLint** for linting
