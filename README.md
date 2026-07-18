@@ -115,20 +115,20 @@ npm install
 
 #### 3. Create a .env file with required environment variables (see below).
 ```
-VITE_cloud_name="YOUR VITE CLOUD NAME"
-VITE_upload_preset="YOUR VITE UPLOAD PRESET"
-VITE_cloudinary_url="YOUR VITE CLOUDINARY URL"
+VITE_cloud_name="YOUR CLOUD NAME"
+VITE_upload_preset="YOUR UPLOAD PRESET"
+VITE_cloudinary_url="YOUR CLOUDINARY URL"
 
-VITE_apiKey="YOUR VITE API KEY"
-VITE_authDomain="YOUR VITE AUTH DOMAIN"
-VITE_projectId="YOUR VITE PROJECT ID"
-VITE_storageBucket="YOUR VITE STORAGE BUCKET"
-VITE_messagingSenderId="YOUR VITE MESSAGING SENDER"
-VITE_appId="YOUR VITE APP ID"
+VITE_apiKey="YOUR API KEY"
+VITE_authDomain="YOUR AUTH DOMAIN"
+VITE_projectId="YOUR PROJECT ID"
+VITE_storageBucket="YOUR STORAGE BUCKET"
+VITE_messagingSenderId="YOUR MESSAGING SENDER"
+VITE_appId="YOUR APP ID"
 
-VITE_STRIPE_PK="YOUR VITE STRIPE PK"
+VITE_STRIPE_PK="YOUR STRIPE PRIMARY KEY"
 
-VITE_BASE_URL="YOUR VITE BASE URL"
+VITE_BASE_URL="YOUR BASE URL"
 ```
 
 #### 4. Run the server:
