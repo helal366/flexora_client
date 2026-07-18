@@ -1,3 +1,5 @@
+![Uploading flexora_mockup.png…]()
+
 # Project Name: flexora
 A Local Food Waste Reduction Platform
 
