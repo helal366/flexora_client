@@ -5,7 +5,11 @@ import useAxiosSecure from './useAxiosSecure';
 
 const useRestaurantProfile = () => {
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const authContent = useAuth();
+  if(!authContent){
+    return { restaurantProfile: null, isLoading: true, isError: false, error: null };
+  }
+  const { user } = authContent;
 
   const {
     data: restaurantProfile,
@@ -16,6 +20,10 @@ const useRestaurantProfile = () => {
     queryKey: ['restaurantProfile', user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
+       // 1. Fixed error: Reassure TypeScript that user is defined here
+      if (!user?.email) {
+        return null;
+      }
       const res = await axiosSecure.get(`/user?email=${user.email}`);
       return res.data?.user_by_email; // expects user object
     },
