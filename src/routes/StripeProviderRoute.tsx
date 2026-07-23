@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 
 const stripePromise=loadStripe(import.meta.env.VITE_STRIPE_PK)
-const StripeProviderRoute = ({children}) => {
+const StripeProviderRoute = ({children}:{children: React.ReactNode}) => {
     return (
         <Elements stripe={stripePromise}>
             {children}

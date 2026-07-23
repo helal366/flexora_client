@@ -1,25 +1,43 @@
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 import useAuth from '../../hooks/useAuth';
+import { AxiosError } from 'axios';
 
-const Charities = () => {
+// 1. Define the interface for a Charity object
+interface Charity {
+    _id: string;
+    organization_logo: string;
+    organization_name: string;
+    mission: string;
+    name: string;
+}
+
+// 2. Define the interface for custom backend error payloads
+interface BackendErrorPayload {
+    message?: string;
+}
+const Charities: React.FC  = () => {
     const { user } = useAuth();
     const userEmail = user?.email
-    const axiosSecure = useAxiosSecure()
-    const { data: charities = [], isLoading, isError, error } = useQuery({
-        queryKey: ['charities'],
+    const axiosSecure = useAxiosSecure();
+
+     // 3. Add explicit types to useQuery <Data, Error>
+    const { data: charities = [], isLoading, isError, error } = useQuery<Charity[], AxiosError<BackendErrorPayload>>({
+        queryKey: ['charities', userEmail],
         queryFn: async () => {
+            if (!userEmail) return []; // Guard clause in case email isn't loaded yet
             const res = await axiosSecure.get(`/charities?email=${userEmail}`);
             return res?.data
-        }
+        },
+        enabled: !!userEmail, // Only run the query when the user email is available
     })
     if (isLoading) {
         return <Loading />
     }
     if (isError) {
-        // error comes from Axios response or query failure
+         // 4. Safely extract message from typed AxiosError
         const backendMessage = error?.response?.data?.message || error.message;
         return (
             <div className="text-red-600 bg-red-100 border border-red-400 p-4 rounded">
@@ -43,9 +61,6 @@ const Charities = () => {
                         <h2 className="card-title">{c?.organization_name}</h2>
                         <p>{c?.mission}</p>
                         <p><span className='text-md font-semibold'>Charity representative: </span>{c?.name}</p>
-                        {/* <div className="card-actions justify-end">
-                            <button className="btn btn-primary">Buy Now</button>
-                        </div> */}
                     </div>
                 </div>
                 )}

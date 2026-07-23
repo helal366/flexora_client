@@ -1,8 +1,10 @@
 import React from 'react';
 import useAuth from '../hooks/useAuth';
 import useUserRole from '../hooks/useUserRole';
+import Loading from '../components/loadingComponents/Loading';
+import { Navigate } from 'react-router';
 
-const RestaurantRoute = ({children}) => {
+const RestaurantRoute = ({children}:{children: React.ReactNode}) => {
    const {user, authLoading}=useAuth();
     const {roleLoading, isRestaurant}=useUserRole();
     if(authLoading || roleLoading) {

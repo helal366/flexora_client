@@ -4,7 +4,7 @@ import useUserRole from '../hooks/useUserRole';
 import Loading from '../components/loadingComponents/Loading';
 import { Navigate } from 'react-router';
 
-const UserRoute = ({children}) => {
+const UserRoute = ({children}:{children: React.ReactNode}) => {
     const {user, authLoading}=useAuth();
     const {roleLoading, isUser}=useUserRole();
     if(authLoading || roleLoading) {
