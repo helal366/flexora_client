@@ -1,29 +1,41 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, ChangeEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 
-const parseTime = (timeRange) => {
+// 1. Define the Donation interface
+interface Donation {
+  _id: string;
+  donation_title: string;
+  image: string;
+  restaurant_name: string;
+  location: string;
+  quantity: string | number;
+  pickup_time_window?: string;
+}
+
+// 2. Add types to helper functions
+const parseTime = (timeRange: string | undefined): Date | null => {
   if (!timeRange) return null;
   const firstTime = timeRange.split('–')[0].trim(); // e.g., "4:00 PM"
   return new Date(`1970-01-01T${convertTo24Hour(firstTime)}`);
 };
 
-const convertTo24Hour = (timeStr) => {
+const convertTo24Hour = (timeStr:string):string => {
   const [time, modifier] = timeStr.split(' ');
   let [hours, minutes] = time.split(':');
-  if (modifier === 'PM' && +hours !== 12) hours = +hours + 12;
-  if (modifier === 'AM' && +hours === 12) hours = 0;
+  if (modifier === 'PM' && +hours !== 12) hours =  String(+hours + 12);
+  if (modifier === 'AM' && +hours === 12) hours = '0';
   return `${hours.toString().padStart(2, '0')}:${minutes}`;
 };
 
-const AllDonations = () => {
+const AllDonations: React.FC  = () => {
   const axiosSecure = useAxiosSecure();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
 
-  const { data: donations = [], isLoading } = useQuery({
+  const { data: donations = [], isLoading } = useQuery<Donation[]>({
     queryKey: ['all-donations'],
     queryFn: async () => {
       const res = await axiosSecure.get(`/donations?status=Verified`);
@@ -43,10 +55,14 @@ const AllDonations = () => {
 
     // 🔃 Sorting
     if (sortOption === 'quantity') {
-      filtered = [...filtered].sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
+      filtered = [...filtered].sort((a, b) => parseInt(b.quantity as string) - parseInt(a.quantity as string));
     } else if (sortOption === 'pickup_time') {
       filtered = [...filtered].sort(
-        (a, b) => parseTime(a.pickup_time_window) - parseTime(b.pickup_time_window)
+        (a, b) => {
+          const timeA = parseTime(a.pickup_time_window)?.getTime() || 0;
+        const timeB = parseTime(b.pickup_time_window)?.getTime() || 0;
+        return timeA - timeB;
+        }
       );
     }
 
@@ -55,6 +71,9 @@ const AllDonations = () => {
 
   if (isLoading) return <Loading />;
 
+  // 4. Type the interaction event handlers
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
+  const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => setSortOption(e.target.value);
   return (
     <section className="py-6">
       {/* Search + Sort Controls */}
@@ -64,12 +83,12 @@ const AllDonations = () => {
           placeholder="Search by location..."
           className="input input-bordered w-full max-w-xs"
           value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
         />
         <select
           className="select select-bordered w-full max-w-xs"
           value={sortOption}
-          onChange={e => setSortOption(e.target.value)}
+          onChange={handleSortChange}
         >
           <option value="">Sort By</option>
           <option value="quantity">Quantity (High to Low)</option>
