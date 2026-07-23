@@ -5,7 +5,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
-import queryClient from './../../../api/queryClient';
+import queryClient from '../../../api/queryClient';
 import { useNavigate } from 'react-router';
 import useCloudinaryImageUpload from '../../../hooks/useCloudinaryImageUpload'
 

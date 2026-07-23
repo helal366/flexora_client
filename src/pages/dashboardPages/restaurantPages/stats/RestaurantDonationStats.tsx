@@ -2,8 +2,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Loading from '../../../../components/loadingComponents/Loading';
-import useAuth from './../../../../hooks/useAuth';
-import useAxiosSecure from './../../../../hooks/useAxiosSecure';
+import useAuth from '../../../../hooks/useAuth';
+import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28CFF', '#FF6B6B', '#00B8D9'];
 

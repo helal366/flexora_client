@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '../../../../api/queryClient';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
-import useAuth from './../../../../hooks/useAuth';
+import useAuth from '../../../../hooks/useAuth';
 
 const ManageDonations = () => {
     const axiosSecure = useAxiosSecure();

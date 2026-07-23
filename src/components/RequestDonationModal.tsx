@@ -1,6 +1,30 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
+import { User } from 'firebase/auth';
+import { FieldValues, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 import Swal from 'sweetalert2';
 
+// Defined structural data interfaces for typesafety
+interface DonationRequest {
+  charity_representative_email?: string | null;
+}
+
+interface Donation {
+  _id: string;
+  image?: string;
+  donation_title?: string;
+  restaurant_name?: string;
+  request?: DonationRequest;
+}
+
+// Errors 1 to 6: Defined strict types for component props
+interface RequestDonationModalProps {
+  donation: Donation;
+  user: User | null;
+  requestRegister: UseFormRegister<any>; // Supports flexible react-hook-form schemas
+  handleRequestSubmit: UseFormHandleSubmit<FieldValues, undefined>;
+  submitRequest: (data: any) => void;
+  setShowRequestModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 const RequestDonationModal = ({
   donation,
   user,
@@ -8,10 +32,11 @@ const RequestDonationModal = ({
   handleRequestSubmit,
   submitRequest,
   setShowRequestModal,
-}) => {
+}:RequestDonationModalProps) => {
   
   // Wrap the parent's handleRequestSubmit to add duplicate request check
-  const onSubmit = (event) => {
+  // Error 7: Explicitly typed the HTML form submission event
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if user already requested this donation
@@ -80,10 +105,9 @@ const RequestDonationModal = ({
               <span className="label-text">Charity Name</span>
             </label>
             <input
-              name="charity_name"
               readOnly
               {...requestRegister('charity_name')}
-              defaultValue={user?.displayName}
+              defaultValue={user?.displayName || undefined}
               className="input input-bordered w-full"
             />
           </div>
@@ -94,10 +118,9 @@ const RequestDonationModal = ({
               <span className="label-text">Charity Email</span>
             </label>
             <input
-              name="charity_email"
               readOnly
               {...requestRegister('charity_email')}
-              defaultValue={user?.email}
+              defaultValue={user?.email || undefined}
               className="input input-bordered w-full"
             />
           </div>

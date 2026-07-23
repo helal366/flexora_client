@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
-import useAxiosSecure from './../hooks/useAxiosSecure';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useState } from 'react';

@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import DonationUI from './DonationUI';
-import useUserRole from './../../hooks/useUserRole';
+import useUserRole from '../../hooks/useUserRole';
 import ButtonOne from './ButtonOne';
 import Swal from 'sweetalert2';
 import queryClient from '../../api/queryClient';

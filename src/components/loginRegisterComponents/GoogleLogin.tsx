@@ -1,5 +1,4 @@
 import React from "react";
-import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
@@ -7,16 +6,41 @@ import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useState } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import { UserCredential } from "firebase/auth";
 
+// Errors 1, 2, 3: Defined strict types for component props
+interface GoogleLoginProps {
+    desire?: string | null;
+    registerLoading?: boolean;
+    isLogging?: boolean;
+}
 
-const GoogleLogin = ({ desire, registerLoading, isLogging }) => {
-    const navigate = useNavigate()
-    const { googleLogin } = useAuth();
+// Defined structural interface for your MongoDB user payload to solve error 7
+interface MongoUserPayload {
+    name: string | null;
+    email: string | null;
+    photoURL: string | null;
+    role: string;
+    contact_number: string;
+    created_at: string;
+    last_login: string;
+    uid: string;
+}
+const GoogleLogin = ({ desire, registerLoading = false, isLogging = false }:GoogleLoginProps) => {
+    const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
     const [googleLoading, setGoogleLoading] = useState(false)
 
+     // Error 4: Checked and handled the null state for context safely
+    const authContext = useAuth();
+    if (!authContext) {
+        return null; 
+    }
+    const { googleLogin } = authContext;
 
-    const addUserToMongodbMutation = useMutation({
+     // Error 5 & 7: Explicitly typed mutation variables and Axios error responses
+    const addUserToMongodbMutation = useMutation<AxiosResponse, AxiosError<{ message?: string }>, MongoUserPayload>({
         mutationFn: (userInfo) => axiosSecure.post(`/users/`, userInfo),
         onSuccess: () => {
             Swal.fire({
@@ -36,8 +60,10 @@ const GoogleLogin = ({ desire, registerLoading, isLogging }) => {
                 showConfirmButton: true,
             });
         },
-    })
-    const googleLoginMutation = useMutation({
+    });
+
+    // Error 6: Added explicit type arguments to map UserCredential response outputs
+    const googleLoginMutation = useMutation<UserCredential, Error, void>({
         mutationFn: () => googleLogin(),
         onSuccess: async (result) => {
             const regUser = result?.user;
@@ -71,7 +97,14 @@ const GoogleLogin = ({ desire, registerLoading, isLogging }) => {
             onSettled: () => setGoogleLoading(false),
         })
     };
-    const isLoading = googleLoading || googleLoginMutation.isLoading || addUserToMongodbMutation.isLoading || registerLoading || isLogging;
+      // Errors 8 & 9: Swapped deprecated .isLoading property out for TanStack v5's .isPending
+      const isLoading = 
+        googleLoading || 
+        googleLoginMutation.isPending || 
+        addUserToMongodbMutation.isPending || 
+        registerLoading || 
+        isLogging;
+    // const isLoading = googleLoading || googleLoginMutation.isLoading || addUserToMongodbMutation.isLoading || registerLoading || isLogging;
 
     return (
         <div>

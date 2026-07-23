@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
-import useAuth from './../../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 
 const Charities = () => {
     const { user } = useAuth();

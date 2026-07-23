@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import useAxiosSecure from '../hooks/useAxiosSecure'; // adjust path as needed
+import useAxiosSecure from './useAxiosSecure'; // adjust path as needed
 import Swal from 'sweetalert2';
 
 const useAddDonation = () => {

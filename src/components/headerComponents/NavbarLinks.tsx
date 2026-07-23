@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router';
 import useAuth from '../../hooks/useAuth';
+import Loading from '../loadingComponents/Loading';
 
 const commonShadow = {
   shadow: '0 2px 6px rgba(14, 165, 233, 0.4)',       // sky-500 soft glow
@@ -17,7 +18,11 @@ const linkStyles = {
 
 
 const NavbarLinks = () => {
-  const { user } = useAuth()
+  const authContent = useAuth();
+    if(!authContent){
+        return <Loading/>
+    }
+  const { user } = authContent
   return (
     <>
       <li className='mr-2'>
@@ -61,27 +66,6 @@ const NavbarLinks = () => {
         </NavLink>
       </li>
 
-
-      {/* <li className='mr-2'>
-        <NavLink to='/featured_donations'>
-          <button
-            className="cursor-pointer rounded px-3 py-1 transition-transform duration-200"
-            style={{
-              boxShadow: linkStyles.featured_donations.shadow
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.boxShadow = linkStyles.featured_donations.hoverShadow;
-              e.currentTarget.style.transform = 'scale(1.06)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.boxShadow = linkStyles.featured_donations.shadow;
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            Featured Donations
-          </button>
-        </NavLink>
-      </li> */}
       {
         user && (
           <>
