@@ -11,11 +11,18 @@ import queryClient from '../api/queryClient';
 const DashboardLayout = () => {
     const navigation = useNavigation();
     const navigationLoading = navigation.state === 'loading'
-    const { user, authLoading } = useAuth()
+    const authContent = useAuth();
+    if (!authContent) {
+        return <Loading />;
+    }
+    
+    const { user, authLoading } = authContent;
     const { role, roleLoading, isUser, isAdmin, isCharity, isRestaurant } = useUserRole();
     useEffect(() => {
         if (user?.email) {
-            queryClient.invalidateQueries(['userInfo', user.email]);
+            queryClient.invalidateQueries({ 
+            queryKey: ['userInfo', user.email] 
+        });
         }
     }, [user?.email]);
     const loading = authLoading || navigationLoading || roleLoading;
