@@ -1,4 +1,3 @@
-import React from 'react';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Loading from '../../../../components/loadingComponents/Loading';
@@ -6,83 +5,111 @@ import useAuth from '../../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import queryClient from '../../../../api/queryClient';
 
+interface IRoleRequest {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  organization_name?: string;
+  mission?: string;
+  transection_id?: string;
+  status: "Pending" | "Approved" | "Rejected";
+}
+interface IUpdatePayload {
+  candidateEmail: string;
+  status: "Approved" | "Rejected";
+  role: string;
+}
+
 const ManageRoleRequest = () => {
     const { user } = useAuth();
-    const adminEmail = user?.email
+    const adminEmail = user?.email;
+    if (!adminEmail) {
+      throw new Error("Admin email not found");
+    }
     const axiosSecure = useAxiosSecure();
-    const { data: role_requests = [], isPending } = useQuery({
-        queryKey: ['roleRequests'],
-        queryFn: async () => {
-            const res = await axiosSecure.get('/users/role_requests');
-            if (!res?.data?.data) throw new Error('Failed to fetch role requests');
-            return res?.data?.data;
-
-        }
-    })
+    const { data: role_requests = [], isPending } = useQuery<IRoleRequest[]>({
+      queryKey: ["roleRequests"],
+      queryFn: async () => {
+        const res = await axiosSecure.get("/users/role_requests");
+        if (!res?.data?.data) throw new Error("Failed to fetch role requests");
+        return res?.data?.data;
+      },
+    });
 
     const updateStatusMutation = useMutation({
-        mutationFn: async ({ candidateEmail, status, role }) => {
-            const res = await axiosSecure.patch(`/users/role_request_update/${encodeURIComponent(candidateEmail)}/${encodeURIComponent(adminEmail)}`,
-                {
-                    status,
-                    role,
-                    assigned_admin_name: user?.displayName,
-                    assigned_admin_email: adminEmail,
-                    assigned_at: new Date().toISOString()
-                });
-            return res?.data
-        },
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries('roleRequests')
-            const action = variables.status;
-            if (action === 'Approved') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Approved!',
-                    text: 'Role update request approved.',
-                    showConfirmButton: true,
-                    timer: 2000
-                })
-            } else if (action === 'Rejected') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Rejected!',
-                    text: 'Role update request rejected.',
-                    showConfirmButton: true,
-                    timer: 2000
-                })
-            }
-        },
-        onError: (error) => {
-            Swal.fire({
-                icon: 'error',
-                text: error?.message || 'Something went wrong! from onError',
-                showConfirmButton: true
-            });
+      mutationFn: async ({ candidateEmail, status, role }: IUpdatePayload) => {
+        const res = await axiosSecure.patch(
+          `/users/role_request_update/${encodeURIComponent(candidateEmail)}/${encodeURIComponent(adminEmail )}`,
+          {
+            status,
+            role,
+            assigned_admin_name: user?.displayName,
+            assigned_admin_email: adminEmail,
+            assigned_at: new Date().toISOString(),
+          },
+        );
+        return res?.data;
+      },
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({queryKey:["roleRequests"]});
+        const action = variables.status;
+        if (action === "Approved") {
+          Swal.fire({
+            icon: "success",
+            title: "Approved!",
+            text: "Role update request approved.",
+            showConfirmButton: true,
+            timer: 2000,
+          });
+        } else if (action === "Rejected") {
+          Swal.fire({
+            icon: "error",
+            title: "Rejected!",
+            text: "Role update request rejected.",
+            showConfirmButton: true,
+            timer: 2000,
+          });
         }
-    })
-    const handleAction = (candidate, status) => {
-        const candidateEmail = candidate?.email;
-        const candidateRole = candidate?.role;
-        let updatedRole = candidateRole
-        if (status === 'Approved') {
-            updatedRole = candidateRole === 'charity_role_request' ? 'charity' : 'restaurant';
-        } else if (status === 'Rejected') {
-            updatedRole = 'user'
-        }
+      },
+      onError: (error:any) => {
         Swal.fire({
-            title: `Are you sure you want to ${status.toLowerCase('en-US', { timeZone: 'Asia/Dhaka' })} this request?`,
-            icon: status === 'Approved' ? 'success' : 'warning',
-            showCancelButton: true,
-            confirmButtonColor: status === 'Approved' ? '#3085d6' : '#d33',
-            cancelButtonColor: '#aaa',
-            confirmButtonText: `Yes, ${status.toLowerCase()} it`,
-        }).then((result)=>{
-            if(result?.isConfirmed){
-                updateStatusMutation.mutate({ candidateEmail, status, role: updatedRole })
-            }
-        })
-    }
+          icon: "error",
+          text: error?.message || "Something went wrong! from onError",
+          showConfirmButton: true,
+        });
+      },
+    });
+    const handleAction = (
+      candidate: IRoleRequest,
+      status: "Approved" | "Rejected",
+    ) => {
+      const candidateEmail = candidate?.email;
+      const candidateRole = candidate?.role;
+      let updatedRole = candidateRole;
+      if (status === "Approved") {
+        updatedRole =
+          candidateRole === "charity_role_request" ? "charity" : "restaurant";
+      } else if (status === "Rejected") {
+        updatedRole = "user";
+      }
+      Swal.fire({
+        title: `Are you sure you want to ${status.toLowerCase()} this request?`,
+        icon: status === "Approved" ? "success" : "warning",
+        showCancelButton: true,
+        confirmButtonColor: status === "Approved" ? "#3085d6" : "#d33",
+        cancelButtonColor: "#aaa",
+        confirmButtonText: `Yes, ${status.toLowerCase()} it`,
+      }).then((result) => {
+        if (result?.isConfirmed) {
+          updateStatusMutation.mutate({
+            candidateEmail,
+            status,
+            role: updatedRole,
+          });
+        }
+      });
+    };
     if (isPending) {
         return <Loading />
     }
