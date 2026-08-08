@@ -1,4 +1,3 @@
-import React from "react";
 import { FaBoxOpen, FaSmileBeam } from "react-icons/fa";
 import { MdOutlineEmojiFoodBeverage } from "react-icons/md";
 

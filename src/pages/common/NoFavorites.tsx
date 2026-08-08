@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaHeartBroken } from 'react-icons/fa';
 
 const NoFavorites = () => {

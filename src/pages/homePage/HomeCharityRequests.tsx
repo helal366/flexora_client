@@ -1,5 +1,3 @@
-import React from 'react';
-// import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
@@ -7,8 +5,6 @@ import CardCharityRequest from './CardCharityRequest';
 import NoCharityRequest from './NoCharityRequest';
 
 const HomeCharityRequests = () => {
-    // const { user } = useAuth();
-    // const userEmail=user?.email;
     const axiosSecure = useAxiosSecure();
     const { data: requests=[], isLoading } = useQuery({
         queryKey: ['requests'],

@@ -1,43 +1,64 @@
-import React from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from 'react-router'
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import queryClient from '../../api/queryClient';
+import { AxiosError } from 'axios';
 
-const CardMyFavorites = ({ favorite }) => {
+interface IFavorite {
+  _id: string;
+  donationId: string;
+  image: string;
+  donation_title: string;
+  restaurant_name: string;
+  location: string;
+  donation_status: string;
+  quantity: number;
+  unit: string;
+}
+
+interface CardMyFavoritesProps {
+  favorite: IFavorite;
+}
+interface ApiError {
+  message: string;
+}
+const CardMyFavorites = ({ favorite }:CardMyFavoritesProps) => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
-    const donationId = favorite?.donationId;
-    const favoriteId = favorite?._id;
-    const userEmail = user?.email;
+    const donationId = favorite.donationId;
+    const favoriteId = favorite._id;
+    const userEmail = user?.email as string;
 
-    const removeMutation = useMutation({
-        mutationFn: async (favoriteId) => {
-            const res = await axiosSecure.delete(`/favorites/remove?id=${favoriteId}&email=${userEmail}`);
-            return res?.data;
-        },
-        onSuccess: () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Removed!',
-                text: 'Donation removed from favorites.',
-                timer: 2000,
-                showConfirmButton: false,
-            });
-            queryClient.invalidateQueries(['favorites', userEmail]); // refetch favorites
-        },
-        onError: (error) => {
-            const message = error?.response?.data?.message || 'Something went wrong!';
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: message,
-            });
-        }
+    const removeMutation = useMutation<void, AxiosError<ApiError>, string>({
+      mutationFn: async (favoriteId) => {
+        const res = await axiosSecure.delete(
+          `/favorites/remove?id=${favoriteId}&email=${userEmail}`,
+        );
+        return res?.data;
+      },
+      onSuccess: () => {
+        Swal.fire({
+          icon: "success",
+          title: "Removed!",
+          text: "Donation removed from favorites.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        queryClient.invalidateQueries({queryKey:["favorites", userEmail]}); // refetch favorites
+      },
+      onError: (error) => {
+        const message =
+          error?.response?.data?.message || "Something went wrong!";
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: message,
+        });
+      },
     });
-    const handleRemove = (favoriteId) => {
+    const handleRemove = (favoriteId:string) => {
         Swal.fire({
             title: 'Are you sure?',
             text: "This donation will be removed from your favorites!",

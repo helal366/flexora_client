@@ -1,4 +1,3 @@
-import React from 'react';
 import ContactPage from './ContactPage';
 
 const AboutPage = () => {

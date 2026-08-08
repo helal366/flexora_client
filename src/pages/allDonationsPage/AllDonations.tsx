@@ -5,7 +5,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 
 // 1. Define the Donation interface
-interface Donation {
+export interface Donation {
   _id: string;
   donation_title: string;
   image: string;
