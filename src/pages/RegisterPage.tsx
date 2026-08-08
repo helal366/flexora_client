@@ -1,192 +1,275 @@
-import SignUp from '../lotties/register/SignUp';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { Link, useLocation, useNavigate } from 'react-router';
-import useAuth from '../hooks/useAuth';
-import Swal from 'sweetalert2';
-import useAxiosSecure from '../hooks/useAxiosSecure';
-import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import GoogleLogin from '../components/loginRegisterComponents/GoogleLogin';
+import SignUp from "../lotties/register/SignUp";
+import { SubmitHandler, useForm } from "react-hook-form";
+import axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useState } from "react";
+import GoogleLogin from "../components/loginRegisterComponents/GoogleLogin";
 
+interface IRegisterForm {
+  name: string;
+  email: string;
+  password: string;
+  contact_number: string;
+  image: FileList; // 🔵 important
+}
+
+interface IUserInfo {
+  name: string;
+  email: string;
+  photoURL: string;
+  role: string;
+  contact_number: string;
+  created_at: string;
+  last_login: string;
+  uid: string;
+}
 const RegisterPage = () => {
-    const axiosSecure = useAxiosSecure()
-    const navigate = useNavigate()
-    const { userRegister, userProfileUpdate,  } = useAuth();
-    const location = useLocation();
-    const [registerLoading, setRegisterLoading]=useState(false)
-    const desire = location?.desire ? location?.desire : '/';
-    const { register,
-        formState: { errors },
-        handleSubmit,
-        reset } = useForm({ criteriaMode: 'all' });
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const { userRegister, userProfileUpdate } = useAuth();
+  const location = useLocation();
+  const [registerLoading, setRegisterLoading] = useState(false);
+  // const state = location?.state ? location?.state : '/';
+  const state = (location.state as { from?: string })?.from || "/";
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm<IRegisterForm>({ criteriaMode: "all" });
 
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [])
-    const mutation = useMutation({
-        mutationFn: (userInfo) => axiosSecure.post('/users', userInfo),
-        onSuccess: () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'You have registered successfully.',
-                timer: 1500
-            });
-            setRegisterLoading(false);
-            if(desire){
-              return navigate(desire)
-            };
-            reset(); // inside onSuccess if you import from react-hook-form
-
-        },
-        onError: (err) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Failed to store user',
-                text: `${err?.message || err}`,
-                showConfirmButton: true
-            });
-        }
-    })
-    const onSubmit = async data => {
-        // image file
-        setRegisterLoading(true)
-        const file = data?.image?.[0]
-        if (!file) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Image Missing!',
-                text: 'Please upload a profile image.',
-                showConfirmButton: true
-            });
-            return;
-        }
-
-        // cloudinary image upload
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", `${import.meta.env.VITE_upload_preset}`);
-        formData.append("cloud_name", `${import.meta.env.VITE_cloud_name}`);
-        try {
-            const result = await axios.post(`${import.meta.env.VITE_cloudinary_url}`, formData);
-            const uploadedProfileImageURL = result?.data?.secure_url;
-            if (!uploadedProfileImageURL) throw new Error('Failed to create image url!');
-
-            // user registration   
-            const userCredential = await userRegister(data?.email, data?.password);
-            if (!userCredential?.user) throw new Error('Registration failed!')
-            const uid_firebase=userCredential?.user?.uid
-
-            // updateInfo
-            const updateInfo = {
-                displayName: data?.name,
-                photoURL: uploadedProfileImageURL,
-            }
-            // update profile info
-            await userProfileUpdate(updateInfo);
-            // user info
-            let rawNumber=data?.contact_number? data?.contact_number.trim():'';
-            if(rawNumber.startsWith('0')){
-                rawNumber='+880'+rawNumber.slice(1)
-            }
-            const userInfo = {
-                name: data?.name,
-                email: data?.email,
-                photoURL: uploadedProfileImageURL,
-                role: 'user',
-                contact_number:  rawNumber,
-                created_at: new Date().toISOString(),
-                last_login: new Date().toISOString(),
-                uid: uid_firebase
-            }
-            // store user info in the database
-            mutation.mutate(userInfo)
-        } catch (err) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Something went wrong!',
-                text: `${err}`,
-                showConfirmButton: true
-            });
-            return;
-        }finally{
-            setRegisterLoading(false);
-        }
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  const mutation = useMutation<void, Error, IUserInfo>({
+    mutationFn: (userInfo) => axiosSecure.post("/users", userInfo),
+    onSuccess: () => {
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "You have registered successfully.",
+        timer: 1500,
+      });
+      setRegisterLoading(false);
+      if (state) {
+        return navigate(state);
+      }
+      reset(); // inside onSuccess if you import from react-hook-form
+    },
+    onError: (err: unknown) => {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong...";
+      Swal.fire({
+        icon: "error",
+        title: "Failed to store user",
+        text: message,
+        showConfirmButton: true,
+      });
+    },
+  });
+  const onSubmit:SubmitHandler<IRegisterForm> = async (data) => {
+    // image file
+    setRegisterLoading(true);
+    const file = data?.image?.[0];
+    if (!file) {
+      Swal.fire({
+        icon: "error",
+        title: "Image Missing!",
+        text: "Please upload a profile image.",
+        showConfirmButton: true,
+      });
+      return;
     }
-    return (
-        <div className="hero bg-base-200 min-h-screen">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="hidden lg:block">
-                    <SignUp />
-                </div>
-                <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-                    <div className="card-body">
-                        <h1 className="text-3xl font-bold text-center mb-2">Register now!</h1>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <fieldset className="fieldset">
 
-                                {/* name */}
-                                <label className="label">Name</label>
-                                <input type="text" {...register("name", { required: true })} className="input" placeholder="Name" />
-                                {errors.name?.type === 'required' && <p className='text-red-600 text-xs'>Name is required</p>}
+    // cloudinary image upload
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", `${import.meta.env.VITE_upload_preset}` as string);
+    formData.append("cloud_name", `${import.meta.env.VITE_cloud_name}` as string);
+    try {
+      const result = await axios.post(
+        `${import.meta.env.VITE_cloudinary_url}` as string,
+        formData,
+      );
+      const uploadedProfileImageURL = result?.data?.secure_url;
+      if (!uploadedProfileImageURL)
+        throw new Error("Failed to create image url!");
 
-                                {/* image upload */}
-                                <label className="label">Upload image</label>
-                                <input type="file" accept='image/*' {...register("image", { required: true })} className="input" placeholder="Email" />
-                                {errors.image?.type === 'required' && <p className='text-red-600 text-xs'>Image is required</p>}
+      // user registration
+      const userCredential = await userRegister(data?.email, data?.password);
+      if (!userCredential?.user) throw new Error("Registration failed!");
+      const uid_firebase = userCredential?.user?.uid;
 
-                                {/* email */}
-                                <label className="label">Email</label>
-                                <input type="email" {...register("email", { required: true })} className="input" placeholder="Email" />
-                                {errors.email?.type === 'required' && <p className='text-red-600 text-xs'>Email is required</p>}
-
-                                {/* mobile number */}
-                                <label className="label">Contact number</label>
-                                <input type="tel" inputMode='numeric' maxLength={11}
-                                {...register("contact_number", { required: 'Contact number is required', pattern:{value: /^01[3-9]\d{8}$/, message: 'Please provide 11 digit Bangladeshi mobile number.'} })} 
-                                className="input" placeholder="01*********" />
-                                {errors.contact_number && <p className='text-red-600 text-xs'>{errors.contact_number.message}</p>}
-
-                                {/* password */}
-                                <label className="label">Password</label>
-                                <input className='px-4 py-2'
-                                    placeholder='******'
-                                    type="password"
-                                    {...register('password', {
-                                        required: 'Password is required',
-                                        validate: (value) => {
-                                            const errors = [];
-                                            if (value.length < 6) errors.push('Password less than 6 characters');
-                                            if (!/[A-Z]/.test(value)) errors.push('No capital letter in password.');
-                                            if (!/[\W_]/.test(value)) errors.push('No special character in password.');
-
-                                            return errors.length === 0 || `${errors.join(', ')}`;
-                                        }
-                                    })}
-                                />
-                                {errors.password && (
-                                    <p className="text-red-600 text-xs">{errors?.password?.message}</p>
-                                )}
-                                <button type='submit' 
-                                disabled={mutation.isPending  || registerLoading} 
-                                className={`btn mt-4 ${mutation.isPending || registerLoading?'bg-gray-300 text-black cursor-not-allowed':'bg-gray-800 text-gray-100 hover:bg-teal-700'}`}>
-                                    {mutation.isPending || registerLoading? (
-                                        <>
-                                            <span className="loading loading-spinner loading-xs mr-1"></span> Registering...
-                                        </>
-                                    ) : 'Register'}
-                                </button>
-                            </fieldset>
-                        </form>
-                        <GoogleLogin desire={desire} registerLoading={registerLoading}/>
-                        <p>Already have an account? Please <Link to='/auth/login' className='text-blue-600 underline'>Login </Link> </p>
-                    </div>
-                </div>
-            </div>
+      // updateInfo
+      const updateInfo = {
+        displayName: data?.name,
+        photoURL: uploadedProfileImageURL,
+      };
+      // update profile info
+      await userProfileUpdate(updateInfo);
+      // user info
+      let rawNumber = data?.contact_number ? data?.contact_number.trim() : "";
+      if (rawNumber.startsWith("0")) {
+        rawNumber = "+880" + rawNumber.slice(1);
+      }
+      const userInfo:IUserInfo = {
+        name: data.name,
+        email: data.email,
+        photoURL: uploadedProfileImageURL,
+        role: "user",
+        contact_number: rawNumber,
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+        uid: uid_firebase as string,
+      };
+      // store user info in the database
+      mutation.mutate(userInfo);
+    } catch (err: unknown) {
+        const message =
+          err instanceof Error ? err.message : "Something went wrong";
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong!",
+        text: message,
+        showConfirmButton: true,
+      });
+      return;
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
+  return (
+    <div className="hero bg-base-200 min-h-screen">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="hidden lg:block">
+          <SignUp />
         </div>
-    );
+        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <div className="card-body">
+            <h1 className="text-3xl font-bold text-center mb-2">
+              Register now!
+            </h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <fieldset className="fieldset">
+                {/* name */}
+                <label className="label">Name</label>
+                <input
+                  type="text"
+                  {...register("name", { required: true })}
+                  className="input"
+                  placeholder="Name"
+                />
+                {errors.name?.type === "required" && (
+                  <p className="text-red-600 text-xs">Name is required</p>
+                )}
+
+                {/* image upload */}
+                <label className="label">Upload image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  {...register("image", { required: true })}
+                  className="input"
+                  placeholder="Email"
+                />
+                {errors.image?.type === "required" && (
+                  <p className="text-red-600 text-xs">Image is required</p>
+                )}
+
+                {/* email */}
+                <label className="label">Email</label>
+                <input
+                  type="email"
+                  {...register("email", { required: true })}
+                  className="input"
+                  placeholder="Email"
+                />
+                {errors.email?.type === "required" && (
+                  <p className="text-red-600 text-xs">Email is required</p>
+                )}
+
+                {/* mobile number */}
+                <label className="label">Contact number</label>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={11}
+                  {...register("contact_number", {
+                    required: "Contact number is required",
+                    pattern: {
+                      value: /^01[3-9]\d{8}$/,
+                      message:
+                        "Please provide 11 digit Bangladeshi mobile number.",
+                    },
+                  })}
+                  className="input"
+                  placeholder="01*********"
+                />
+                {errors.contact_number && (
+                  <p className="text-red-600 text-xs">
+                    {errors.contact_number.message}
+                  </p>
+                )}
+
+                {/* password */}
+                <label className="label">Password</label>
+                <input
+                  className="px-4 py-2"
+                  placeholder="******"
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    validate: (value) => {
+                      const errors = [];
+                      if (value.length < 6)
+                        errors.push("Password less than 6 characters");
+                      if (!/[A-Z]/.test(value))
+                        errors.push("No capital letter in password.");
+                      if (!/[\W_]/.test(value))
+                        errors.push("No special character in password.");
+
+                      return errors.length === 0 || `${errors.join(", ")}`;
+                    },
+                  })}
+                />
+                {errors.password && (
+                  <p className="text-red-600 text-xs">
+                    {errors?.password?.message}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={mutation.isPending || registerLoading}
+                  className={`btn mt-4 ${mutation.isPending || registerLoading ? "bg-gray-300 text-black cursor-not-allowed" : "bg-gray-800 text-gray-100 hover:bg-teal-700"}`}
+                >
+                  {mutation.isPending || registerLoading ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs mr-1"></span>{" "}
+                      Registering...
+                    </>
+                  ) : (
+                    "Register"
+                  )}
+                </button>
+              </fieldset>
+            </form>
+            <GoogleLogin state={state} registerLoading={registerLoading} />
+            <p>
+              Already have an account? Please{" "}
+              <Link to="/auth/login" className="text-blue-600 underline">
+                Login{" "}
+              </Link>{" "}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default RegisterPage;
