@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Loading from '../../../../components/loadingComponents/Loading';
 import Swal from 'sweetalert2';
@@ -7,6 +6,22 @@ import useAuth from '../../../../hooks/useAuth';
 import queryClient from '../../../../api/queryClient';
 import RoleButton from './RoleButton';
 
+interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+interface IRoleChangePayload {
+  candidateEmail: string;
+  role:string;
+  updateInfo: any;
+}
+
+interface IDeletePayload {
+  id: string;
+  email: string;
+}
 const ManageUsers = () => {
     const { user } = useAuth();
     const adminEmail = user?.email;

@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { User } from 'firebase/auth';
 import { FieldValues, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -36,7 +36,7 @@ const RequestDonationModal = ({
   
   // Wrap the parent's handleRequestSubmit to add duplicate request check
   // Error 7: Explicitly typed the HTML form submission event
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if user already requested this donation

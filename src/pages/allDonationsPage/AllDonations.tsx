@@ -3,17 +3,18 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import { FoodDonation } from '../../types/donations';
 
 // 1. Define the Donation interface
-export interface Donation {
-  _id: string;
-  donation_title: string;
-  image: string;
-  restaurant_name: string;
-  location: string;
-  quantity: string | number;
-  pickup_time_window?: string;
-}
+// export interface Donation {
+//   _id: string;
+//   donation_title: string;
+//   image: string;
+//   restaurant_name: string;
+//   location: string;
+//   quantity: string | number;
+//   pickup_time_window?: string;
+// }
 
 // 2. Add types to helper functions
 const parseTime = (timeRange: string | undefined): Date | null => {
@@ -35,12 +36,12 @@ const AllDonations: React.FC  = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
 
-  const { data: donations = [], isLoading } = useQuery<Donation[]>({
-    queryKey: ['all-donations'],
+  const { data: donations = [], isLoading } = useQuery<FoodDonation[]>({
+    queryKey: ["all-donations"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/donations?status=Verified`);
       return res?.data;
-    }
+    },
   });
 
   const filteredAndSortedDonations = useMemo(() => {
