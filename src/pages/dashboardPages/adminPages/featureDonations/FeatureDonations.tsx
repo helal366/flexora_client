@@ -4,22 +4,24 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
 import { useState } from "react";
 import NoVerifiedDonations from "./NoVerifiedDonations";
+import { FoodDonation } from "../../../../types/donations";
 
-interface IDonation {
-  _id: string;
-  donation_title: string;
-  food_type: string;
-  restaurant_name: string;
-  image: string;
-  is_featured?: boolean;
-}
+// interface IDonation {
+//   _id: string;
+//   donation_title: string;
+//   food_type: string;
+//   restaurant_name: string;
+//   image: string;
+//   is_featured?: boolean;
+// }
+
 const FeatureDonations = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [featuredIds, setFeaturedIds] = useState<string[]>([]);
 
   // Fetch verified donations
-  const { data: donations = [], isLoading } = useQuery<IDonation[]>({
+  const { data: donations = [], isLoading } = useQuery<FoodDonation[]>({
     queryKey: ["verifiedDonations"],
     queryFn: async () => {
       const res = await axiosSecure.get("/donations?status=Verified");

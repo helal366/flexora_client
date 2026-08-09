@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaRegSadCry } from 'react-icons/fa';
 
 const NoCharityRequest = () => {

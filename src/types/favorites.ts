@@ -13,5 +13,5 @@ export interface FavoriteDonation {
   donationId: string; // Reference link to the parent donation document
   favoriter_name: string;
   favoriter_email: string;
-  favoriter_role: "charity" | "donor" | "admin" | string; // Strict literal for specific platform roles
+  favoriter_role: "charity" | "restaurant" | "admin" | string; // Strict literal for specific platform roles
 }

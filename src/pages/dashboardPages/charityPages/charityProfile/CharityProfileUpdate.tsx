@@ -1,25 +1,37 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import useUserRole from '../../../../hooks/useUserRole';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';
 import Loading from '../../../../components/loadingComponents/Loading';
+import { CharityUser } from '../../../../types/users';
 
+type CharityUpdateData = Partial<CharityUser>;
+type CharityFormData = Omit<
+  Partial<CharityUser>,
+  "organization_logo" | "photoURL"
+> & {
+  organization_logo?: FileList;
+  photoURL?: FileList;
+};
 const CharityProfileUpdate = () => {
   const { userInfo, roleLoading } = useUserRole();
   const axiosSecure = useAxiosSecure();
   const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
 
   // Extract user data from role info
-  const user = userInfo?.user_by_email;
+  const user = userInfo?.user_by_email as CharityUser | undefined;
+  if (!user) {
+    throw new Error("User not found");
+  }
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm<CharityFormData>();
 
   // Reset form when data becomes available
   useEffect(() => {
@@ -42,28 +54,26 @@ const CharityProfileUpdate = () => {
   }, [user, reset]);
 
   // Submit handler
-  const onSubmit = async (formData) => {
-    const updatedData = { ...formData }
+  const onSubmit = async (formData:CharityFormData) => {
+    const { organization_logo, photoURL, ...rest } = formData;
+    const updatedData: CharityUpdateData = {...rest};
     try {
       // ORGANIZATION LOGO
-      const orgFile = formData?.organization_logo?.[0];
-      if (orgFile) {
-        const uploadedOrgLogo = await uploadImage(orgFile);
-        updatedData.organization_logo = uploadedOrgLogo
-      } else {
-        updatedData.organization_logo = user.organization_logo || '';
-      }
+      const orgFile = organization_logo?.[0];
+      updatedData.organization_logo = orgFile
+        ? await uploadImage(orgFile)
+        : user.organization_logo || "";
 
       // PERSONAL PHOTO
-      const photoFile = formData?.photoURL?.[0];
-      if (photoFile) {
-        const uploadedPhotoFile = await uploadImage(photoFile);
-        updatedData.photoURL = uploadedPhotoFile
-      } else {
-        updatedData.photoURL = user.photoURL || '';
-      }
+      const photoFile = photoURL?.[0];
+      updatedData.photoURL = photoFile
+        ? await uploadImage(photoFile) // returns string
+        : user.photoURL || "";
 
-      const res = await axiosSecure.patch(`/users/update-charity-profile/${user?.email}`, updatedData);
+      const res = await axiosSecure.patch<{
+        userUpdate: { modifiedCount: number };
+        requestsUpdate: { modifiedCount: number };
+      }>(`/users/update-charity-profile/${user?.email}`, updatedData);
       if(res?.data?.userUpdate?.modifiedCount > 0 && res?.data?.requestsUpdate?.modifiedCount > 0){
         Swal.fire({
           icon: 'success',
@@ -91,9 +101,19 @@ const CharityProfileUpdate = () => {
         });
       }
     } catch (err) {
+      let message:string;
+      if(err instanceof Error){
+        message=err.message
+      }else{
+        message="Something went wrong..."
+      }
       Swal.fire({
-        icon: 'error', title: 'Update failed!', text: err?.message, timer: 2500, showConfirmButton: true
-      })
+        icon: "error",
+        title: "Update failed!",
+        text: message,
+        timer: 2500,
+        showConfirmButton: true,
+      });
     }
   };
 

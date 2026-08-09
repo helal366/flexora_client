@@ -42,3 +42,7 @@ export interface RestaurantUserFields extends BaseOrganization {
 // Single comprehensive interface using optional fields for polymorpic MongoDB documents
 export interface AppUser
   extends BaseUser, CharityUserFields, RestaurantUserFields {}
+
+export interface CharityUser extends BaseUser, CharityUserFields {}
+
+export interface RestaurantUser extends BaseUser, RestaurantUserFields {}
