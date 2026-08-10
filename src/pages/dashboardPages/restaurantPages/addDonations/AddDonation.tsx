@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
 import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload'; 
 import useRestaurantProfile from '../../../../hooks/useRestaurantProfile';
 import Loading from '../../../../components/loadingComponents/Loading';
 import useAddDonation from '../../../../hooks/useAddDonation';
+import { AddDonationFormData, DonationData, PickupTimeWindows } from '../../../../types/donations';
 
 const pickupDate = new Date().toLocaleDateString(); // e.g., "7/17/2025"
-const pickupTimeWindows = {
-    date: pickupDate,
-    breakfast: '11:00 AM – 12:30 PM',
-    lunch: '4:00 PM – 5:30 PM',
-    dinner: '10:15 PM – 11:45 PM',
+const pickupTimeWindows: PickupTimeWindows = {
+  date: pickupDate,
+  breakfast: "11:00 AM – 12:30 PM",
+  lunch: "4:00 PM – 5:30 PM",
+  dinner: "10:15 PM – 11:45 PM",
 };
 
 const AddDonation = () => {
     const { user } = useAuth();
     const { mutateAsync: uploadImage } = useCloudinaryImageUpload();
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState<string|null>(null);
     const { restaurantProfile } = useRestaurantProfile();
-    const [addLoading, setAddLoading]=useState(false)
+    const [addLoading, setAddLoading]=useState<boolean>(false)
     const { mutate: addDonation, isPending } = useAddDonation();
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+    const {
+      register,
+      handleSubmit,
+      watch,
+      formState: { errors },
+      reset,
+    } = useForm<AddDonationFormData>();
 
     const selectedMeal = watch('meal_time'); 
 
-    const onSubmit = async (data) => {
+    const onSubmit:SubmitHandler<AddDonationFormData> = async (data) => {
         setAddLoading(true)
         const result = await Swal.fire({
             title: 'Confirm Donation',
@@ -44,7 +51,7 @@ const AddDonation = () => {
                 imageUrl = await uploadImage(data?.image[0]); // Upload to Cloudinary or any service
             }
 
-            const donationData = {
+            const donationData:DonationData = {
                 donation_title: data?.donation_title,
                 food_type: data?.food_type,
                 quantity: data?.quantity,
@@ -54,8 +61,8 @@ const AddDonation = () => {
                 restaurant_name: restaurantProfile?.organization_name || '',
                 restaurant_email: restaurantProfile?.organization_email || '',
                 location: restaurantProfile?.organization_location || '',
-                restaurant_representative_name: user?.displayName,
-                restaurant_representative_email: user?.email,
+                restaurant_representative_name: user?.displayName || '',
+                restaurant_representative_email: user?.email || '',
                 image: imageUrl,
                 status: 'Pending',
                 posted_at: new Date().toISOString()
@@ -81,10 +88,14 @@ const AddDonation = () => {
             },
         });
         } catch (err) {
+            const message =
+              err instanceof Error
+                ? err.message
+                : "Could not submit the donation. Try again.";
             Swal.fire({
-                icon: 'error',
-                title: 'Failed!',
-                text:err?.message || 'Could not submit the donation. Try again.',
+              icon: "error",
+              title: "Failed!",
+              text: message,
             });
         }
     };
@@ -208,7 +219,7 @@ const AddDonation = () => {
                         className="file-input file-input-bordered w-full"
                         {...register('image', { required: 'Image is required' })}
                         onChange={(e) => {
-                            const file = e.target.files[0];
+                            const file = e.target.files?.[0];
                             if (file) {
                                 setImagePreview(URL.createObjectURL(file));
                             }
