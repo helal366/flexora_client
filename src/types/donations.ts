@@ -11,16 +11,16 @@ export interface FoodDonation {
   _id: string;
   donation_title: string;
   food_type: string;
-  quantity: string; // Stored as a string representing a number (e.g., "12")
+  quantity: string; 
   unit: string;
   pickup_time_window: string;
   restaurant_name: string;
   restaurant_email: string;
   location: string;
   image: string;
-  status: "Verified" | "Unverified" | string; // Strict literal with string fallback
+  status: "Verified" | "Unverified" | string; 
   posted_at: string | Date;
-  donation_status: DonationStatus; // Strict literal with string fallback
+  donation_status: DonationStatus; 
   restaurant_representative_email: string;
   restaurant_representative_name: string;
   is_featured: boolean;
@@ -47,6 +47,7 @@ export interface DonationData {
   restaurant_representative_name: string;
 }
 export type MealTime = "breakfast" | "lunch" | "dinner";
+
 export interface AddDonationFormData {
   donation_title: string;
   food_type: string;
