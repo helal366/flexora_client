@@ -1,4 +1,4 @@
-export type UserRole = "user" | "charity" | "restaurant" | "admin" | string;
+export type UserRole = "user" | "charity" | "restaurant" | "admin" ;
 export type VerificationStatus = "Pending" | "Approved" | "Rejected" | string;
 
 export interface BaseUser {
@@ -39,7 +39,6 @@ export interface RestaurantUserFields extends BaseOrganization {
   organization_request_time?: string | Date;
 }
 
-// Single comprehensive interface using optional fields for polymorpic MongoDB documents
 export interface AppUser
   extends BaseUser, CharityUserFields, RestaurantUserFields {}
 

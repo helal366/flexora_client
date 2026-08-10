@@ -30,7 +30,7 @@ const DashBoardHome = () => {
     },
   };
 
-  const current = roleMap[role] || roleMap['user'];
+  const current = role && role in roleMap ?  roleMap[role as keyof typeof roleMap] : roleMap.user;
 
   return (
     <div
