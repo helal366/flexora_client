@@ -1,80 +1,100 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Loading from '../../../../components/loadingComponents/Loading';
 import Swal from 'sweetalert2';
+import { DonationRequest } from '../../../../types/requests';
+import { FoodDonation } from '../../../../types/donations';
+import { ReviewData } from '../../../../types/reviews';
 
+interface AddReviewModalProps {
+  isOpen: boolean;
+  onClose: ()=> void;
+  request: DonationRequest;
+  userName?: string | null;
+  userEmail?: string | null;
+}
 const AddReviewModalReceivedDonations = ({
   isOpen,
   onClose,
   request,
-  userName = '',
-  userEmail = '',
-}) => {
-  const [rating, setRating] = useState(5);
-  const [description, setDescription] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  userName = "",
+  userEmail = "",
+}: AddReviewModalProps) => {
+  const [rating, setRating] = useState<number>(5);
+  const [description, setDescription] = useState<string>("");
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const axiosSecure = useAxiosSecure();
 
-  const id = request?.donation_id
+  const id = request?.donation_id;
 
-  const { data: donation, isLoading } = useQuery({
-    queryKey: ['donation-details', id],
+  const { data: donation, isLoading } = useQuery<FoodDonation>({
+    queryKey: ["donation-details", id],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations/details/${id}?email=${userEmail}`);
+      const res = await axiosSecure.get<FoodDonation>(
+        `/donations/details/${id}?email=${userEmail}`,
+      );
       return res?.data;
     },
-    enabled: !!id && !!userEmail
+    enabled: !!id && !!userEmail,
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const reviewData = {
+    const reviewData:ReviewData = {
       donation_id: request.donation_id,
       donation_title: request.donation_title,
       restaurant_name: request.restaurant_name,
       restaurant_email: request.restaurant_email,
       restaurant_representative_name: request.restaurant_representative_name,
       restaurant_representative_email: request.restaurant_representative_email,
-      restaurant_location: donation?.location,
+      restaurant_location: donation?.location || '',
       donation_image: request.donation_image,
-      reviewer_name: userName,
-      reviewer_email: userEmail,
+      reviewer_name: userName || '',
+      reviewer_email: userEmail || '',
       description,
       rating,
       created_at: new Date(),
     };
 
     try {
-      await axiosSecure.post('/reviews', reviewData); // Change base URL or use axiosSecure accordingly
+      await axiosSecure.post("/reviews", reviewData); // Change base URL or use axiosSecure accordingly
       Swal.fire({
-        icon: 'success',
-        title: 'Review submitted successfully!',
+        icon: "success",
+        title: "Review submitted successfully!",
       });
       setRating(5);
-      setDescription('');
+      setDescription("");
       onClose();
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to submit review. Please try again.";
       Swal.fire({
-        icon: 'error',
-        title: 'Failed!',
-        text: error?.message || 'Failed to submit review. Please try again.',
+        icon: "error",
+        title: "Failed!",
+        text: message,
       });
     } finally {
       setSubmitting(false);
     }
   };
   if (isLoading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={() => !submitting && onClose()}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={() => !submitting && onClose()}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -108,34 +128,43 @@ const AddReviewModalReceivedDonations = ({
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor="reviewerName" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="reviewerName"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Reviewer Name
                     </label>
                     <input
                       type="text"
                       id="reviewerName"
                       name="reviewer_name"
-                      value={userName || ''}
+                      value={userName || ""}
                       readOnly
                       className="mt-1 block w-full rounded-md border border-gray-300 p-2 bg-gray-100 text-gray-700 cursor-not-allowed"
                     />
                   </div>
                   <div>
-                    <label htmlFor="donationTitle" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="donationTitle"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Donation Title
                     </label>
                     <input
                       type="text"
                       id="donationTitle"
                       name="donation_title"
-                      value={request?.donation_title || ''}
+                      value={request?.donation_title || ""}
                       readOnly
                       className="mt-1 block w-full rounded-md border border-gray-300 p-2 bg-gray-100 text-gray-700 cursor-not-allowed"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="rating"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Rating
                     </label>
                     <select
@@ -149,7 +178,7 @@ const AddReviewModalReceivedDonations = ({
                     >
                       {[5, 4, 3, 2, 1].map((num) => (
                         <option key={num} value={num}>
-                          {num} Star{num > 1 ? 's' : ''}
+                          {num} Star{num > 1 ? "s" : ""}
                         </option>
                       ))}
                     </select>
@@ -189,11 +218,10 @@ const AddReviewModalReceivedDonations = ({
                       className="inline-flex justify-center rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:bg-teal-300"
                       disabled={submitting}
                     >
-                      {submitting ? 'Submitting...' : 'Submit Review'}
+                      {submitting ? "Submitting..." : "Submit Review"}
                     </button>
                   </div>
                 </form>
-
               </Dialog.Panel>
             </Transition.Child>
           </div>

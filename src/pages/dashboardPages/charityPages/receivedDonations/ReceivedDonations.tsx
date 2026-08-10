@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
 import AddReviewModalReceivedDonations from './AddReviewModalReceivedDonations';
+import { DonationRequest } from '../../../../types/requests';
 import NoReceivedDonations from './NoReceivedDonations';
 
 const ReceivedDonations = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const [selectedRequest, setSelectedRequest] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<DonationRequest | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { data: requests = [], isLoading } = useQuery({
+  const { data: requests = [], isLoading } = useQuery<DonationRequest[]>({
     queryKey: ['received-donations', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(
+      const res = await axiosSecure.get<DonationRequest[]>(
         `/requests?charity_representative_email=${user?.email}&picking_status=Picked Up`
       );
       return res.data;
     },
     enabled: !!user?.email,
   });
-  if(requests?.length===0) return <NoReceivedDonations/>
   if (isLoading) return <Loading />;
+  if(requests?.length===0) return <NoReceivedDonations/>
 
   return (
     <div className="grid gap-4 md:grid-cols-2 my-10 ml-4">
@@ -80,8 +81,8 @@ const ReceivedDonations = () => {
             setSelectedRequest(null);
           }}
           request={selectedRequest}
-          userName={user.displayName}
-          userEmail={user.email}
+          userName={user?.displayName ?? ''}
+          userEmail={user?.email ?? ''}
         />
       )}
     </div>

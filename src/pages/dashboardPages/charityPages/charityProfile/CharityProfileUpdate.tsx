@@ -22,9 +22,6 @@ const CharityProfileUpdate = () => {
 
   // Extract user data from role info
   const user = userInfo?.user_by_email as CharityUser | undefined;
-  if (!user) {
-    throw new Error("User not found");
-  }
 
   const {
     register,
@@ -62,13 +59,13 @@ const CharityProfileUpdate = () => {
       const orgFile = organization_logo?.[0];
       updatedData.organization_logo = orgFile
         ? await uploadImage(orgFile)
-        : user.organization_logo || "";
+        : user?.organization_logo || "";
 
       // PERSONAL PHOTO
       const photoFile = photoURL?.[0];
       updatedData.photoURL = photoFile
         ? await uploadImage(photoFile) // returns string
-        : user.photoURL || "";
+        : user?.photoURL || "";
 
       const res = await axiosSecure.patch<{
         userUpdate: { modifiedCount: number };

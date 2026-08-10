@@ -1,8 +1,6 @@
-import React from 'react';
-import { MdOutlineNoMeals, MdOutlineLocalDining } from 'react-icons/md';
-import { FaHandsHelping } from 'react-icons/fa';
-
-const NoAvailableDonations = () => {
+import { MdOutlineNoMeals, MdOutlineLocalDining } from "react-icons/md";
+import { FaHandsHelping } from "react-icons/fa";
+const NoDonations = () => {
   return (
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="bg-gradient-to-br from-blue-100 to-cyan-200 text-blue-900 shadow-2xl rounded-2xl p-8 max-w-md text-center">
@@ -14,7 +12,8 @@ const NoAvailableDonations = () => {
           No Donations Available to Pick Up
         </h2>
         <p className="mb-4 text-sm text-blue-800">
-          Currently, there are no donations available for pickup. Please check back soon or explore other sections.
+          Currently, there are no donations available for pickup. Please check
+          back soon or explore other sections.
         </p>
         <div className="flex justify-center">
           <FaHandsHelping size={28} className="text-green-500" />
@@ -24,4 +23,4 @@ const NoAvailableDonations = () => {
   );
 };
 
-export default NoAvailableDonations;
+export default NoDonations;

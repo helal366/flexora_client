@@ -1,25 +1,27 @@
-import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 import Loading from '../../../../components/loadingComponents/Loading';
+import { DonationRequest } from '../../../../types/requests';
 
 const MyRequests = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  const { data: requests = [], isLoading, refetch } = useQuery<DonationRequest[]>({
     queryKey: ['charityRequests', user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/requests/charity?email=${user.email}`);
+      const res = await axiosSecure.get<DonationRequest[]>(
+        `/requests/charity?email=${user?.email}`,
+      );
       return res.data;
     },
     enabled: !!user?.email,
   });
 
   const { mutate: cancelRequest } = useMutation({
-    mutationFn: async (requestId) => {
+    mutationFn: async (requestId:string) => {
       const res = await axiosSecure.delete(`/requests/${requestId}`);
       return res?.data;
     },
@@ -32,7 +34,7 @@ const MyRequests = () => {
     },
   });
 
-  const handleCancel = (id) => {
+  const handleCancel = (id:string) => {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You are about to cancel this request.',

@@ -1,5 +1,4 @@
-import React from 'react';
-import { FaUserTie, FaHandsHelping, FaUtensils, FaSpinner, FaRegSmileBeam } from 'react-icons/fa';
+import { FaUserTie, FaHandsHelping, FaUtensils,  FaRegSmileBeam } from 'react-icons/fa';
 import useUserRole from '../../../hooks/useUserRole';
 import Loading from '../../../components/loadingComponents/Loading';
 

@@ -5,6 +5,8 @@ export interface PickedUpBy {
   charity_representative_email: string;
 }
 
+export type DonationStatus = "Available" | "Requested" | "Picked Up";
+
 export interface FoodDonation {
   _id: string;
   donation_title: string;
@@ -18,7 +20,7 @@ export interface FoodDonation {
   image: string;
   status: "Verified" | "Unverified" | string; // Strict literal with string fallback
   posted_at: string | Date;
-  donation_status: "Picked Up" | "Pending" | string; // Strict literal with string fallback
+  donation_status: DonationStatus; // Strict literal with string fallback
   restaurant_representative_email: string;
   restaurant_representative_name: string;
   is_featured: boolean;

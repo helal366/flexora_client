@@ -1,21 +1,21 @@
-import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import queryClient from '../../../../api/queryClient';
 import Loading from '../../../../components/loadingComponents/Loading';
-import NoAvailableDonations from '../receivedDonations/NoAvailableDonations';
+import { DonationRequest } from '../../../../types/requests';
+import NoDonations from './NoDonations';
 
 const MyPickups = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     // ✅ Fetch accepted requests
-    const { data: requests = [], isLoading } = useQuery({
+    const { data: requests = [], isLoading } = useQuery<DonationRequest[]>({
         queryKey: ['my-pickups', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/requests?charity_representative_email=${user?.email}&request_status=Accepted`);
+            const res = await axiosSecure.get<DonationRequest[]>(`/requests?charity_representative_email=${user?.email}&request_status=Accepted`);
             return res?.data;
         },
         enabled: !!user?.email,
@@ -23,20 +23,20 @@ const MyPickups = () => {
 
     // ✅ Confirm pickup mutation (uses requestId now)
     const mutation = useMutation({
-        mutationFn: async (requestId) => {
+        mutationFn: async (requestId:string) => {
             return axiosSecure.patch(`/requests/confirm-pickup/${requestId}`);
         },
         onSuccess: () => {
             Swal.fire('Success!', 'Pickup confirmed.', 'success');
-            queryClient.invalidateQueries(['my-pickups', user?.email]);
-            queryClient.invalidateQueries(['received-donations', user?.email]);
+            queryClient.invalidateQueries({queryKey:['my-pickups', user?.email]});
+            queryClient.invalidateQueries({queryKey:['received-donations', user?.email]});
         },
         onError: () => {
             Swal.fire('Error!', 'Failed to confirm pickup.', 'error');
         }
     });
 
-    const handleConfirmPickup = (requestId) => {
+    const handleConfirmPickup = (requestId:string) => {
         Swal.fire({
             title: 'Confirm Pickup?',
             icon: 'question',
@@ -49,7 +49,7 @@ const MyPickups = () => {
         });
     };
 
-    if(requests.length===0) return <NoAvailableDonations/>
+    if(requests.length===0) return <NoDonations />;
 
     if (isLoading) return <section><Loading /></section>;
 
@@ -63,7 +63,9 @@ const MyPickups = () => {
                     <div className="text-[15px] mb-3">
                         <p>
                             <span className="text-teal-700 italic font-semibold">Restaurant :</span>{' '}
-                            <span className="text-teal-800">{request.restaurant_name}, {request.location}</span>
+                            <span className="text-teal-800">{request.restaurant_name}, 
+                                {/* {request.location} */}
+                                </span>
                         </p>
 
                         <p>

@@ -1,3 +1,5 @@
+import { DonationStatus } from "./donations";
+
 export interface FavoriteDonation {
   _id: string;
   image: string;
@@ -9,7 +11,7 @@ export interface FavoriteDonation {
   location: string;
   quantity: string; // Matches your MongoDB sample representation of numbers as strings
   unit: string;
-  donation_status: "Available" | "Pending" | "Picked Up" | string; // Type-safe string fallback
+  donation_status:DonationStatus; // Type-safe string fallback
   donationId: string; // Reference link to the parent donation document
   favoriter_name: string;
   favoriter_email: string;

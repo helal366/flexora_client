@@ -1,5 +1,4 @@
-import React from 'react';
-import { FaInbox, FaGift, FaSmile } from 'react-icons/fa';
+import { FaInbox, FaGift, FaSmile } from "react-icons/fa";
 
 const NoReceivedDonations = () => {
   return (
@@ -13,7 +12,8 @@ const NoReceivedDonations = () => {
           No Received Donations
         </h2>
         <p className="mb-4 text-sm text-purple-800">
-          You haven’t received any food donations yet. Once your requested items are picked up and confirmed, they'll appear here.
+          You haven’t received any food donations yet. Once your requested items
+          are picked up and confirmed, they'll appear here.
         </p>
         <div className="flex justify-center">
           <FaSmile size={30} className="text-yellow-500" />
