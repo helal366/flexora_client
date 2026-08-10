@@ -1,28 +1,28 @@
 import { useMutation } from '@tanstack/react-query';
-import React from 'react';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import queryClient from '../../../../api/queryClient';
 import useAuth from '../../../../hooks/useAuth';
 import { Link } from 'react-router';
+import { FoodDonation } from '../../../../types/donations';
 
-const SingleDonation = ({donation}) => {
+const SingleDonation = ({donation}:{donation:FoodDonation}) => {
     const {user}=useAuth()
     const axiosSecure=useAxiosSecure()
      const deleteMutation = useMutation({
-    mutationFn: async (id) => {
+    mutationFn: async (id:string) => {
       return axiosSecure.delete(`/donations/${id}`);
     },
     onSuccess: () => {
       Swal.fire('Deleted!', 'Donation has been deleted.', 'success');
-      queryClient.invalidateQueries(['my-donations', user?.email]);
+      queryClient.invalidateQueries({queryKey:['my-donations', user?.email]});
     },
     onError: () => {
       Swal.fire('Error!', 'Failed to delete donation.', 'error');
     },
   });
 
-  const handleDelete = (id) => {
+  const handleDelete = (id:string) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "This donation will be deleted permanently.",
@@ -92,7 +92,7 @@ const SingleDonation = ({donation}) => {
             <button
               onClick={() => handleDelete(donation._id)}
               className="btn btn-sm bg-teal-200 hover:bg-teal-400 text-red-700 flex-1"
-              disabled={deleteMutation.isLoading}
+              disabled={deleteMutation.isPending}
             >
               Delete
             </button>
