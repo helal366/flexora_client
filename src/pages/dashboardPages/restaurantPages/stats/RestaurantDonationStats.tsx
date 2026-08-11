@@ -1,9 +1,9 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Loading from '../../../../components/loadingComponents/Loading';
 import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import { FoodDonation } from '../../../../types/donations';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28CFF', '#FF6B6B', '#00B8D9'];
 
@@ -11,19 +11,21 @@ const RestaurantDonationStats = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: donations = [], isLoading } = useQuery({
-    queryKey: ['restaurant-donations-stats', user?.email],
+  const { data: donations = [], isLoading } = useQuery<FoodDonation[]>({
+    queryKey: ["restaurant-donations-stats", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations?restaurant_email=${user?.email}`);
+      const res = await axiosSecure.get<FoodDonation[]>(
+        `/donations?restaurant_email=${user?.email}`,
+      );
       return res.data;
     },
-    enabled: !!user?.email
+    enabled: !!user?.email,
   });
 
   if (isLoading) return <Loading />;
 
   // Aggregate donation data by food_type
-  const typeMap = {};
+  const typeMap:Record<string,number> = {};
   donations.forEach(donation => {
     const type = donation.food_type || 'Unknown';
     const quantity = parseInt(donation.quantity) || 0;
