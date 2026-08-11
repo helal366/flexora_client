@@ -1,5 +1,3 @@
-import React from 'react';
-// import useAuth from '../../../../hooks/useAuth';
 import useUserRole from '../../../../hooks/useUserRole';
 import { FaHandPointDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router';

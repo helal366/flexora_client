@@ -1,47 +1,54 @@
-import React from 'react';
-// import  { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import queryClient from '../../../../api/queryClient';
+import { DonationRequest, IPatchPayload } from '../../../../types/requests';
+
+interface IStatusResponse {
+  message: string;
+}
 
 const RequestedDonations = () => {
   const axiosSecure = useAxiosSecure();
 //   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  const { data: requests = [], isPending } = useQuery({
-    queryKey: ['restaurant-requests'],
+  const { data: requests = [], isPending } = useQuery<DonationRequest[]>({
+    queryKey: ["restaurant-requests"],
     queryFn: async () => {
-      const res = await axiosSecure.get('/requests/restaurant'); // Adjust route
+      const res = await axiosSecure.get<DonationRequest[]>(
+        "/requests/restaurant",
+      ); // Adjust route
       return res?.data;
     },
   });
 
-  const { mutate: updateStatus, isLoading: isUpdating } = useMutation({
-    mutationFn: async ({ requestId, newStatus, donationId }) => {
-      const res = await axiosSecure.patch(`/requests/status/${requestId}`,
-         { status: newStatus,
-           donation_id: donationId, // Pass donation_id for locking
-          });
-      if (newStatus === 'Accepted') {
-        await axiosSecure.patch(`/requests/reject-others/${donationId}`, { except: requestId });
+  const { mutate: updateStatus, isPending: isUpdating } = useMutation<IStatusResponse, Error, IPatchPayload>({
+    mutationFn: async ({ requestId, newStatus, donationId }: IPatchPayload) => {
+      const res = await axiosSecure.patch(`/requests/status/${requestId}`, {
+        status: newStatus,
+        donation_id: donationId, // Pass donation_id for locking
+      });
+      if (newStatus === "Accepted") {
+        await axiosSecure.patch(`/requests/reject-others/${donationId}`, {
+          except: requestId,
+        });
       }
       return res.data;
     },
     onSuccess: () => {
-      Swal.fire('Success', 'Status updated successfully.', 'success');
-      queryClient.invalidateQueries(['restaurant-requests']);
+      Swal.fire("Success", "Status updated successfully.", "success");
+      queryClient.invalidateQueries({ queryKey: ["restaurant-requests"] });
     },
     onError: () => {
-      Swal.fire('Error', 'Something went wrong.', 'error');
+      Swal.fire("Error", "Something went wrong.", "error");
     },
   });
 
-  const handleAccept = (req) => {
+  const handleAccept = (req:DonationRequest) => {
     updateStatus({ requestId: req._id, newStatus: 'Accepted', donationId: req.donation_id });
 };
 
-const handleReject = (req) => {
+const handleReject = (req:DonationRequest) => {
     updateStatus({ requestId: req._id, newStatus: 'Rejected', donationId: req.donation_id });
   };
 

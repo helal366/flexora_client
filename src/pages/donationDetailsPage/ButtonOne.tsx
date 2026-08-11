@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ButtonOne = ({children, bg, hoverBg, textColor, onClick, disabled, isFavorited}) => {
     return (
         <button 

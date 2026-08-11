@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
 
 const NoTransection = () => {

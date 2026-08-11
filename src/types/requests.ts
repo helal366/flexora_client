@@ -28,5 +28,11 @@ export interface DonationRequest {
   picking_status: "Not Picked Up" | "Picked Up" | string;
   charity_logo: string;
   charity_address: string;
-  charity_contact: string; // Handled as string to preserve leading zeros
+  charity_contact: string; 
+}
+
+export interface IPatchPayload {
+  requestId: string;
+  newStatus: RequestStatus;
+  donationId: string
 }

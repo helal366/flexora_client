@@ -1,4 +1,3 @@
-import React from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
