@@ -1,12 +1,16 @@
-import React from "react";
+import { AppUser, UserRole } from "../types/users";
 import useAuth from "./useAuth";
 import useAxiosSecure from "./useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
 // 1. Define the return interface so TypeScript can autocomplete your roles safely
+interface IUserInfoResponse {
+  user_by_email?: AppUser;
+}
+
 interface UserRoleHookResult {
-  userInfo: any;
-  role: string;
+  userInfo: IUserInfoResponse | null | undefined;
+  role: UserRole;
   roleLoading: boolean;
   isError: boolean;
   error: Error | null;
@@ -40,19 +44,21 @@ const useUserRole = ():UserRoleHookResult => {
     isPending: roleLoading,
     isError,
     error,
-  } = useQuery({
+  } = useQuery<IUserInfoResponse | null, Error>({
     queryKey: ["userInfo", user?.email],
     queryFn: async () => {
       // Guard against null email inside the query function
       if (!user?.email) return null;
-      const res = await axiosSecure.get(`/user?email=${user?.email}`);
+      const res = await axiosSecure.get<IUserInfoResponse>(
+        `/user?email=${user?.email}`,
+      );
       return res?.data;
     },
     refetchOnWindowFocus: true,
     retry: 2,
     enabled: !!user?.email,
   });
-  const role = userInfo?.user_by_email?.role || "user";
+  const role:UserRole = userInfo?.user_by_email?.role ?? "user";
   const isUser = role === "user";
   const isCharity = role === "charity";
   const isRestaurant = role === "restaurant";
