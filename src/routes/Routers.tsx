@@ -36,7 +36,7 @@ import UpdateMyDonation from "../pages/dashboardPages/restaurantPages/myDonation
 import MyPickups from "../pages/dashboardPages/charityPages/myPickups/MyPickups";
 import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDonations/ReceivedDonations";
 import MyReviews from "../pages/dashboardPages/MyReviews";
-import TransectionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
+import TransactionHistory from "../pages/dashboardPages/userPages/TransactionHistory";
 import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
 import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/stats/RestaurantDonationStats";
 import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
@@ -160,10 +160,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "transection_history_user",
+        path: "transaction_history_user",
         element: (
           <UserRoute>
-            <TransectionHistory />
+            <TransactionHistory />
           </UserRoute>
         ),
       },
@@ -315,10 +315,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "transection_history_charity",
+        path: "transaction_history_charity",
         element: (
           <CharityRoute>
-            <TransectionHistory />
+            <TransactionHistory />
           </CharityRoute>
         ),
       },

@@ -1,7 +1,7 @@
 export type TransactionStatus = "Pending" | "Approved" | "Rejected";
 export interface CharityPaymentRequest {
   _id: string;
-  transection_id: string; // Preserves the exact backend spelling variation
+  transaction_id: string; // Preserves the exact backend spelling variation
   amount: number; // Raw integer representing the transaction amount (e.g., 25)
   currency: "USD"; // Strict primary option with extensible fallback
   user_name: string;
@@ -33,10 +33,10 @@ export interface CharityRolePatchPayload {
   organization_logo: string;
   organization_tagline: string;
   mission: string;
-  transection_id: string;
+  transaction_id: string;
   amount_paid: number;
   currency: "USD";
-  status: "Pending" | "Approved" | "Rejected";
+  status: TransactionStatus;
   role: "charity_role_request";
   charity_request_time: Date;
 }
@@ -52,5 +52,11 @@ export interface UpdateResult {
 export interface CharityRolePatchResponse {
   message: string;
   userUpdate: UpdateResult;
-  transectionUpdate: UpdateResult;
+  transactionUpdate: UpdateResult;
+}
+
+export interface RestaurantRolePatchResponse {
+  message: string;
+  userUpdate: UpdateResult;
+  transactionUpdate: UpdateResult;
 }

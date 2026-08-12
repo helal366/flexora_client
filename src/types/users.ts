@@ -1,4 +1,10 @@
-export type UserRole = "user" | "charity" | "restaurant" | "admin" ;
+export type UserRole =
+  | "user"
+  | "charity"
+  | "restaurant"
+  | "admin"
+  | "restaurant_role_request"
+  | "charity_role_request";
 export type VerificationStatus = "Pending" | "Approved" | "Rejected" | string;
 
 export interface BaseUser {
@@ -31,7 +37,7 @@ export interface CharityUserFields extends BaseOrganization {
   amount_paid?: number;
   charity_request_time?: string | Date;
   currency?: string;
-  transection_id?: string; // Preserves exact backend spelling variation
+  transaction_id?: string; // Preserves exact backend spelling variation
 }
 
 export interface RestaurantUserFields extends BaseOrganization {
@@ -45,3 +51,30 @@ export interface AppUser
 export interface CharityUser extends BaseUser, CharityUserFields {}
 
 export interface RestaurantUser extends BaseUser, RestaurantUserFields {}
+
+export interface RestaurantRequestFormPayload {
+  name: string;
+  email: string;
+  organization_name?: string;
+  organization_email?: string;
+  organization_location?: string;
+  organization_address?: string;
+  organization_contact?: string;
+  organization_tagline?: string;
+  mission?: string;
+  organization_logo?: FileList;
+}
+
+export interface RestaurantRequestPatchData {
+  organization_name?: string;
+  organization_email?: string;
+  organization_location?: string;
+  organization_address?: string;
+  organization_contact?: string;
+  organization_tagline?: string;
+  mission?: string;
+  organization_logo?: string;
+  role: UserRole;
+  status?: VerificationStatus;
+  organization_request_time?: string | Date;
+}

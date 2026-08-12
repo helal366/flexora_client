@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import useUserRole from '../../../../hooks/useUserRole';
-import useAxiosSecure from '../../../../hooks/useAxiosSecure';
-import Swal from 'sweetalert2';
-import useCloudinaryImageUpload from '../../../../hooks/useCloudinaryImageUpload';
-import Loading from '../../../../components/loadingComponents/Loading';
-import { CharityUser } from '../../../../types/users';
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import useUserRole from "../../../../hooks/useUserRole";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+import useCloudinaryImageUpload from "../../../../hooks/useCloudinaryImageUpload";
+import Loading from "../../../../components/loadingComponents/Loading";
+import { CharityUser } from "../../../../types/users";
 
 type CharityUpdateData = Partial<CharityUser>;
 type CharityFormData = Omit<
@@ -18,7 +18,12 @@ type CharityFormData = Omit<
 const CharityProfileUpdate = () => {
   const { userInfo, roleLoading } = useUserRole();
   const axiosSecure = useAxiosSecure();
-  const { mutateAsync: uploadImage, isPending, isError, error } = useCloudinaryImageUpload();
+  const {
+    mutateAsync: uploadImage,
+    isPending,
+    isError,
+    error,
+  } = useCloudinaryImageUpload();
 
   // Extract user data from role info
   const user = userInfo?.user_by_email as CharityUser | undefined;
@@ -34,26 +39,26 @@ const CharityProfileUpdate = () => {
   useEffect(() => {
     if (user) {
       reset({
-        name: user.name || '',
-        email: user.email || '',
-        role: user.role || '',
-        contact_number: user.contact_number || '',
-        organization_tagline: user?.organization_tagline || '',
-        mission: user.mission || '',
-        organization_contact: user.organization_contact || '',
-        organization_email: user.organization_email || '',
-        organization_name: user.organization_name || '',
-        transection_id: user.transection_id || '',
-        status: user.status || 'Pending',
-        organization_address: user.organization_address || '',
+        name: user.name || "",
+        email: user.email || "",
+        role: user.role || "",
+        contact_number: user.contact_number || "",
+        organization_tagline: user?.organization_tagline || "",
+        mission: user.mission || "",
+        organization_contact: user.organization_contact || "",
+        organization_email: user.organization_email || "",
+        organization_name: user.organization_name || "",
+        transaction_id: user.transaction_id || "",
+        status: user.status || "Pending",
+        organization_address: user.organization_address || "",
       });
     }
   }, [user, reset]);
 
   // Submit handler
-  const onSubmit = async (formData:CharityFormData) => {
+  const onSubmit = async (formData: CharityFormData) => {
     const { organization_logo, photoURL, ...rest } = formData;
-    const updatedData: CharityUpdateData = {...rest};
+    const updatedData: CharityUpdateData = { ...rest };
     try {
       // ORGANIZATION LOGO
       const orgFile = organization_logo?.[0];
@@ -71,38 +76,40 @@ const CharityProfileUpdate = () => {
         userUpdate: { modifiedCount: number };
         requestsUpdate: { modifiedCount: number };
       }>(`/users/update-charity-profile/${user?.email}`, updatedData);
-      if(res?.data?.userUpdate?.modifiedCount > 0 && res?.data?.requestsUpdate?.modifiedCount > 0){
+      if (
+        res?.data?.userUpdate?.modifiedCount > 0 &&
+        res?.data?.requestsUpdate?.modifiedCount > 0
+      ) {
         Swal.fire({
-          icon: 'success',
-          text: 'Profile and Charity requests updated successfully!',
+          icon: "success",
+          text: "Profile and Charity requests updated successfully!",
           timer: 1500,
         });
-      }else if (res?.data?.userUpdate?.modifiedCount > 0) {
+      } else if (res?.data?.userUpdate?.modifiedCount > 0) {
         Swal.fire({
-          icon: 'success',
-          text: 'Profile updated successfully!',
+          icon: "success",
+          text: "Profile updated successfully!",
           timer: 1500,
         });
-      } else if(res?.data?.requestsUpdate?.modifiedCount > 0){
+      } else if (res?.data?.requestsUpdate?.modifiedCount > 0) {
         Swal.fire({
-          icon: 'success',
-          text: 'Charity requests updated successfully!',
+          icon: "success",
+          text: "Charity requests updated successfully!",
           timer: 1500,
         });
-      }
-      else {
+      } else {
         Swal.fire({
-          icon: 'info',
-          text: 'No changes were made to your profile.',
+          icon: "info",
+          text: "No changes were made to your profile.",
           timer: 1500,
         });
       }
     } catch (err) {
-      let message:string;
-      if(err instanceof Error){
-        message=err.message
-      }else{
-        message="Something went wrong..."
+      let message: string;
+      if (err instanceof Error) {
+        message = err.message;
+      } else {
+        message = "Something went wrong...";
       }
       Swal.fire({
         icon: "error",
@@ -116,25 +123,29 @@ const CharityProfileUpdate = () => {
 
   if (roleLoading) return <Loading />;
 
-
   return (
     <>
       {isError && (
         <div className="mb-4 text-red-600 bg-red-100 p-2 rounded">
-          Failed to upload image: {error?.message || 'Unknown error'}
+          Failed to upload image: {error?.message || "Unknown error"}
         </div>
       )}
 
-      <section className='mb-20'>
-        <p className='text-center my-5 text-xl font-semibold italic bg-teal-400 text-gray-700'>Charity Profile Update Form</p>
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto p-4 bg-white rounded shadow">
+      <section className="mb-20">
+        <p className="text-center my-5 text-xl font-semibold italic bg-teal-400 text-gray-700">
+          Charity Profile Update Form
+        </p>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full mx-auto p-4 bg-white rounded shadow"
+        >
           {/* Name */}
           <div className="mb-4">
             <label className="block font-medium mb-1">Name</label>
             <input
               type="text"
               readOnly
-              {...register('name', { required: 'Your name is required' })}
+              {...register("name", { required: "Your name is required" })}
               className="input input-bordered w-full"
             />
           </div>
@@ -145,21 +156,28 @@ const CharityProfileUpdate = () => {
             <input
               type="email"
               readOnly
-              {...register('email', { required: 'Your email is required' })}
+              {...register("email", { required: "Your email is required" })}
               className="input input-bordered w-full"
             />
           </div>
 
           {/* upload your photo if you need to update */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Upload Your Profile Photo to update</label>
+            <label className="block font-medium mb-1">
+              Upload Your Profile Photo to update
+            </label>
             {user?.photoURL && (
-              <img src={user.photoURL} alt="Current" className="w-16 h-16 rounded-full mb-2" />
+              <img
+                src={user.photoURL}
+                alt="Current"
+                className="w-16 h-16 rounded-full mb-2"
+              />
             )}
             <input
-              type="file" accept="image/*"
-              {...register('photoURL')}
-              placeholder='Upload your photo'
+              type="file"
+              accept="image/*"
+              {...register("photoURL")}
+              placeholder="Upload your photo"
               className="input input-bordered w-full"
             />
           </div>
@@ -169,7 +187,7 @@ const CharityProfileUpdate = () => {
             <label className="block font-medium mb-1">Role</label>
             <input
               type="text"
-              {...register('role')}
+              {...register("role")}
               className="input input-bordered w-full"
               disabled
             />
@@ -180,7 +198,9 @@ const CharityProfileUpdate = () => {
             <label className="block font-medium mb-1">Contact Number</label>
             <input
               type="text"
-              {...register('contact_number', { required: 'Your contact number is required' })}
+              {...register("contact_number", {
+                required: "Your contact number is required",
+              })}
               className="input input-bordered w-full"
             />
           </div>
@@ -190,7 +210,9 @@ const CharityProfileUpdate = () => {
             <label className="block font-medium mb-1">Organization Name</label>
             <input
               type="text"
-              {...register('organization_name', { required: 'Organization name is required' })}
+              {...register("organization_name", {
+                required: "Organization name is required",
+              })}
               className="input input-bordered w-full"
             />
             {errors.organization_name && (
@@ -203,49 +225,72 @@ const CharityProfileUpdate = () => {
             <label className="block font-medium mb-1">Organization Email</label>
             <input
               type="email"
-              {...register('organization_email', { required: 'Organization email is required' })}
+              {...register("organization_email", {
+                required: "Organization email is required",
+              })}
               className="input input-bordered w-full"
             />
             {errors.organization_email && (
-              <p className="text-red-600">{errors.organization_email.message}</p>
+              <p className="text-red-600">
+                {errors.organization_email.message}
+              </p>
             )}
           </div>
 
           {/* Organization Contact */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Organization Contact</label>
+            <label className="block font-medium mb-1">
+              Organization Contact
+            </label>
             <input
               type="text"
-              {...register('organization_contact', { required: 'Organization contact is required' })}
+              {...register("organization_contact", {
+                required: "Organization contact is required",
+              })}
               className="input input-bordered w-full"
             />
             {errors.organization_contact && (
-              <p className="text-red-600">{errors.organization_contact.message}</p>
+              <p className="text-red-600">
+                {errors.organization_contact.message}
+              </p>
             )}
           </div>
 
           {/* Organization Address */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Organization Address</label>
+            <label className="block font-medium mb-1">
+              Organization Address
+            </label>
             <textarea
-              {...register('organization_address', { required: 'Organization address is required' })}
+              {...register("organization_address", {
+                required: "Organization address is required",
+              })}
               className="textarea textarea-bordered w-full"
               rows={2}
             />
             {errors.organization_address && (
-              <p className="text-red-600">{errors.organization_address.message}</p>
+              <p className="text-red-600">
+                {errors.organization_address.message}
+              </p>
             )}
           </div>
 
           {/*Upload Organization Logo if you need to update*/}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Upload Organization Logo to update </label>
+            <label className="block font-medium mb-1">
+              Upload Organization Logo to update{" "}
+            </label>
             {user?.organization_logo && (
-              <img src={user.organization_logo} alt="Current" className="w-16 h-16 rounded-full mb-2" />
+              <img
+                src={user.organization_logo}
+                alt="Current"
+                className="w-16 h-16 rounded-full mb-2"
+              />
             )}
             <input
-              type="file" accept="image/*"
-              {...register('organization_logo')}
+              type="file"
+              accept="image/*"
+              {...register("organization_logo")}
               className="input input-bordered w-full"
             />
             {errors.organization_logo && (
@@ -255,20 +300,28 @@ const CharityProfileUpdate = () => {
 
           {/* Tagline */}
           <div className="mb-4">
-            <label className="block font-medium mb-1">Organization Tagline</label>
+            <label className="block font-medium mb-1">
+              Organization Tagline
+            </label>
             <input
-              {...register('organization_tagline', { required: 'Organization tagline is required' })}
+              {...register("organization_tagline", {
+                required: "Organization tagline is required",
+              })}
               className="input input-bordered w-full"
             />
             {errors.organization_tagline && (
-              <p className="text-red-600">{errors.organization_tagline.message}</p>
+              <p className="text-red-600">
+                {errors.organization_tagline.message}
+              </p>
             )}
           </div>
           {/* Mission */}
           <div className="mb-4">
             <label className="block font-medium mb-1">Mission</label>
             <textarea
-              {...register('mission', { required: 'Organization mission statement is required' })}
+              {...register("mission", {
+                required: "Organization mission statement is required",
+              })}
               className="textarea textarea-bordered w-full"
               rows={2}
             />
@@ -277,12 +330,12 @@ const CharityProfileUpdate = () => {
             )}
           </div>
 
-          {/* Transection ID */}
+          {/* Transaction ID */}
           <div className="mb-4">
             <label className="block font-medium mb-1">Transaction ID</label>
             <input
               type="text"
-              {...register('transection_id')}
+              {...register("transaction_id")}
               disabled
               className="input input-bordered w-full"
             />
@@ -292,20 +345,24 @@ const CharityProfileUpdate = () => {
           <div className="mb-4">
             <label className="block font-medium mb-1">Status</label>
             <input
-              type='text'
-              {...register('status')}
+              type="text"
+              {...register("status")}
               disabled
-              className="input input-bordered w-full" />
-
+              className="input input-bordered w-full"
+            />
           </div>
-          {isPending && <p className="text-yellow-500 font-medium my-2">Uploading image, please wait...</p>}
+          {isPending && (
+            <p className="text-yellow-500 font-medium my-2">
+              Uploading image, please wait...
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={isSubmitting || isPending}
             className="btn bg-teal-700 text-gray-300 hover:bg-teal-900 w-full"
           >
-            {isSubmitting || isPending ? 'Updating...' : 'Update Profile'}
+            {isSubmitting || isPending ? "Updating..." : "Update Profile"}
           </button>
         </form>
       </section>

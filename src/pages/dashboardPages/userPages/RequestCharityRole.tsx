@@ -21,14 +21,14 @@ interface PaymentIntentResponse {
 const RequestCharityRole = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-  if(!user){
-    throw new Error("User not found")
+  if (!user) {
+    throw new Error("User not found");
   }
   const userEmail = user.email;
   const userName = user.displayName;
-    if (!userEmail || !userName) {
-      throw new Error("email or name not found");
-    }
+  if (!userEmail || !userName) {
+    throw new Error("email or name not found");
+  }
   const {
     register,
     formState: { errors, isSubmitting },
@@ -61,17 +61,17 @@ const RequestCharityRole = () => {
     },
   });
 
-  const saveTransection = useMutation<
+  const saveTransaction = useMutation<
     AxiosResponse<CharityPaymentRequest>,
     Error,
     CharityPaymentRequest
   >({
-    mutationFn: async (transectionData: CharityPaymentRequest) => {
-      const saveTransectionRes = await axiosSecure.post<CharityPaymentRequest>(
-        "/save-transection",
-        transectionData,
+    mutationFn: async (transactionData: CharityPaymentRequest) => {
+      const saveTransactionRes = await axiosSecure.post<CharityPaymentRequest>(
+        "/save-transaction",
+        transactionData,
       );
-      return saveTransectionRes;
+      return saveTransactionRes;
     },
   });
 
@@ -195,14 +195,14 @@ const RequestCharityRole = () => {
           },
         });
 
-        if (paymentError) {
-          throw new Error(paymentError.message);
-        }
-      
+      if (paymentError) {
+        throw new Error(paymentError.message);
+      }
+
       if (paymentIntent && paymentIntent.status === "succeeded") {
         const transactionData: CharityPaymentRequest = {
           _id: "",
-          transection_id: paymentIntent.id,
+          transaction_id: paymentIntent.id,
           amount: 5,
           currency: "USD",
           email: userEmail,
@@ -215,8 +215,8 @@ const RequestCharityRole = () => {
           request_time: new Date(),
           status: "Pending",
         };
-        // save transection
-        await saveTransection.mutateAsync(transactionData);
+        // save transaction
+        await saveTransaction.mutateAsync(transactionData);
       }
 
       // PATCH user in DB with organization_name, mission, role
@@ -228,7 +228,7 @@ const RequestCharityRole = () => {
         organization_logo: uploadedUrl,
         organization_tagline: formData?.organization_tagline,
         mission: formData?.mission,
-        transection_id: paymentIntent?.id, //stripe's id
+        transaction_id: paymentIntent?.id, //stripe's id
         amount_paid: 5,
         currency: "USD",
         status: "Pending",
@@ -441,7 +441,7 @@ const RequestCharityRole = () => {
             {createPaymentIntent.isPending && (
               <p>🔄 Creating payment intent...</p>
             )}
-            {saveTransection.isPending && <p>💾 Saving payment details...</p>}
+            {saveTransaction.isPending && <p>💾 Saving payment details...</p>}
             {patchCharityRequest.isPending && (
               <p>📥 Updating charity request...</p>
             )}

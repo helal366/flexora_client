@@ -1,27 +1,27 @@
-import { useQuery } from '@tanstack/react-query';
-import useAuth from '../../../hooks/useAuth';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import Loading from '../../../components/loadingComponents/Loading';
-import NoTransection from './NoTransection';
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../../components/loadingComponents/Loading";
+import NoTransaction from "./NoTransaction";
 
-const TransectionHistory = () => {
+const TransactionHistory = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
   const { data: transactions = [], isLoading } = useQuery({
-    queryKey: ['charity-transactions', user?.email],
+    queryKey: ["charity-transactions", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/transactions?email=${user?.email}`);
       return res?.data;
-    }
+    },
   });
 
   if (isLoading) {
-    return <Loading/>;
+    return <Loading />;
   }
-  if(transactions.length===0){
-    return <NoTransection/>
+  if (transactions.length === 0) {
+    return <NoTransaction />;
   }
 
   return (
@@ -33,7 +33,9 @@ const TransectionHistory = () => {
             <th>#</th>
             <th>Organization Logo</th>
             <th>Organization Name</th>
-            <th className='whitespace-break-spaces'>Organization Representative Name</th>
+            <th className="whitespace-break-spaces">
+              Organization Representative Name
+            </th>
             <th>Transaction ID</th>
             <th>Amount (USD)</th>
             <th>Request Date</th>
@@ -53,17 +55,17 @@ const TransectionHistory = () => {
               </td>
               <td>{txn?.organization_name}</td>
               <td>{txn?.user_name}</td>
-              <td>{txn?.transection_id}</td>
+              <td>{txn?.transaction_id}</td>
               <td>${txn?.amount}</td>
               <td>{new Date(txn?.request_time).toLocaleString()}</td>
               <td>
                 <span
                   className={`badge ${
-                    txn.status === 'Approved'
-                      ? 'badge-success'
-                      : txn.status === 'Pending'
-                      ? 'badge-warning'
-                      : 'badge-error'
+                    txn.status === "Approved"
+                      ? "badge-success"
+                      : txn.status === "Pending"
+                        ? "badge-warning"
+                        : "badge-error"
                   }`}
                 >
                   {txn?.status}
@@ -77,5 +79,4 @@ const TransectionHistory = () => {
   );
 };
 
-export default TransectionHistory;
-
+export default TransactionHistory;
