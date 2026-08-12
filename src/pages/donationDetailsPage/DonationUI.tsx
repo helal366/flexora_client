@@ -1,22 +1,46 @@
-import React from 'react';
 import SingleUI from './SingleUI';
 import DonationStatus from './DonationStatus';
+import {
+  DonationStatus as FoodDonationStatus,
+  FoodDonation,
+} from "../../types/donations";
 
-const DonationUI = ({donation, formattedDate, totalFood, status}) => {
-    return (
-        <section className='space-y-1 '>
-                <SingleUI label='Food Type' value={donation?.food_type}/>
-                <SingleUI label='Restaurant Name' value={donation?.restaurant_name}/>
-                <SingleUI label='Restaurant Email' value={donation?.restaurant_email}/>
-                <SingleUI label='Restaurant Representative Name' value={donation?.restaurant_representative_name}/>
-                <SingleUI label='Restaurant Representative Email' value={donation?.restaurant_representative_email}/>
-                <SingleUI label='Restaurant Location' value={donation?.location}/>
-                <SingleUI label='Total Food' value={totalFood} />
-                <SingleUI label='Proposed Pickup Date' value={formattedDate} />
-                <SingleUI label='Proposed Pickup Time' value={donation?.pickup_time_window} />
-                <DonationStatus status={status}/>
-           </section>
-    );
+interface DonationUIProps {
+  donation?: FoodDonation;
+  formattedDate: string;
+  totalFood: string;
+  status?: FoodDonationStatus;
+}
+const DonationUI = ({
+  donation,
+  formattedDate,
+  totalFood,
+  status,
+}: DonationUIProps) => {
+    const donationStatus = status ?? "unknown"
+  return (
+    <section className="space-y-1 ">
+      <SingleUI label="Food Type" value={donation?.food_type} />
+      <SingleUI label="Restaurant Name" value={donation?.restaurant_name} />
+      <SingleUI label="Restaurant Email" value={donation?.restaurant_email} />
+      <SingleUI
+        label="Restaurant Representative Name"
+        value={donation?.restaurant_representative_name}
+      />
+      <SingleUI
+        label="Restaurant Representative Email"
+        value={donation?.restaurant_representative_email}
+      />
+      <SingleUI label="Restaurant Location" value={donation?.location} />
+      <SingleUI label="Total Food" value={totalFood} />
+      <SingleUI label="Proposed Pickup Date" value={formattedDate} />
+      <SingleUI
+        label="Proposed Pickup Time"
+        value={donation?.pickup_time_window}
+      />
+      <DonationStatus status={donationStatus} />
+    </section>
+  );
 };
 
 export default DonationUI;
