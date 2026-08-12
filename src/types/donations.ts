@@ -5,29 +5,40 @@ export interface PickedUpBy {
   charity_representative_email: string;
 }
 
-export type DonationStatus = "Available" | "Requested" | "Picked Up";
+export type DonationStatus = "Available" | "Requested" | "Picked Up" | string;
 
 export interface FoodDonation {
   _id: string;
+
   donation_title: string;
   food_type: string;
-  quantity: string; 
+
+  quantity: string;
   unit: string;
+
   pickup_time_window: string;
+  pickup_date: string | Date;
+
   restaurant_name: string;
   restaurant_email: string;
+
   location: string;
+
   image: string;
-  status: "Verified" | "Unverified" | string; 
-  posted_at: string | Date;
-  donation_status: DonationStatus; 
+  status: "Verified" | "Unverified" | string;
+  donation_status: DonationStatus;
+
   restaurant_representative_email: string;
   restaurant_representative_name: string;
+  
   is_featured: boolean;
-  favoriters_email_list: string[];
-  picked_up_by: PickedUpBy;
-  updated_at: string | Date;
   is_locked: boolean;
+
+  favoriters_email_list: string[];
+  picked_up_by?: PickedUpBy;
+
+  posted_at: string | Date;
+  updated_at?: string | Date;
 }
 
 export interface DonationData {

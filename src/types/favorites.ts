@@ -17,3 +17,5 @@ export interface FavoriteDonation {
   favoriter_email: string;
   favoriter_role: "charity" | "restaurant" | "admin" | string; // Strict literal for specific platform roles
 }
+
+export type FavoritePostData = Omit<FavoriteDonation, "_id">;
