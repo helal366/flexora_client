@@ -60,3 +60,8 @@ export interface RestaurantRolePatchResponse {
   userUpdate: UpdateResult;
   transactionUpdate: UpdateResult;
 }
+
+export interface CharityPaymentGetRequestResponse {
+  message: string;
+  transactions: CharityPaymentRequest[];
+}

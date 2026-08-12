@@ -3,7 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loading from "../../../components/loadingComponents/Loading";
 import NoTransaction from "./NoTransaction";
-import { CharityPaymentRequest } from "../../../types/transactions";
+import { CharityPaymentGetRequestResponse, CharityPaymentRequest } from "../../../types/transactions";
 
 const TransactionHistory = () => {
   const { user } = useAuth();
@@ -14,10 +14,10 @@ const TransactionHistory = () => {
       queryKey: ["charity-transactions", user?.email],
       enabled: !!user?.email,
       queryFn: async () => {
-        const res = await axiosSecure.get<CharityPaymentRequest[]>(
+        const res = await axiosSecure.get<CharityPaymentGetRequestResponse>(
           `/transactions?email=${user?.email}`,
         );
-        return res?.data;
+        return res?.data?.transactions;
       },
     });
 

@@ -3,22 +3,27 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import { DonationReview } from '../../types/reviews';
 
 const MyReviews = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: reviews = [], isLoading, refetch } = useQuery({
-    queryKey: ['my-reviews', user?.email],
+  const {
+    data: reviews = [],
+    isLoading,
+    refetch,
+  } = useQuery<DonationReview[]>({
+    queryKey: ["my-reviews", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/reviews?email=${user?.email}`);
+      const res = await axiosSecure.get<DonationReview[]>(`/reviews?email=${user?.email}`);
       return res?.data;
-    }
+    },
   });
-  const deleteMutation = useMutation({
-    mutationFn: async (reviewId) => {
-      const res = await axiosSecure.delete(`/reviews/${reviewId}?email=${user?.email}`);
+  const deleteMutation = useMutation<{message:string}, Error, string>({
+    mutationFn: async (reviewId:string) => {
+      const res = await axiosSecure.delete<{message:string}>(`/reviews/${reviewId}?email=${user?.email}`);
       return res.data;
     },
     onSuccess: () => {
