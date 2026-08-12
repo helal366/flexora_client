@@ -3,19 +3,23 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loading from "../../../components/loadingComponents/Loading";
 import NoTransaction from "./NoTransaction";
+import { CharityPaymentRequest } from "../../../types/transactions";
 
 const TransactionHistory = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: transactions = [], isLoading } = useQuery({
-    queryKey: ["charity-transactions", user?.email],
-    enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/transactions?email=${user?.email}`);
-      return res?.data;
-    },
-  });
+  const { data: transactions = [], isLoading } =
+    useQuery<CharityPaymentRequest[]>({
+      queryKey: ["charity-transactions", user?.email],
+      enabled: !!user?.email,
+      queryFn: async () => {
+        const res = await axiosSecure.get<CharityPaymentRequest[]>(
+          `/transactions?email=${user?.email}`,
+        );
+        return res?.data;
+      },
+    });
 
   if (isLoading) {
     return <Loading />;
