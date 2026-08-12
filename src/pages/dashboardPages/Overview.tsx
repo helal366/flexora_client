@@ -4,15 +4,23 @@ import { FaBox, FaCheckCircle, FaHandHoldingHeart } from 'react-icons/fa';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import { AxiosError } from 'axios';
 
+interface OverviewResponse {
+  approvedDonations: number;
+  charityRequests: number;
+  pickedUpDonations: number;
+}
 const Overview = () => {
   const axiosSecure = useAxiosSecure();
   const {user}=useAuth();
   const userEmail=user?.email
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['overviewData'],
+  const { data, isLoading, isError, error } = useQuery<OverviewResponse, AxiosError<{message:string}>>({
+    queryKey: ["overviewData", userEmail],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/overview?email=${userEmail}`);
+      const res = await axiosSecure.get<OverviewResponse>(
+        `/overview?email=${userEmail}`,
+      );
       return res.data; // { approvedDonations, charityRequests, pickedUpDonations }
     },
   });
@@ -28,7 +36,7 @@ const Overview = () => {
       </div>
     );
 
-  const { approvedDonations, charityRequests, pickedUpDonations } = data;
+  const { approvedDonations=0, charityRequests=0, pickedUpDonations=0 } = data??{};
 
   const pieData = [
     { name: 'Approved Donations', value: approvedDonations },
