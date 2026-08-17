@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FaUtensils } from 'react-icons/fa';
 import useAxiosSecure from '../../hooks/useAxiosSecure';

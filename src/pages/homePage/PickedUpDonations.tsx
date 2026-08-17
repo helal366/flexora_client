@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
 import NoPickedUpDonations from '../common/NoPickedUpDonations';

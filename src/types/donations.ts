@@ -1,3 +1,5 @@
+import { RestaurantUser } from "./users";
+
 export interface PickedUpBy {
   charity_name: string;
   charity_email: string;
@@ -30,7 +32,7 @@ export interface FoodDonation {
 
   restaurant_representative_email: string;
   restaurant_representative_name: string;
-  
+
   is_featured: boolean;
   is_locked: boolean;
 
@@ -74,4 +76,10 @@ export interface PickupTimeWindows {
   breakfast: string;
   lunch: string;
   dinner: string;
+}
+
+export interface TopDonatedRestaurantResponse {
+  restaurant: RestaurantUser;
+  totalDonations: number;
+  donations: FoodDonation[];
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const NoReviewCard = () => {
   return (
     <div className="my-6">
