@@ -36,7 +36,6 @@ import UpdateMyDonation from "../pages/dashboardPages/restaurantPages/myDonation
 import MyPickups from "../pages/dashboardPages/charityPages/myPickups/MyPickups";
 import ReceivedDonations from "../pages/dashboardPages/charityPages/receivedDonations/ReceivedDonations";
 import MyReviews from "../pages/dashboardPages/MyReviews";
-import TransactionHistory from "../pages/dashboardPages/userPages/TransactionHistory";
 import FeatureDonations from "../pages/dashboardPages/adminPages/featureDonations/FeatureDonations";
 import RestaurantDonationStats from "../pages/dashboardPages/restaurantPages/stats/RestaurantDonationStats";
 import DonationDetails from "../pages/donationDetailsPage/DonationDetails";
@@ -44,6 +43,7 @@ import MyFavorites from "../pages/common/MyFavorites";
 import DashBoardHome from "../pages/dashboardPages/dashboardHome/DashBoardHome";
 import Charities from "../pages/charities/Charities";
 import Overview from "../pages/dashboardPages/Overview";
+import TransactionHistory from "../pages/dashboardPages/userPages/TransectionHistory";
 
 const router = createBrowserRouter([
   {

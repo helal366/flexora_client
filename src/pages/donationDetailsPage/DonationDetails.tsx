@@ -24,9 +24,6 @@ interface FavoritePostResponse {
 const DonationDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
-//   if(!user){
-//     throw new Error("User not found")
-//   }
   const axiosSecure = useAxiosSecure();
   const userEmail = user?.email;
   const { isUser, isCharity, userInfo } = useUserRole();
@@ -174,7 +171,7 @@ const DonationDetails = () => {
           Donation Details
         </h1>
         <img
-          className="w-full min-h-32 max-h-[400px] one mb-5"
+          className="w-full min-h-32 max-h-100 one mb-5"
           src={donation?.image}
           alt={donation?.donation_title}
         />

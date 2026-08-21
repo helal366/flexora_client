@@ -5,16 +5,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
 import { FoodDonation } from '../../types/donations';
 
-// 1. Define the Donation interface
-// export interface Donation {
-//   _id: string;
-//   donation_title: string;
-//   image: string;
-//   restaurant_name: string;
-//   location: string;
-//   quantity: string | number;
-//   pickup_time_window?: string;
-// }
+
 
 // 2. Add types to helper functions
 const parseTime = (timeRange: string | undefined): Date | null => {

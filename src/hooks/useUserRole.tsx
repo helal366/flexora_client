@@ -1,12 +1,9 @@
-import { AppUser, UserRole } from "../types/users";
+import {IUserInfoResponse, UserRole } from "../types/users";
 import useAuth from "./useAuth";
 import useAxiosSecure from "./useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
 // 1. Define the return interface so TypeScript can autocomplete your roles safely
-interface IUserInfoResponse {
-  user_by_email?: AppUser;
-}
 
 interface UserRoleHookResult {
   userInfo: IUserInfoResponse | null | undefined;

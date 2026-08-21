@@ -78,3 +78,18 @@ export interface RestaurantRequestPatchData {
   status?: VerificationStatus;
   organization_request_time?: string | Date;
 }
+
+export interface IUserInfo {
+  name: string;
+  email: string;
+  photoURL: string;
+  role: string;
+  contact_number: string;
+  created_at: string;
+  last_login: string;
+  uid: string;
+}
+
+export interface IUserInfoResponse {
+  user_by_email?: AppUser;
+}

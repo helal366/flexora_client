@@ -36,3 +36,36 @@ export interface IPatchPayload {
   newStatus: RequestStatus;
   donationId: string
 }
+
+export interface RequestFormInputs {
+  donation_title: string;
+  restaurant_name: string;
+  restaurant_representative_name: string;
+  charity_name: string;
+  charity_email: string;
+  request_description: string;
+  preferred_pickup_date: string;
+  preferred_pickup_time: string;
+}
+
+export interface BackendRequestPayload {
+  donation_id: string;
+  donation_title: string;
+  donation_image: string;
+  food_type: string;
+  quantity: string;
+  donation_status: string;
+  unit: string;
+  preferred_pickup_date: string;
+  preferred_pickup_time: string;
+  restaurant_name: string;
+  restaurant_email: string;
+  restaurant_representative_name: string;
+  restaurant_representative_email: string;
+  request_description: string;
+  charity_name: string;
+  charity_email: string;
+  charity_logo: string;
+  charity_representative_name: string;
+  charity_representative_email: string;
+}

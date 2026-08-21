@@ -30,3 +30,13 @@ export interface ReviewData {
   rating: number;
   created_at: Date;
 }
+
+export interface ReviewFormInputs {
+  donation_title: string;
+  restaurant_name: string;
+  restaurant_representative_name: string;
+  reviewer_name: string;
+  reviewer_email: string;
+  rating: number;
+  description: string;
+}

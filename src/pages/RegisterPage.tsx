@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useState } from "react";
 import GoogleLogin from "../components/loginRegisterComponents/GoogleLogin";
+import { IUserInfo } from "../types/users";
 
 interface IRegisterForm {
   name: string;
@@ -18,16 +19,6 @@ interface IRegisterForm {
   image: FileList; // 🔵 important
 }
 
-interface IUserInfo {
-  name: string;
-  email: string;
-  photoURL: string;
-  role: string;
-  contact_number: string;
-  created_at: string;
-  last_login: string;
-  uid: string;
-}
 const RegisterPage = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
