@@ -3,16 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
 import CardCharityRequest from './CardCharityRequest';
 import NoCharityRequest from './NoCharityRequest';
+import { DonationRequest } from '../../types/requests';
 
 const HomeCharityRequests = () => {
     const axiosSecure = useAxiosSecure();
-    const { data: requests=[], isLoading } = useQuery({
-        queryKey: ['requests'],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/requests/home_page`);
-            return res?.data;
-        }
-        
+    const { data: requests = [], isLoading } = useQuery<DonationRequest[]>({
+      queryKey: ["requests"],
+      queryFn: async () => {
+        const res =
+          await axiosSecure.get<DonationRequest[]>(`/requests/home_page`);
+        return res?.data;
+      },
     });
 
     if (isLoading) {

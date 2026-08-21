@@ -1,17 +1,17 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import NoFeaturedDonations from './NoFeaturedDonations';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import { FoodDonation } from '../../types/donations';
 
 const FeaturedDonations = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: donations = [], isLoading } = useQuery({
+  const { data: donations = [], isLoading } = useQuery<FoodDonation[]>({
     queryKey: ['featuredDonations'],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/donations/featured`);
+      const res = await axiosSecure.get<FoodDonation[]>(`/donations/featured`);
       return res?.data;
     }
   });
