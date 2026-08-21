@@ -57,7 +57,7 @@ const TopDonatedRestaurant = () => {
               >
                 <figure>
                   <img
-                    className="w-full h-[150px] border border-white shadow-2xl"
+                    className="w-full h-37.5 border border-white shadow-2xl"
                     src={req?.image}
                     alt={req?.donation_title}
                   />

@@ -1,16 +1,30 @@
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
-
+import { CharityUser } from '../../types/users';
+import { DonationRequest } from '../../types/requests';
+/** res.json({
+          charity: charityInfo || {},
+          totalRequests: topCharityAgg[0]?.totalRequests || 0,
+          requests: charityRequests || [],
+        });
+ */
+interface ITopCharityRequestResponse {
+  charity: CharityUser;
+  totalRequests: number | string;
+  requests: DonationRequest[];
+}
 const TopCharityRequests = () => {
     const axiosSecure = useAxiosSecure();
-    const { data, isLoading } = useQuery({
-        queryKey: ['charity', 'requests'],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/top-charity-requests`);
-            return res?.data
-        }
-    })
+    const { data, isLoading } = useQuery<ITopCharityRequestResponse>({
+      queryKey: ["charity", "requests"],
+      queryFn: async () => {
+        const res = await axiosSecure.get<ITopCharityRequestResponse>(
+          `/top-charity-requests`,
+        );
+        return res?.data;
+      },
+    });
     if (isLoading) {
         return <Loading />
     }
@@ -32,7 +46,7 @@ const TopCharityRequests = () => {
                 {
                     requests.map(req => <div key={req?._id} className="card bg-gray-200  shadow-2xl border border-gray-400/50">
                         <figure>
-                            <img className='w-full h-[150px] border border-white shadow-2xl'
+                            <img className='w-full h-37.5 border border-white shadow-2xl'
                                 src={req?.donation_image}
                                 alt={req?.donation_title} />
                         </figure>
