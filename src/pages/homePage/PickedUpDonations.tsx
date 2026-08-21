@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import Loading from '../../components/loadingComponents/Loading';
 import NoPickedUpDonations from '../common/NoPickedUpDonations';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { FoodDonation } from '../../types/donations';
 
 const PickedUpDonations = () => {
     const axiosSecure=useAxiosSecure()
-    const { data: pickedups = [], isLoading } = useQuery({
+    const { data: pickedups = [], isLoading } = useQuery<FoodDonation[]>({
         queryKey: ['pickedups'],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/picked-up-donations`);
+            const res = await axiosSecure.get<FoodDonation[]>(`/picked-up-donations`);
             return res?.data;
         }
     });
@@ -27,7 +28,7 @@ const PickedUpDonations = () => {
                                 {
                                     pickedups.map(req => <div key={req?._id} className="card bg-gray-200  shadow-2xl border border-gray-400/50">
                                         <figure>
-                                            <img className='w-full h-[150px] border border-white shadow-2xl'
+                                            <img className='w-full h-37.5 border border-white shadow-2xl'
                                                 src={req?.image}
                                                 alt={req?.donation_title} />
                                         </figure>
