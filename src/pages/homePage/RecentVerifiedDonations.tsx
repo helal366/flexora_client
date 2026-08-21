@@ -2,14 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { FaUtensils } from 'react-icons/fa';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../../components/loadingComponents/Loading';
+import { FoodDonation } from '../../types/donations';
 
 const RecentVerifiedDonations = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: donations = [], isLoading } = useQuery({
-    queryKey: ['recentVerifiedDonations'],
+  const { data: donations = [], isLoading } = useQuery<FoodDonation[]>({
+    queryKey: ["recentVerifiedDonations"],
     queryFn: async () => {
-      const res = await axiosSecure.get('/recent-verified-donations');
+      const res = await axiosSecure.get<FoodDonation[]>(
+        "/recent-verified-donations",
+      );
       return res?.data;
     },
   });
@@ -38,7 +41,7 @@ const RecentVerifiedDonations = () => {
           <div key={donation._id} className="card bg-gray-200 shadow-2xl border border-gray-400/50">
             <figure>
               <img
-                className="w-full h-[150px] border border-white shadow-2xl object-cover"
+                className="w-full h-37.5 border border-white shadow-2xl object-cover"
                 src={donation.image}
                 alt={donation.donation_title}
               />
