@@ -15,6 +15,7 @@ import ModalReviewDonation from "./ModalReviewDonation";
 import { FoodDonation } from "../../types/donations";
 import { FavoritePostData } from "../../types/favorites";
 import { AxiosError } from "axios";
+import { DonationReview } from "../../types/reviews";
 
 interface FavoritePostResponse {
   acknowledged: boolean;
@@ -90,10 +91,10 @@ const DonationDetails = () => {
     data: reviewsDonation = [],
     isLoading: reviewsLoading,
     refetch: refetchReviews,
-  } = useQuery({
+  } = useQuery<DonationReview[]>({
     queryKey: ["reviews-by-donationId", donationId],
     queryFn: async () => {
-      const res = await axiosSecure.get(
+      const res = await axiosSecure.get<DonationReview[]>(
         `/reviews/${donationId}?email=${userEmail}`,
       );
       return res?.data;
